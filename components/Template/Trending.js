@@ -1,0 +1,402 @@
+/* eslint-disable react/no-unescaped-entities */
+import React, { useEffect, useState } from "react";
+import { BsDownload } from "react-icons/bs";
+import { FaTimes } from "react-icons/fa";
+import { FcApproval, FcDisapprove } from "react-icons/fc";
+import { MdDeleteOutline } from "react-icons/md"
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Image from "next/image";
+import { useTheme } from "next-themes";
+
+import { db, auth, storage } from "../../firebase";
+import Modal from "react-modal";
+
+import { 
+collection,
+addDoc,
+doc,
+setDoc,
+getFirestore,
+arrayUnion,
+getDoc,
+query,
+where,
+getDocs,
+updateDoc,
+arrayRemove,
+deleteDoc,
+serverTimestamp,
+onSnapshot,
+orderBy,
+limit,
+startAfter,
+endBefore,
+startAt,
+endAt,
+increment,
+decrement,
+runTransaction,
+writeBatch,
+getDocFromCache,
+} from 'firebase/firestore';
+	
+import {
+	ref,
+	getDownloadURL,
+	uploadBytesResumable,
+	getStorage,
+	uploadBytes
+} from "firebase/storage";
+
+import { useSelector } from "react-redux";
+import { moment } from "moment";
+
+const Trending = ({ data}) => {
+	const [openDownloadMOdal, setOpenDownloadModal] = useState(false);
+	const [downloadUrl, setDownloadUrl] = useState("");
+	const [openDeleteModal, setOpenDeleteModal] = useState(false);
+	const [openApproveDeleteModal, setOpenApproveDeleteModal] = useState(false);
+	const [openAdModal, setOpenAdModal] = useState(false);
+
+	const user = useSelector((state) => state.data.currentUser);
+
+    const { theme } = useTheme();
+    const [chiplen, setChipLen] = useState(3);
+
+
+	useEffect(() => {
+		if (window.innerWidth < 768) {
+			setChipLen(2);
+		}
+	}, []);
+
+	const handleDownload = async () => {
+		getDoc(doc(db, "memes", data.id)).then((Doc) => {
+			if (Doc.exists()) {
+				updateDoc(doc(db, "memes", data.id), {
+					downloaded: increment(1),
+				});
+			}
+		});
+		const storageRef = ref(storage, data.memeURL);
+		const downloadUrl = await getDownloadURL(storageRef);
+		const a = document.createElement("a");
+		a.href = downloadUrl 
+		a.target = "_blank";
+		a.download = data.memeURL;
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+	};
+
+	
+
+	const deleteTemplate = async () => {
+		getDoc(doc(db, "memes", data.memeId)).then((Doc) => {
+			if (Doc.exists()) {
+				addDoc(collection(db, "memes", user.uid, "Trash"), {
+					...Doc.data(),
+					deletedAt: serverTimestamp(),
+				}).then(() => {
+					deleteDoc(doc(db, "memes", data.memeId)).then(() => {
+						deleteDoc(doc(db, "memes", user.uid, "userMemes", data.id)).then(() => {
+							setOpenApproveDeleteModal(false);
+						});
+					});
+				});
+			}
+		});
+		
+	};
+
+
+
+
+
+	return (
+		<>
+        <div className="flex flex-col">
+			<div className='bg-white dark:bg-slate-800 h-[250px] shadow-md rounded-lg overflow-hidden relative group transition-all duration-300'>
+                {data?.type === "image" ? (
+                 <Image
+                    src={data.memeURL}
+                    alt={data.name}
+                    layout='fill'
+                    objectFit='cover'
+                    className='rounded-lg'
+                />
+                ) : (
+                    <video
+                     src={data.memeURL}
+                     alt={data.name}
+                     layout='fill'
+                     className='rounded-lg h-full w-full'
+                     autoPlay
+                     loop
+                     muted
+                     security="restricted"
+                     style={{ objectFit: "cover" }}
+                 />
+                )}
+
+					<p className="text-white text-sm text-center absolute bottom-2 left-1/2 transform -translate-x-1/2 overflow-hidden whitespace-nowrap overflow-ellipsis">
+						{data.name}
+					</p>
+						
+
+				<div className='template-upper-btns absolute left-0 top-0 w-full bg-transparent py-3 px-5 transition-all duration-300'>
+					<div className='w-full flex justify-between'>
+						<div className='varified_badge cursor-pointer'>
+							{!data?.user?.uid && !data?.verified ? (
+								<FcApproval className='text-2xl' />
+							) : (
+								// <FcDisapprove className='text-2xl' />
+								null
+							)}
+						</div>
+						{/* <div className='delete_icon cursor-pointer'>
+							<MdDeleteOutline className='text-2xl' />
+						</div> */}
+					</div>
+				</div>
+
+				{/* template-buttons lower */}
+				{!data?.user?.uid ? (
+					<div className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-3 px-5 transition-all duration-300'
+					     onClick={() => setOpenDeleteModal(true)}>
+				    	<div className='flex justify-end'>
+				     	    <MdDeleteOutline className='text-2xl' />
+				    	</div>
+			    	</div>
+				) : (
+					<div
+						className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-3 px-5 transition-all duration-300'
+						onClick={() => setOpenDownloadModal(true)}>
+						{/* download icon  */}
+						<div className='flex justify-end'>
+							<BsDownload className='text-2xl' />
+						</div>
+					</div>
+				)}
+			</div>
+            <div className='flex justify-between items-center mt-2'>
+                <Stack direction="column" spacing={1}>
+                    <Stack direction="row" spacing={1} flexWrap="wrap" 
+                    >
+                        {data?.tags?.slice(0, chiplen).map((tag, index) => <Chip key={index} label={tag}
+                        style={
+                            theme === "dark"
+                                ? { color: "#fff", backgroundColor: "#1f2937", margin: "0 5px 5px 0" }
+                                : { color: "#000", backgroundColor: "#fff", margin: "0 5px 5px 0" }
+                        } />)}
+                        {data?.tags?.length > chiplen && <Chip label={`+${data?.tags?.length - chiplen}`} style={
+                            theme === "dark"
+                                ? { color: "#fff", backgroundColor: "#1f2937", margin: "0 5px 5px 0" }
+                                : { color: "#000", backgroundColor: "#fff", margin: "0 5px 5px 0" }
+                        } onClick={() => setChipLen(data?.tags?.length)} />}
+                      {data?.tags?.length === 0 && <Chip label="No tags" style={
+                            theme === "dark"
+                                ? { color: "#fff", backgroundColor: "#1f2937", margin: "0 5px 5px 0" }
+                                : { color: "#000", backgroundColor: "#fff", margin: "0 5px 5px 0" }
+                        } />}
+                        {data?.tags?.length === chiplen && <Chip label="Hide"
+                          variant="outlined"
+                         style={
+                            theme === "dark"
+                                ? { color: "#fff", backgroundColor: "#", margin: "0 5px 5px 0" }
+                                : { color: "#000", backgroundColor: "#fff", margin: "0 5px 5px 0" }
+                        } onClick={() => setChipLen(3)} />}
+
+                      
+
+                    </Stack>
+                </Stack>
+            </div>
+        </div>
+             
+			{/* ----------- */}
+			{/* modal  */}
+			{/* -------------- */}
+			<div
+				className={`download-modal fixed w-full h-full z-10 bg-transparent top-0 left-0 ${
+					openDownloadMOdal ? "block" : "hidden"
+				}`}>
+				<div className='flex flex-col h-full justify-center items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-full w-[400px] z-20'>
+					<div
+						className='cross-icon w-full flex justify-end p-3 text-2xl cursor-pointer'
+						onClick={() => setOpenDownloadModal(false)}>
+						<FaTimes />
+					</div>
+					<div
+						className={`bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-400 px-5 py-5 shadow rounded-2xl border border-[#ff4522] w-full`}
+						id='download_modal'>
+						<p className='text-center cursor-pointer'>
+							Watch Ad for download{" "}
+							<BsDownload className='text-2xl ml-2 inline font-medium' 
+							onClick={() => {
+								setOpenDownloadModal(false);
+								// setOpenAdModal(true);
+								handleDownload();
+							}} />
+						</p>
+					</div>
+				</div>
+			</div>
+
+
+			<Modal
+				isOpen={openDeleteModal}
+				onRequestClose={() => setOpenDeleteModal(false)}
+				style={{
+					overlay: {
+						backgroundColor: "rgba(0,0,0,0.5)",
+						zIndex: 1000,
+					},
+					content: {
+						backgroundColor: "transparent",
+						border: "none",
+						top: "50%",
+						left: "50%",
+						right: "auto",
+						bottom: "auto",
+						marginRight: "-50%",
+						transform: "translate(-50%, -50%)",
+						width: "400px",
+						height: "200px",
+						zIndex: 1000,
+					},
+				}}>
+				<div className='flex flex-col h-full justify-center items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-full w-[400px] z-20'>
+					<div
+						className='cross-icon w-full flex justify-end p-3 text-2xl cursor-pointer'
+						onClick={() => setOpenDeleteModal(false)}>
+						<FaTimes />
+					</div>
+					<div
+						className={`bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-400 px-5 py-5 shadow rounded-2xl border border-[#ff4522] w-full`}
+						id='download_modal'>
+						<p className='text-center cursor-pointer'>
+							Are you sure you want to delete this template?
+						</p>
+						<div className='flex justify-center mt-5'>
+							<button
+								className='bg-[#ff4522] text-white px-5 py-2 rounded-md mr-3'
+								onClick={() => {
+									setOpenApproveDeleteModal(true);
+									setOpenDeleteModal(false);
+								}}>
+								Yes
+							</button>
+							<button
+								className='bg-[#ff4522] text-white px-5 py-2 rounded-md'
+								onClick={() => setOpenDeleteModal(false)}>
+								No
+							</button>
+						</div>
+					</div>
+				</div>
+			</Modal>
+
+			<Modal
+				isOpen={openApproveDeleteModal}
+				onRequestClose={() => setOpenApproveDeleteModal(false)}
+				style={{
+					overlay: {
+						backgroundColor: "rgba(0,0,0,0.5)",
+						zIndex: 1000,
+					},
+					content: {
+						backgroundColor: "transparent",
+						border: "none",
+						top: "50%",
+						left: "50%",
+						right: "auto",
+						bottom: "auto",
+						marginRight: "-50%",
+						transform: "translate(-50%, -50%)",
+						width: "400px",
+						height: "200px",
+						zIndex: 1000,
+					},
+				}}>
+				<div className='flex flex-col h-full justify-center items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-full w-[400px] z-20'>
+					<div
+						className='cross-icon w-full flex justify-end p-3 text-2xl cursor-pointer'
+						onClick={() => setOpenApproveDeleteModal(false)}>
+						<FaTimes />
+					</div>
+					<div
+						className={`bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-400 px-5 py-5 shadow rounded-2xl border border-[#ff4522] w-full`}
+						id='download_modal'>
+						<p className='text-center cursor-pointer'>
+						  	This template is in queue for 30 days. After 30 days, it will be deleted automatically.
+						</p>
+						<div className='flex justify-center mt-5'>
+							<button
+								className='bg-[#ff4522] text-white px-5 py-2 rounded-md mr-3'
+								onClick={() => {
+									deleteTemplate();
+								}}>
+								Ok
+							</button>
+						</div>
+					</div>
+				</div>
+			</Modal>
+
+
+			<Modal
+				isOpen={openAdModal}
+				onRequestClose={() => setOpenAdModal(false)}
+				style={{
+					overlay: {
+						backgroundColor: "rgba(0,0,0,0.5)",
+						zIndex: 1000,
+					},
+					content: {
+						backgroundColor: "transparent",
+						border: "none",
+						top: "50%",
+						left: "50%",
+						right: "auto",
+						bottom: "auto",
+						marginRight: "-50%",
+						transform: "translate(-50%, -50%)",
+						width: "800px",
+						height: "600px",
+						zIndex: 1000,
+					},
+				}}>
+				{/* play a 30 s videos */}
+				<div className='flex flex-col h-full justify-center items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-full w-[800px] z-20'>
+					<video
+						src={data?.memeURL}
+						autoPlay
+						// controls
+						style={{ 
+							width: "100%",
+							height: "100%",
+						}}
+						
+						/>
+					<button className='bg-transparent absolute bottom-0 left-0 right-0 mx-auto mb-5 text-white text-2xl' onClick={() => setOpenAdModal(false)}>
+						Skip Ad
+					</button>
+
+				</div>
+			</Modal>
+
+
+				
+					
+					
+
+							
+
+
+		</>
+	);
+};
+
+export default Trending;
