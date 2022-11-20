@@ -164,7 +164,7 @@ function resetRecord(){
   
     return (
       <>
-        <AudioReactRecorder state={record} onStop={onStop} />
+        {/* <AudioReactRecorder state={record} onStop={onStop} />
         {!clicked ? (<Iconspecial  className='icondiv fal fa-microphone bg-slate-50 dark:bg-slate-900 !w-10' onClick={()=>{startRecord(); }}></Iconspecial>
         ) : (
         <div className="spinner-wave" onClick={()=>{stopRecord(); }}>
@@ -180,7 +180,7 @@ function resetRecord(){
         <Iconspecial  className="left fal fa-times-circle bg-slate-50 dark:bg-slate-900 " onClick={()=>resetRecord()}></Iconspecial>
 
           </div>
-         )}
+         )} */}
        
       </>
     )
