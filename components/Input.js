@@ -85,28 +85,7 @@ function Input() {
       }, (error) => {
         console.log(error);
       }, async () => {
-        if(input) {
-          
-          let text = input;
-          let words = text.split(" ");
-          words.filter((word) => word.startsWith("@"));
-          taggedFriends.map((friend) => {
-            if(words.includes(`@${friend.name}`)) {
-              addDoc(collection(db, `notifications/${friend.id}/notifications`), {
-                type: "tag",
-                notifidate: serverTimestamp(),
-                read: false,
-                postID: docRef.id,
-                userName: user?.userName,
-                notifimsg: `${user?.userName} tagged you in a post`,
-                sender: user?.name,
-                senderid: user?.uid,
-                photoURL: user?.photoURL,
-              });
-              
-            }
-          });
-        }
+        
         const downloadURL = await getDownloadURL(task.snapshot.ref);
         const postRef = await addDoc(collection(db, "posts"), {
           caption: input,
@@ -125,13 +104,35 @@ function Input() {
             userName: user?.userName || user?.email.split('@')[0],
           }
         });
-        const docRef =  await addDoc(collection(db, `posts/${user?.uid}/userPosts`), {
-          timestamp: serverTimestamp(),
-          postID: postRef.id,
-        });
         await updateDoc(doc(db, "posts", postRef.id), {
           postID: postRef.id,
-        }).then(() => {
+        })
+        await addDoc(collection(db, `posts/${user?.uid}/userPosts`), {
+          timestamp: serverTimestamp(),
+          postID: postRef.id,
+        })
+        .then(() => {
+          if(input) {
+            let text = input;
+            let words = text.split(" ");
+            words.filter((word) => word.startsWith("@"));
+            taggedFriends.map(async (friend) => {
+              if(words.includes(`@${friend.name}`)) {
+               await addDoc(collection(db, `notifications/${friend.id}/notifications`), {
+                  type: "tag",
+                  notifidate: serverTimestamp(),
+                  read: false,
+                  postID: postRef.id,
+                  userName: user?.userName,
+                  notifimsg: `${user?.userName} tagged you in a post`,
+                  sender: user?.name,
+                  senderid: user?.uid,
+                  photoURL: user?.photoURL,
+                });
+                
+              }
+            });
+          }
           setLoading(false);
           setInput("");
           setSelectedFile(null);
@@ -147,26 +148,7 @@ function Input() {
       });
 
     } else {
-      if(input) {
-        let text = input;
-        let words = text.split(" ");
-        words.filter((word) => word.startsWith("@"));
-        taggedFriends.map((friend) => {
-          if(words.includes(`@${friend.name}`)) {
-            addDoc(collection(db, `notifications/${friend.id}/notifications`), {
-              type: "tag",
-              notifidate: serverTimestamp(),
-              read: false,
-              postID: docRef.id,
-              userName: user?.userName,
-              notifimsg: `${user?.userName} tagged you in a post`,
-              sender: user?.name,
-              senderid: user?.uid,
-              photoURL: user?.photoURL,
-            });
-          }
-        });
-      }
+      
       const postRef = await addDoc(collection(db, "posts"), {
         caption: input,
         timestamp: serverTimestamp(),
@@ -187,10 +169,30 @@ function Input() {
       await updateDoc(doc(db, "posts", postRef.id), {
         postID: postRef.id,
       });
-     const docRef =   await addDoc(collection(db, `posts/${user?.uid}/userPosts`), {
+     await addDoc(collection(db, `posts/${user?.uid}/userPosts`), {
         timestamp: serverTimestamp(),
         postID: postRef.id,
       }).then(() => {
+        if(input) {
+          let text = input;
+          let words = text.split(" ");
+          words.filter((word) => word.startsWith("@"));
+          taggedFriends.map(async (friend) => {
+            if(words.includes(`@${friend.name}`)) {
+             await addDoc(collection(db, `notifications/${friend.id}/notifications`), {
+                type: "tag",
+                notifidate: serverTimestamp(),
+                read: false,
+                postID: postRef.id,
+                userName: user?.userName,
+                notifimsg: `${user?.userName} tagged you in a post`,
+                sender: user?.name,
+                senderid: user?.uid,
+                photoURL: user?.photoURL,
+              });
+            }
+          });
+        }
         setLoading(false);
         setInput("");
         setSelectedFile(null);

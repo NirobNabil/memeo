@@ -155,7 +155,7 @@ function Header(props) {
             router.push(`/Profile?uid=${notif?.senderid}`)
            }
            else if(notif?.type === 'tag'){
-              router.push(`/posts?id=${notif.senderid + "/" + "userPosts" + "/" + notif.postID}`);
+              router.push(`/posts?id=${notif.postID}`);
             }else {
              router.push(`/messenger?id=${notif.senderid}`)
             }

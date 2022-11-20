@@ -8,7 +8,13 @@
     "start": "next start",
     "lint": "next lint",
     "clear": "rm -rf .next",
-    "clear:cache": "rm -rf .next/cache"
+    "clear:cache": "rm -rf .next/cache",
+    "clear:dist": "rm -rf .next/dist",
+    "clear:server": "rm -rf .next/server",
+    "clear:static": "rm -rf .next/static",
+    "clear:build": "rm -rf .next/build-manifest.json",
+    "build:clear": "npm run clear && npm run build"
+    
   },
   "dependencies": {
     "@emoji-mart/data": "^1.0.6",

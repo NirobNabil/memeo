@@ -51,16 +51,17 @@ function Userrow (props) {
      <div className="users">
 
         <InfiniteScroll
-          dataLength={convos?.length}
+          dataLength={convos.length}
           next={fetchMore}
           hasMore={true}
-          loader={<div className="loader" key={0}>Loading ...</div>}
+          loader={<h1>Loading ...</h1>}
           endMessage={
             <p style={{ textAlign: "center" }}>
               <b>Yay! You have seen it all</b>
             </p>
           }
-          height={400}
+          // scrollableTarget="scrollableDiv"
+          height={500}
           >
           {convos?.map((element, index) =>
                   <Users key={index} chatuser={chatuser} setChatuser={setChatuser} element={element} />

@@ -11,7 +11,7 @@ export default function ProfileCard({post, func, text, from, isTrue, setRemoveLi
 
 
   return (
-        <li className="py-3 border-b  divide-y divide-gray-200 dark:divide-gray-700 dark:border-gray-700">
+        <li className="py-3 border-b mx-2 divide-y divide-gray-200 dark:divide-gray-700 dark:border-gray-700">
             <div className="flex items-center space-x-4">
                 <div className="flex-shrink-0 cursor-pointer"
                     onClick={() => router.push(`/Profile?uid=${post.uid}`)}>

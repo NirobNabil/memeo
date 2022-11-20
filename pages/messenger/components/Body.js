@@ -25,6 +25,10 @@ import {
   doc,
   getDoc,
   setDoc,
+  arrayRemove,
+  arrayUnion,
+  startAfter,
+
  } from "firebase/firestore";
 
  import { connect } from "react-redux";
@@ -170,10 +174,11 @@ function Body(props) {
   }, [user?.uid])
 
   const fetchMoreChatsUser = async () => {
-    if(user && !chatuser && convos.length > 0){
-      const lastmsgtime = convos[convos.length-1].lastmsgtime
+    if(user && convos.length > 0){
+      // alert('fetching more chats')
+      const lastmsgdate = convos[convos.length-1].lastmsgdate
       const conversationsRef = collection(db, 'conversations');
-      const q = query(conversationsRef, where('uids', 'array-contains', user?.uid), orderBy('lastmsgdate', 'desc'), startAfter(lastmsgtime), limit(10));
+      const q = query(conversationsRef, where('uids', 'array-contains', user?.uid), orderBy('lastmsgdate', 'desc'), startAfter(lastmsgdate), limit(10));
       const querySnapshot = await getDocs(q);
       const conversations = [];
       querySnapshot.forEach((doc) => {
@@ -241,7 +246,8 @@ function Body(props) {
                           <b>Yay! You have seen it all</b>
                         </p>
                       }
-                      height={400}
+                      height={600}
+                      // scrollableTarget="scrollableDiv"
                     >
                       {convos?.map((el, index)=> ( <div key={index} className="profilepic">
                                  <Chatviewrow el={el} setChatopen={setChatopen} chatopen={chatopen} chatuser={chatuser} setChatuser={setChatuser}  setChatstarted={setChatstarted} setChatview={setChatview} />
