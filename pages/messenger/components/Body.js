@@ -37,6 +37,7 @@ import {
 
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
 import InfiniteScroll from "react-infinite-scroll-component";
+import Loading from "../../../components/Loading";
 
 
 function Body(props) {
@@ -52,6 +53,7 @@ function Body(props) {
   const [user, setUser] = useState(null);
   const [recipientPhotoURL, setRecipientPhotoURL] = useState("");
   const { Home, id } = props;
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -159,6 +161,7 @@ function Body(props) {
 
   useEffect(()=>{
     if(user?.uid && !chatuser){
+    setLoading(true)  
     const conversationsRef = collection(db, 'conversations');
     const q = query(conversationsRef, where('uids', 'array-contains', user?.uid), orderBy('lastmsgdate', 'desc'), limit(10));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -168,6 +171,7 @@ function Body(props) {
       });
       setConvos(conversations);
      console.log('conversations', conversations)
+      setLoading(false)
     });
     return unsubscribe
     }
@@ -188,6 +192,14 @@ function Body(props) {
     }
   }
 
+
+  if(loading) {
+    return (
+      <div className="justify-center items-center flex flex-col h-screen">
+        <Loading />
+      </div>
+    )
+  }
   
 
 

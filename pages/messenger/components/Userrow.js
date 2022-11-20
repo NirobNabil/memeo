@@ -51,7 +51,7 @@ function Userrow (props) {
      <div className="users">
 
         <InfiniteScroll
-          dataLength={convos.length}
+          dataLength={convos?.length || 0}
           next={fetchMore}
           hasMore={true}
           loader={<h1>Loading ...</h1>}
