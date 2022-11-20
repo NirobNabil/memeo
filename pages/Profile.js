@@ -103,17 +103,23 @@ export default function Profile(props) {
     (async () => {
       const q = query(collection(db, 'users'), where('uid', '==', uid));
       const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        const user = doc.data()
-        setUser(doc.data())
-        setBackgroundURL(doc.data()?.backgroundURL || "https://firebasestorage.googleapis.com/v0/b/instagram-clone-2f5b9.appspot.com/o/defaults%2Fbackground.jpg?alt=media&token=7b2b0b0f-8b1f-4b1f-8f9d-1b2f2f2f2f2f")
-        setPhotoURL(doc.data()?.photoURL || "https://firebasestorage.googleapis.com/v0/b/instagram-clone-2f5b9.appspot.com/o/defaults%2Fprofile.jpg?alt=media&token=7b2b0b0f-8b1f-4b1f-8f9d-1b2f2f2f2f2f")
-        setName(doc.data()?.name || "")
-        setBio(doc.data()?.bio || "")
-        getDocs(collection(db, 'posts'), where('uid', '==', uid), orderBy('timestamp', 'desc'), limit(10)).then((querySnapshot) => {
+      querySnapshot.forEach((docx) => {
+        const user = docx.data()
+        setUser(docx.data())
+        setBackgroundURL(docx.data()?.backgroundURL || "https://firebasestorage.googleapis.com/v0/b/instagram-clone-2f5b9.appspot.com/o/defaults%2Fbackground.jpg?alt=media&token=7b2b0b0f-8b1f-4b1f-8f9d-1b2f2f2f2f2f")
+        setPhotoURL(docx.data()?.photoURL || "https://firebasestorage.googleapis.com/v0/b/instagram-clone-2f5b9.appspot.com/o/defaults%2Fprofile.jpg?alt=media&token=7b2b0b0f-8b1f-4b1f-8f9d-1b2f2f2f2f2f")
+        setName(docx.data()?.name || "")
+        setBio(docx.data()?.bio || "")
+        getDocs(collection(db, 'posts', uid, 'userPosts'), orderBy('timestamp', 'desc'), limit(10)).then((querySnapshot) => {
           const posts = []
-          querySnapshot.forEach((doc) => {
-            posts.push({ id: doc.id, ...doc.data(), user})
+          querySnapshot.forEach((Doc) => {
+            if(Doc.exists()){
+              getDoc(doc(db, 'posts', Doc.data().postID)).then((doc) => {
+                if(doc.exists()){
+                posts.push({id: doc.id, ...doc.data()})
+                }
+              })
+            }
           })
           setUserPost(posts)
         })
@@ -124,13 +130,17 @@ export default function Profile(props) {
   }, [uid, router])
 
   const fetchMorePosts = async () => {
-    if(userPost.length > 0) {
+    if(userPost.length > 0 && uid) {
       const last = userPost[userPost.length - 1]
-      const q = query(collection(db, 'posts'), where('uid', '==', uid), orderBy('timestamp', 'desc'), startAfter(last.timestamp), limit(10));
+      const q = query(collection(db, 'posts', uid, 'userPosts'), orderBy('timestamp', 'desc'), startAfter(last.timestamp), limit(10));
       const querySnapshot = await getDocs(q);
       const posts = []
-      querySnapshot.forEach((doc) => {
-        posts.push({ id: doc.id, ...doc.data(), user})
+      querySnapshot.forEach((Doc) => {
+        getDoc(doc(db, 'posts', Doc.data().postID)).then((doc) => {
+          if(doc.exists()){
+          posts.push({id: doc.id, ...doc.data()})
+          }
+        })
       })
       setUserPost([...userPost, ...posts])
     }
@@ -416,7 +426,7 @@ export default function Profile(props) {
       <div className="flex flex-col items-center justify-center">
         {User && (
            <img
-           src={User?.backgroundURL || 'https://images.unsplash.com/photo-1617670000000-0c0c0c0c0c0c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80'}
+           src={User.backgroundURL || 'https://i.imgur.com/4hzNTTq.png'}
            alt="background pic"
            className="w-full h-40 object-cover cursor-pointer "
           />
@@ -442,11 +452,13 @@ export default function Profile(props) {
             </div>
 
             <div className='flex flex-row gap-10 items-center justify-center my-2'>
+              {(followersUIDs?.includes(user?.uid) || followingUIDs?.includes(user?.uid)) && (
               <button className='flex items-center justify-center  space-x-1  bg-transparent hover:bg-gray-100 dark:hover:bg-slate-800 dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 border border-gray-300 dark:border-slate-800'
-              onClick={() => router.push(`/messenger/components/Body?uid=${User?.uid}`)}
+              onClick={() => router.push(`/messenger?id=${User?.uid}`)}
               >
                 Message
               </button>
+              )}
               {uid === user?.uid ? (
                <button className='flex items-center justify-center  space-x-1  bg-transparent hover:bg-gray-100 dark:hover:bg-slate-800 dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 border border-gray-300 dark:border-slate-800'
                onClick={() => setIsOpen(true)}
@@ -464,7 +476,7 @@ export default function Profile(props) {
                   }
                 }}
                   >
-                      {followersUIDs.includes(auth?.currentUser?.uid) ? 'Unfollow' : 'Follow'}
+                      {followersUIDs.includes(user?.uid) ? 'Unfollow' : 'Follow'}
                   </button>
                 )}
             </div>

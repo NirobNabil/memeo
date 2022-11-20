@@ -124,6 +124,10 @@ export default function ImageGrid(props) {
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
+                style={{ 
+                    padding: "0px 0px 0px 0px",
+                    margin: "0px 0px 0px 0px",
+                }}
             >
                 <CloseIcon className="close" onClick={handleClose} />
                 {selectedImage?.type === "image" ? (

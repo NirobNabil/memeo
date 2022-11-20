@@ -2,7 +2,6 @@
 import React, {useState, useEffect} from 'react'
 import firebase from 'firebase/app'
 import {db, auth} from '../../../firebase'
-import Hoverableicondiv from './Hoverableiconsdiv'
 import Link from 'next/link'
 
 import {

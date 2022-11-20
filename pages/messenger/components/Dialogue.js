@@ -205,9 +205,10 @@ function Dialogue(props) {
   useEffect(() => {
     if(chatuser && user){
     let uid = [user.uid, chatuser].sort().join("");
-    const unsubscribe = onSnapshot(doc(db, "conversations", uid), (doc) => {
+    const unsubscribe = onSnapshot(doc(db, "conversations", uid), (Doc) => {
+      if(Doc.exists()){
       setLoader(false);
-      const data = doc.data();
+      const data = Doc.data();
       setTheme(data.customizedconvo.theme);
       setEmojitype(data.customizedconvo.emoji);
       setChatUsers(data.users);
@@ -220,6 +221,61 @@ function Dialogue(props) {
         setMyNotify(data.notifications2)
         setNickname(data.nickname2)
       }
+    } else {
+      let id = [user.uid, chatuser].sort().join("");
+      getDoc(doc(db, "users", chatuser)).then((doc) => {
+        if (doc.exists()) {
+          const data = doc.data();
+        setDoc(doc(db, "conversations", id), {
+          customizedconvo: {
+            theme: "https://i.imgur.com/4hzNTTq.png",
+            emoji: "🤗"
+          },
+          uid: id,
+          uids: [user.uid, chatuser],
+          users: [{
+            uid: user?.uid,
+            name: user?.name,
+            photoURL: user?.photoURL,
+          }, {
+            uid: data?.uid,
+            name: data?.name,
+            photoURL: data?.photoURL,
+          }],
+          nickname1: '',
+          nickname2: '',
+          notifications1: true,
+          notifications2: true,
+          lastmsgdate: serverTimestamp(),
+          });
+          addDoc(collection(db, "conversations", id, "messages"), {
+          message: "Welcome to your new conversation!",
+          reaction1: "",
+          reaction2: "",
+          msgdate: serverTimestamp(),
+          read: false,
+          senderid: user?.uid || "",
+          sendername: user?.name || "",
+          editing: false,
+          });
+			  
+		    	addDoc(collection(db, "notifications", chatuser, "notifications"), {
+					notifimsg: `${user?.name} started a conversation with you!`,
+					notifidate: serverTimestamp(),
+					read: false,
+					sender: user.name,
+					senderid: user.uid,
+					photoURL: user.photoURL,
+					type: "conversation",
+				})
+        window.location.reload();
+      } else {
+        console.log("No such document!");
+      }
+    }).catch((error) => {
+      console.log("Error getting document:", error);
+    });
+    }
     });
     return () => unsubscribe();
    }

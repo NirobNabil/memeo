@@ -1,8 +1,6 @@
 /* eslint-disable react/jsx-key */
 import React, { useState, useEffect, useContext } from "react";
-import firebase from "firebase/app";
 import { db, auth } from "../../../firebase";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
 import Link from 'next/link'
 
 import { ContextApp } from "../ContextAPI";

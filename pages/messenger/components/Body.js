@@ -42,18 +42,18 @@ import Loading from "../../../components/Loading";
 
 function Body(props) {
 
-  const [convos, setConvos] = useState([])
   const [chatuser, setChatuser] = useState("");
   const [adduser, setAdduser] = useState(false);
   const [message, setMessage] = useState("");
   const [recipientid, setRecipientid] = useState("");
   const [recipientname, setRecipientname] = useState("");
-  const [chatview, setChatview] = useState(false)
-  const [chatstarted, setChatstarted] = useState(false)
+  const [chatstarted, setChatstarted] = useState(false);
   const [user, setUser] = useState(null);
   const [recipientPhotoURL, setRecipientPhotoURL] = useState("");
-  const { Home, id } = props;
+  const [chatview, setChatview] = useState(false);
+  const { Home, id,  } = props;
   const [loading, setLoading] = useState(false);
+  const [convos, setConvos] = useState([])
 
   const router = useRouter();
 
@@ -65,18 +65,56 @@ function Body(props) {
     const [chatopen, setChatopen] = useState(false)
 
     useEffect(() => {
-      if(id){
-        setChatuser(id)
+      if(props?.data?.currentUser){
+        setUser(props.data.currentUser)
       }
-    }, [id])
+    }, [props?.data?.currentUser])
 
     useEffect(() => {
-      if (uid) {
-        setChatuser(uid);
+      if(id && user?.uid){
+        setChatuser(id)
+        setLoading(true)  
+        const conversationsRef = collection(db, 'conversations');
+        const q = query(conversationsRef, where('uids', 'array-contains', user?.uid), orderBy('lastmsgdate', 'desc'), limit(10));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const conversations = [];
+          querySnapshot.forEach((doc) => {
+            conversations.push({...doc.data(), id: doc.id});
+          });
+          setConvos(conversations);
+         console.log('conversations', conversations)
+          setLoading(false)
+        });
+        return unsubscribe
       }
-    }, [uid]);
+    }, [id, user?.uid])
 
+    useEffect(() => {
+      if (uid && user?.uid) {
+        setChatuser(uid);
+        setLoading(true)  
+        const conversationsRef = collection(db, 'conversations');
+        const q = query(conversationsRef, where('uids', 'array-contains', user?.uid), orderBy('lastmsgdate', 'desc'), limit(10));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const conversations = [];
+          querySnapshot.forEach((doc) => {
+            conversations.push({...doc.data(), id: doc.id});
+          });
+          setConvos(conversations);
+         console.log('conversations', conversations)
+          setLoading(false)
+        });
+        return unsubscribe
+      }
+    }, [uid, user?.uid]);
+
+    useEffect(() => {
+      if (props?.data?.chats) {
+        setConvos(props.data.chats);
+      }
+    }, [props?.data?.chats]);
     
+   
 
     
    
@@ -138,15 +176,11 @@ function Body(props) {
     }
   }
 
-  useEffect(() => {
-    if(props?.data?.currentUser){
-      setUser(props.data.currentUser)
-    }
-  }, [props?.data?.currentUser])
+ 
 
   useEffect(() => {
     if(chatuser){
-      for(let i = 0; i < convos.length; i++){
+      for(let i = 0; i < convos?.length; i++){
         if(convos[i].uids.includes(chatuser)){
           let convo = convos[i]
           let newConvos = convos.filter((el)=> el.id !== convo.id)
@@ -242,14 +276,17 @@ function Body(props) {
      )}
     {Home && (
        <>
-       <Hoverableicondiv  classNames={"chatdiv fixed flex bs"} icon={"comment"} state={chatview} setState={setChatview}/>
+       <Hoverableicondiv  classNames={"chatdiv fixed flex bs"} icon={"comment"} state={chatview} fetchMore={fetchMoreChatsUser} setState={setChatview}/>
        <CSSTransition in={chatview} timeout={300} unmountOnExit classNames='chatusers'>
          <div className="chatusers bs bg-white dark:bg-slate-800 ">
            <h2>Chat</h2>
            <div className="users  flex-row bg-white dark:bg-slate-800">
-             <i className="fal fa-times" onClick={()=> setChatview(false)} style={{color: 'var(--theme-color)', position: 'absolute', top: '15px',right: '20px'}}></i>
+             <i className="fal fa-times" onClick={()=> {
+              setChatview(false)
+             }
+              } style={{color: 'var(--theme-color)', position: 'absolute', top: '15px',right: '20px'}}></i>
                    <InfiniteScroll
-                      dataLength={convos.length}
+                      dataLength={convos?.length || 0}
                       next={fetchMoreChatsUser}
                       hasMore={true}
                       loader={<h4>Loading...</h4>}

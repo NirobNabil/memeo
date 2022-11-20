@@ -57,7 +57,7 @@ function Hoverableicondiv(props) {
        className={`icondiv ${classNames} 
         text-slate-900 dark:bg-slate-900 dark:text-white  bg-white dark:hover:bg-slate-900 hover:bg-slate-800 hover:text-white cursor-pointer `}
        
-       onClick={()=>{setState && setState(!state); handleEvent && handleEvent() && alert('clicked')}}>
+       onClick={()=>{setState && setState(!state); handleEvent && handleEvent()}}>
          {icon && <i  className={" fal fa-" + icon} />}
       </div>
     

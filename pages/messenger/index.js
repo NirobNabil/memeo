@@ -42,33 +42,56 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { useRouter } from 'next/router'
 
+import Loading from "../../components/Loading";
+
 
 
 function App(props) {
+
+
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
+
+  const { id } = router.query;
 
   if(props?.data?.currentUser?.uid === undefined){
     auth.onAuthStateChanged((user) => {
+      setLoading(true)
       if(user){
         props.fetchUserAgain(user.uid)
       }
+      setLoading(false)
     })
   }
 
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
+      setLoading(true)
       if (user) {
         props.fetchUserAgain(user.uid)
       }
+      setLoading(false)
     })
   }, [])
+
+ 
+
   
+  
+  if(loading) {
+    return (
+      <div className="justify-center items-center flex flex-col h-screen">
+        <Loading />
+      </div>
+    )
+  }
 
 
   return ( 
       <ContextAppProvider>
-          <Body id={router?.query?.id}/>
+          <Body id={id}  />
       </ContextAppProvider>
   );
 }

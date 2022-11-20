@@ -167,7 +167,7 @@ function Home(props) {
   useEffect(() => {
     if (user) {
       const notificationsRef = collection(db, "notifications", user?.uid, "notifications");
-      const q = query(notificationsRef, orderBy('notifidate', 'desc'), limit(10));
+      const q = query(notificationsRef, orderBy('notifidate', 'desc'),limit(10));
       const unsubscribe = onSnapshot(q, (snapshot) => {
           let notifications = snapshot.docs.map((doc) => {
               const data = doc.data();
@@ -245,9 +245,10 @@ function Home(props) {
               
 
   useEffect(() => {
-    if (user && followingUIDs.length > 0) {
+    if (user) {
       const postsRef = collection(db, `posts`);
-      const q = query(postsRef, where("uid", "in", followingUIDs), orderBy("timestamp", "desc"), limit(20));
+     // where("uid", "in", followingUIDs),
+      const q = query(postsRef,  orderBy("timestamp", "desc"), limit(20));
       const unsubscribe = onSnapshot(q, (snapshot) => {
           let posts = [];
           snapshot.docs.map((doc) => {
@@ -261,13 +262,14 @@ function Home(props) {
       });
       return unsubscribe;
     }
-  }, [user, followingUIDs]);
+  }, [user]);
 
   const fetchPosts = () => {
-    if (user && followingUIDs.length > 0 && posts?.length > 0) {
+    if (user && posts?.length > 0) {
       const lastPost = posts[posts?.length - 1];
       const postsRef = collection(db, `posts`);
-      const q = query(postsRef, where("uid", "in", followingUIDs), orderBy("timestamp", "desc"), startAfter(lastPost?.timestamp), limit(20));
+      // where("uid", "in", followingUIDs)
+      const q = query(postsRef,orderBy("timestamp", "desc"), startAfter(lastPost?.timestamp), limit(20));
       const unsubscribe = onSnapshot(q, (snapshot) => {
           let posts = [];
           snapshot.docs.map((doc) => {
@@ -284,9 +286,10 @@ function Home(props) {
   };
 
   useEffect(() => {
-    if (user && followingUIDs.length > 0) {
+    if (user) {
       const postsRef = collection(db, `posts`);
-      const q = query(postsRef, where("uid", "in", followingUIDs), where("type", "==", "video"), orderBy("timestamp", "desc"), limit(20));
+      //where("uid", "in", followingUIDs),
+      const q = query(postsRef,  where("type", "==", "video"), orderBy("timestamp", "desc"), limit(20));
       const unsubscribe = onSnapshot(q, (snapshot) => {
           let posts = [];
           snapshot.docs.map((doc) => {
@@ -300,13 +303,14 @@ function Home(props) {
       });
       return unsubscribe;
     }
-  }, [user, followingUIDs]);
+  }, [user]);
 
   const fetchVideoPosts = () => {
-    if (user && followingUIDs.length > 0 && videoPosts?.length > 0) {
+    if (user && videoPosts?.length > 0) {
       const lastPost = videoPosts[videoPosts?.length - 1];
       const postsRef = collection(db, `posts`);
-      const q = query(postsRef, where("uid", "in", followingUIDs), where("type", "==", "video"), orderBy("timestamp", "desc"), startAfter(lastPost?.timestamp), limit(20));
+      //where("uid", "in", followingUIDs),
+      const q = query(postsRef,  where("type", "==", "video"), orderBy("timestamp", "desc"), startAfter(lastPost?.timestamp), limit(20));
       const unsubscribe = onSnapshot(q, (snapshot) => {
           let posts = [];
           snapshot.docs.map((doc) => {
@@ -352,31 +356,37 @@ function Home(props) {
   };
 
   useEffect(() => {
-    if (user && followingUIDs.length > 0) {
-      const q = query(collection(db, 'users'), where("uid", "not-in", followingUIDs), limit(10));
+    if (user) {
+    //  where("uid", "not-in", followingUIDs),
+      const q = query(collection(db, 'users'), orderBy("createdAt", "desc"), limit(20));
       const unsubscribe = onSnapshot(q, (snapshot) => {
           let users = [];
           snapshot.docs.map((doc) => {
               const data = doc.data();
               const id = doc.id;
-              users.push({ id: id, ...data });
+              if(followingUIDs.indexOf(id) === -1 && followersUIDs.indexOf(id) === -1 && id !== user?.uid) {
+               users.push({ id: id, ...data });
+              }
           });
           setFollow(users);
       });
       return unsubscribe;
     }
-  }, [user, followingUIDs]);
+  }, [user, followingUIDs, followersUIDs]);
 
   const fetchFollow = () => {
-    if (user && follow?.length > 0 && followingUIDs.length > follow?.length) {
-      const lastUser = follow[follow?.length - 1];
-      const q = query(collection(db, 'users'), where("uid", "not-in", followingUIDs), startAfter(lastUser?.uid), limit(10));
+    if (user && follow?.length > 0) {
+      const lastUser = follow[follow?.length - 1]
+      //where("uid", "not-in", followingUIDs),
+      const q = query(collection(db, 'users'),  orderBy("createdAt", "desc"), startAfter(lastUser?.createdAt), limit(20));
       const unsubscribe = onSnapshot(q, (snapshot) => {
           let users = [];
           snapshot.docs.map((doc) => {
               const data = doc.data();
               const id = doc.id;
-              users.push({ id: id, ...data });
+              if(followingUIDs.indexOf(id) === -1 && followersUIDs.indexOf(id) === -1 && id !== user?.uid) {
+               users.push({ id: id, ...data });
+              }
           });
           setFollow((prev) => [...prev, ...users]);
       });
@@ -397,7 +407,7 @@ function Home(props) {
   }, [user, followersUIDs]);
 
   const fetchFollowers = () => {
-    if (user && followers?.length > 0 && followersUIDs.length > followers?.length) {
+    if (user && followers?.length > 0 && followersUIDs.length > 0) {
       const lastFollower = followers[followers?.length - 1];
       followersUIDs.slice(followersUIDs.indexOf(lastFollower?.id) + 1, followersUIDs.indexOf(lastFollower?.id) + 11).map((uid) => {
         getDoc(doc(db, 'users', uid)).then((doc) => {

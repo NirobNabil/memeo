@@ -1,5 +1,6 @@
 import { USER_STATE_CHANGE } from "../constants";
 import { CLEAR_DATA } from "../constants";
+import { USER_CHATS_STATE_CHANGE } from "../constants";
 
 import { db, auth, storage } from "../../firebase";
 
@@ -27,12 +28,18 @@ export const fetchUser = () => (dispatch) => {
             const docSnap = await getDoc(userRef);
             if (docSnap.exists()) {
                 dispatch({ type: USER_STATE_CHANGE, currentUser: docSnap.data() });
+				const conversationsRef = collection(db, 'conversations');
+				const q = query(conversationsRef, where('uids', 'array-contains', docSnap.data().uid), orderBy('lastmsgdate', 'desc'), limit(10));
+				 onSnapshot(q, (querySnapshot) => {
+				const conversations = [];
+				querySnapshot.forEach((doc) => {
+					conversations.push({...doc.data(), id: doc.id});
+				});
+				dispatch({ type: USER_CHATS_STATE_CHANGE, chats: conversations });
+			 });
 			}
-
-        } else {
-            dispatch({ type: USER_STATE_CHANGE, currentUser: null });
-        }
-    });
+		}
+	});
 };
 
 
@@ -43,6 +50,15 @@ export const fetchUserAgain = (uid) => async (dispatch) => {
 	if (docSnap.exists()) {
 		console.log("Document data:", docSnap.data());
 		dispatch({ type: USER_STATE_CHANGE, currentUser: docSnap.data() });
+		const conversationsRef = collection(db, 'conversations');
+		const q = query(conversationsRef, where('uids', 'array-contains', docSnap.data().uid), orderBy('lastmsgdate', 'desc'), limit(10));
+			onSnapshot(q, (querySnapshot) => {
+		const conversations = [];
+		querySnapshot.forEach((doc) => {
+			conversations.push({...doc.data(), id: doc.id});
+		});
+		dispatch({ type: USER_CHATS_STATE_CHANGE, chats: conversations });
+		});
 	}
 };
 
