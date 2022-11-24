@@ -31,7 +31,7 @@ import { ToastError } from "../Components/Toast";
 import { CircularProgress } from "@material-ui/core";
 
 
-const LoginForm = ({ setLoginOrRegister }) => {
+const  ForgetPassWord = ({ setLoginOrRegister }) => {
 
 	const [toastShow, setToastShow] = useState(false);
 	const [toastError, setToastError] = useState(false);
@@ -256,4 +256,4 @@ const LoginForm = ({ setLoginOrRegister }) => {
 	);
 };
 
-export default LoginForm;
+export default  ForgetPassWord;
