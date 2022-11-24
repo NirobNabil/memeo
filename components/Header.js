@@ -253,6 +253,11 @@ function Header(props) {
         active={tab === "home"} 
         handle={() => {
           setTab('home');
+          router.push('/');
+          window.scrollTo(0, 0);
+          if (window.scrollY > 0) {
+            window.location.reload();
+          }
         }}
         />
         <HeaderLink 
@@ -280,11 +285,12 @@ function Header(props) {
                 <Popover.Button >
                   
                     <HeaderLink 
-                      Icon={open ? NotificationsIconActive : NotificationsIcon } 
+                      Icon={open ? NotificationsIconActive  : NotificationsIcon}
                       text="Notifications" 
                       feed
                       active={tab === "notifications"}
                       notificationsLength={ open ? 0 : notificationsLength}
+                      open={open}
                       />
                 </Popover.Button>
                 <Transition

@@ -7,6 +7,7 @@ import { LoginWrapper } from "../../styles/LoginOrRegister.styles";
 import Loading from "../../components/Loading";
 import LoginForm from "../../components/loginForm";
 import RegisterForm from "../../components/RegisterForm";
+import ForgetPassWord from "../../components/ForgetPassWord";
 
 import { auth } from "../../firebase";
 
@@ -50,19 +51,6 @@ const LoginOrRegister = () => {
 						direction='column'
 						horizontal='space-between'
 						vertical='space-between'>
-						{/* <div className='login-banner-title'>
-							<p>
-								Make your day <br /> <span>Happy</span> <br /> With MEME
-							</p>
-						</div>
-						<div className='login-banner-subtitle'>
-							<p>
-								Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vitae
-								reprehenderit doloremque magni error maxime quibusdam tenetur
-								perferendis in temporibus voluptates, autem ducimus aliquid
-								itaque voluptatum. Exercitationem esse vel dolore eum?
-							</p>
-						</div> */}
 					</Flex>
 				</div>
 				<Flex horizontal='center' vertical='center'>
@@ -71,6 +59,9 @@ const LoginOrRegister = () => {
 					)}
 					{loginOrRegister === "register" && (
 						<RegisterForm setLoginOrRegister={setLoginOrRegister} />
+					)}
+					{loginOrRegister === "forgot" && (
+						<ForgetPassWord setLoginOrRegister={setLoginOrRegister} />
 					)}
 				</Flex>
 			</Grid>

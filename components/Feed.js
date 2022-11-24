@@ -36,6 +36,7 @@ function Feed({ posts,  inactive, active, len, fetchMore, fromPost }) {
   
   const [removeList, setRemoveList] = useState([]);
   const user = useSelector(state => state?.data?.currentUser)
+  const [loading, setLoading] = useState(false);
 
 
   if(user?.uid === undefined) return <Postskeleton />
@@ -49,9 +50,15 @@ function Feed({ posts,  inactive, active, len, fetchMore, fromPost }) {
 
      <InfiniteScroll
       dataLength={posts.length}
-      next={fetchMore}
+      next={() => {
+        setLoading(true)
+        fetchMore()
+        setLoading(false)
+      }}
       hasMore={true}
-      loader={!fromPost && <Postskeleton />}
+      loader={
+        !fromPost && loading && <Postskeleton />
+      }
       endMessage={
         <p style={{ textAlign: "center" }}>
           <b>Yay! You have seen it all</b>

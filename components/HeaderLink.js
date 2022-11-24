@@ -18,7 +18,7 @@ import {
  } from "firebase/firestore"
 import { db, auth } from "../firebase";
 
-function HeaderLink({ Icon, text, feed, active, avatar, hidden, handle, Menu, notificationsLength }) {
+function HeaderLink({ Icon, text, feed, active, avatar, hidden, handle, Menu, notificationsLength, open }) {
   const user = useSelector((state) => state.data.currentUser);
 
  
@@ -28,7 +28,7 @@ function HeaderLink({ Icon, text, feed, active, avatar, hidden, handle, Menu, no
     <div
       className={`${
         hidden && "hidden md:inline-flex"
-      } cursor-pointer flex flex-col justify-center items-center
+      } cursor-pointer flex flex-col justify-center items-center  hover:text-[#ff4522] hover:bg-[#ff4522] hover:bg-opacity-10 rounded-xl p-2 space-y-1 relative
       ${Menu && "bg-dark/60 dark:text-white lg:-mb-1.5 space-y-1.5"}
       ${
         feed
@@ -41,7 +41,7 @@ function HeaderLink({ Icon, text, feed, active, avatar, hidden, handle, Menu, no
     >
      
      <div className="flex items-center justify-center space-x-1 relative">
-      {Icon && <Icon className="!h-7 !w-7 lg:!-mb-1" />}
+      {Icon && <Icon className={`!h-7 !w-7 lg:!-mb-1 ${open && "text-[#ff4522]" } `}/>}
       {!active && notificationsLength > 0 && (
         <div className="bg-red-600 rounded-full h-5 w-5 flex items-center justify-center absolute text-white text-xs font-bold -top-1.5 -right-1.5">
           <p className="text-xs text-white">{
@@ -55,12 +55,7 @@ function HeaderLink({ Icon, text, feed, active, avatar, hidden, handle, Menu, no
       
       
 
-      <h4
-        className={`text-sm ${
-          feed && "hidden lg:flex justify-center w-full mx-auto"
-        }
-        `}
-      >
+      <h4 className={`text-sm ${feed && "hidden lg:flex justify-center w-full mx-auto"}  ${open && "text-[#ff4522]" }`}>
         {text}
       </h4>
       {active && (

@@ -32,6 +32,7 @@ import {
   arrayRemove,
   arrayUnion,
   setDoc,
+  increment,
  } from "firebase/firestore"
 
  import {
@@ -53,7 +54,6 @@ import { ChatAltIcon } from "@heroicons/react/outline";
 import { v4 as uuidv4 } from 'uuid';
 import Modal from "react-modal";
 import Iframe from "react-iframe";
-import Postskeleton from "./Skeleton/Postskeleton";
 import Video from './Video'
 
 
@@ -74,6 +74,7 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
   const [shareModalIsOpen, setShareModalIsOpen] = useState(false);
   const [sharePostText, setSharePostText] = useState("");
   const [showCaption, setShowCaption] = useState(false);
+  const [commentlen, setCommentlen] = useState(len);
 
   const postRef = useRef(null);
   
@@ -103,7 +104,7 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
   }, [user?.uid, post.id])
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(query(collection(db, 'posts', post.id, 'comments'), orderBy('timestamp', 'desc'), limit(len)), (snapshot) => {
+    const unsubscribe = onSnapshot(query(collection(db, 'posts', post.id, 'comments'), orderBy('timestamp', 'desc'), limit(commentlen)), (snapshot) => {
       let commentsAll = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -127,7 +128,7 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
       setComments(commentsAll);
     })
     return unsubscribe;
-  }, [post.id, user?.uid, len])
+  }, [post.id, user?.uid, commentlen])
 
 
 
@@ -332,14 +333,11 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
     await updateDoc(doc(db, 'posts', post.id, 'comments', comment.id), {
       comments: arrayUnion(object),
     });
-    getDoc(doc(db, 'posts', post.id)).then((docValue) => {
-      if(docValue.exists()){
+    
         updateDoc(doc(db, 'posts', post.id), {
-          comments: docValue.data().comments + 1,
+          comments: increment(1),
         })
-        post.comments = docValue.data().comments + 1;
-      }
-    })
+        post.comments = post.comments + 1;
   }
 
   const loveComment = async (reply, comment) => {
@@ -415,7 +413,7 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
                 setIsFavorite(true)
                 setDoc(doc(db, "posts", user?.uid, "userFavorites", post.id), {
                   id: post.shareFrom.id,
-                  uid: post.shareFrom.uid,
+                  timestamp: serverTimestamp(),
                 });
               }}
               />  
@@ -431,9 +429,7 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
             <CloseRoundedIcon className="h-6 w-6 dark:text-white dark:bg-slate-900 text-black bg-gray-200 space-x-2 rounded-full cursor-pointer" 
             onClick={() => {
               setRemoveList((prev) => [...prev, post.id]);
-              // setDoc(doc(db, "posts", user?.uid), {
-              //   removeList: arrayUnion(post.id),
-              // }, {merge: true});
+              
             }}
             />
         </div>
@@ -467,7 +463,7 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
               setIsFavorite(true)
               setDoc(doc(db, "posts", user?.uid, "userFavorites", post.id), {
                 id: post.id,
-                uid: post.user?.uid,
+                timestamp: serverTimestamp(),
               });
             }}
             />  
@@ -483,9 +479,7 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
            <CloseRoundedIcon className="h-6 w-6 dark:text-white dark:bg-slate-900 text-black bg-gray-200 space-x-2 rounded-full cursor-pointer" 
            onClick={() => {
             setRemoveList((prev) => [...prev, post.id]);
-            // setDoc(doc(db, "posts", user?.uid), {
-            //   removeList: arrayUnion(post.id),
-            // }, {merge: true});
+           
            }}
            />
        </div>
@@ -600,6 +594,8 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
         </div>
       </div>
 
+     
+
       <div 
       className="flex justify-evenly items-center border-t  border-gray-600/80  mx-2.5 pt-2 text-gray-500 dark:text-white/75"
       >
@@ -608,34 +604,25 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
             onClick={() => {
               if(liked){
                 setLiked(false)
-                getDoc(doc(db, "posts",  post.id)).then((docData) => {
-                  if(docData.exists()){
-                    updateDoc(doc(db, "posts", post.id), {
-                      likes: docData.data().likes - 1,
-                    });
-                    deleteDoc(doc(db, "posts", post.id, "likes", user?.uid));
-                    post.likes = docData.data().likes - 1;
-                  }
+                updateDoc(doc(db, "posts", post.id), {
+                  likes: increment(-1),
                 });
-
+                deleteDoc(doc(db, "posts", post.id, "likes", user?.uid));
+                post.likes -= 1;
               }else{
                 setLiked(true)
-                getDoc(doc(db, "posts", post.id)).then((docData) => {
-                  if(docData.exists()){
-                    updateDoc(doc(db, "posts", post.id), {
-                      likes: docData.data().likes + 1,
-                    });
-                    setDoc(doc(db, "posts",  post.id, "likes", user?.uid), {
-                      uid: user?.uid,
-                      name: user.name,
-                      photoURL: user.photoURL,
-                      userName: user.userName || user.email.split("@")[0],
-                    });
-                    post.likes = docData.data().likes + 1;
-                  }
+                updateDoc(doc(db, "posts", post.id), {
+                  likes: increment(1),
                 });
-              }
+                setDoc(doc(db, "posts",  post.id, "likes", user?.uid), {
+                  uid: user?.uid,
+                  name: user.name,
+                  photoURL: user.photoURL,
+                  userName: user.userName || user.email.split("@")[0],
+                });
+                post.likes += 1;
             }}
+            }
           >
         
         <label className="swap swap-flip text-9xl">
@@ -682,6 +669,19 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
           </button>
         )}
       </div>
+
+      {post?.comments > 0 && post?.comments !== commentlen && (
+      <div className="flex items-center space-x-2 p-2.5 cursor-pointer">
+        <span className="flex items-center space-x-2"
+        onClick={() => {
+          setCommentlen(post?.comments);
+        }}
+        >
+          see all {post?.comments} comments
+        </span>
+      </div>
+      )}
+
       {comments && (
         <div className="flex flex-col space-y-2 px-2.5">
           {comments?.map((comment) => (
@@ -747,17 +747,13 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
                   {comment?.user?.uid === user?.uid && (
                     <p className="text-xs dark:text-white/50 cursor-pointer hover:underline"
                         onClick={() => {
-                        getDoc(doc(db, "posts", post.id)).then((docx) => {
-                          if (docx.exists()) {
                             getDoc(doc(db, "posts",  post.id, "comments", comment.id)).then((docy) => {
+                               post.comments -= (docy.data().comments.length + 1);
                                 updateDoc(doc(db, "posts", post.id), {
-                                  comments: docx.data().comments - docy.data().comments.length - 1,
+                                  comments: increment(-(docy.data().comments.length + 1)),
                                 })
-                                deleteDoc(doc(db, "posts", post.id, "comments", comment.id));
-                                post.comments = docx.data().comments - docy.data().comments.length - 1;
+                                deleteDoc(doc(db,"posts", post.id, "comments", comment.id));
                             });
-                          }
-                        });
                       }}
                     >
                       Delete
@@ -807,14 +803,10 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
                                 updateDoc(doc(db, 'posts', post.id, 'comments', comment.id), {
                                     comments: comment?.comments.filter((data) => data.id !== reply.id),
                                 })
-                                getDoc(doc(db, "posts", post.id)).then((docx) => {
-                                  if (docx.exists()) {
-                                    updateDoc(doc(db, "posts",  post.id), {
-                                      comments: docx.data().comments - 1,
-                                    });
-                                    post.comments = docx.data().comments - 1;
-                                  }
+                                updateDoc(doc(db, "posts",  post.id), {
+                                  comments: increment(-1),
                                 });
+                                post.comments -= 1;
                             }
                           }
                         >
@@ -862,6 +854,8 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
           ))}
         </div>
       )}
+
+     
 
 
 

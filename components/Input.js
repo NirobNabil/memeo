@@ -42,6 +42,8 @@ import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 
+import { FileOpen } from "@mui/icons-material";
+
 
 const Picker = dynamic(() => import("@emoji-mart/react"), {
   ssr: false,
@@ -286,23 +288,8 @@ function Input() {
               ></textarea>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <div className="flex items-center space-x-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6 text-gray-500 dark:text-white/75 cursor-pointer hover:text-blue-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      onClick={() => filePickerRef.current.click()}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                      />
-                    </svg>
-                    <input
+                 
+                  <input
                       type="file"
                       ref={filePickerRef}
                       hidden
@@ -311,28 +298,9 @@ function Input() {
                     <p className="text-sm font-semibold dark:text-white/75 cursor-pointer hover:text-blue-500"
                     onClick={() => filePickerRef.current.click()}
                     >
-                      Photo/Video
+                       <svg ariaHidden="true" className="w-6 h-6 cursor-pointer" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd"></path></svg>
                     </p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6 text-gray-500 dark:text-white/75 cursor-pointer hover:text-blue-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                      />
-                    </svg>
-                    <p className="text-sm font-semibold dark:text-white/75 cursor-pointer hover:text-blue-500">
-                      Tag Friends
-                    </p>
-                  </div>
+                  
                    
                   {/* emoji picker */}
                   <div className="flex items-center space-x-2">

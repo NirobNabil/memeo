@@ -501,7 +501,7 @@ function Templates(props) {
 								<div className='item-inner'>
 									<div className='item-title'>Total Earning: </div>
 								</div>
-								<div className='item-media'>$ 0.06</div>
+								<div className='item-media'>$ 0.00</div>
 							</div>
 						</div>
 					</div>

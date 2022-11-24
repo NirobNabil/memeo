@@ -22,9 +22,13 @@ import { auth, storage, db } from "../../firebase";
 import { signInWithPopup, GithubAuthProvider, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import {
 signInWithEmailAndPassword,
+sendEmailVerification,
+sendPasswordResetEmail
+
 } from "firebase/auth";
 import { ToastSuccess } from "../Components/Toast";
 import { ToastError } from "../Components/Toast";
+import { CircularProgress } from "@material-ui/core";
 
 
 const LoginForm = ({ setLoginOrRegister }) => {
@@ -34,6 +38,8 @@ const LoginForm = ({ setLoginOrRegister }) => {
 
 	const [toastMessage, setToastMessage] = useState("");
 	const [toastErrorMessage, setToastErrorMessage] = useState("");
+    const [isSend , setIsSend] = useState(false)
+    const [loading , setLoading] = useState(false)
 
 	const {
 		register,
@@ -51,29 +57,31 @@ const LoginForm = ({ setLoginOrRegister }) => {
 	};
 
 	const loginWithEmail = async (data) => {
-		const { emailOrPhone, password } = data;
-		try {
-			await signInWithEmailAndPassword(auth, emailOrPhone, password)
-				.then((userCredential) => {
-				    	setToastMessage("Login Successful");
-						setToastShow(true);
-						setTimeout(() => {
-							setToastShow(false);
-							setToastMessage("");
-						}, 3000);
-				})
-		} catch (error) {
-			console.log(error);
-			alert(error.message);
-			setToastErrorMessage(error.message);
-			setToastError(true);
-			setTimeout(() => {
-				setToastError(false);
-				setToastErrorMessage("");
-			}, 3000);
-
-		}
-	};
+	        	const { emailOrPhone} = data;
+                setIsSend(true)
+                setLoading(true)
+                sendPasswordResetEmail(auth, emailOrPhone)
+                    .then(() => {
+                        setToastShow(true);
+                        setToastMessage(
+                            "Password reset email sent successfully"
+                        );
+                        setTimeout(() => {
+                            setToastShow(false);
+                            setToastMessage("");
+                        }, 3000);
+                        setLoading(false)
+                    })
+                    .catch((error) => {
+                        setToastError(true);
+                        setToastErrorMessage(error.message);
+                        setTimeout(() => {
+                            setToastError(false);
+                            setToastErrorMessage("");
+                        }, 3000);
+                        setLoading(false)
+                    });
+	   };
 
 	const signinGithub = async (e) => {
 		e.preventDefault();
@@ -134,7 +142,7 @@ const LoginForm = ({ setLoginOrRegister }) => {
 								helperText={errors.emailOrPhone?.message}
 							/>
 						</Box>
-						<Box sx={{ display: "flex", alignItems: "flex-end", mb: 3 }}>
+						{/* <Box sx={{ display: "flex", alignItems: "flex-end", mb: 3 }}>
 							<CssTextField
 								id='password'
 								label='Your password'
@@ -165,49 +173,29 @@ const LoginForm = ({ setLoginOrRegister }) => {
 								error={Boolean(errors.password)}
 								helperText={errors.password?.message}
 							/>
-						</Box>
-
-						{/* <Box sx={{ display: "flex", alignItems: "flex-end", mb: 1 }}>
-							<FormControl>
-								<FormControlLabel
-									control={
-										<Checkbox
-											sx={{
-												color: "#ff4522",
-												"&.Mui-checked": {
-													color: "#ff4522",
-												},
-											}}
-											{...register("rememberMe")}
-										/>
-									}
-									label='Remember me'
-								/>
-							</FormControl>
 						</Box> */}
 
-						<Box
-							sx={{
-								display: "flex",
-								alignItems: "flex-end",
-								justifyContent: "space-between",
-								mb: 3,
-							}}>
-							<Button
-								type='submit'
-								variant='contained'
+                        <div className='forget-password-submit-email-to-reset'>
+                            <Button
+                                type='submit'
+                                color='primary'
+                                variant='contained'
 								sx={{
 									backgroundColor: "#ff4522",
 									color: "#fff",
 									"&:hover": {
 										backgroundColor: "#ff4522",
 									},
-								}}>
-								Login
-							</Button>
-							<span onClick={() => setLoginOrRegister("forgot")}
-							className='cursor-pointer'>Forgot password?</span>
-						</Box>
+								}}
+                                >
+                                {loading ? <CircularProgress color='inherit' size={20} /> : isSend ? "Didn't receive email? Resend Again" : "Send email to reset password"}
+                            </Button>
+                        </div>
+
+
+                        
+
+					
 					</form>
 					{/* if password is not forgotten */}
 					<Box
@@ -220,6 +208,12 @@ const LoginForm = ({ setLoginOrRegister }) => {
 						</button>
 					</Box>
 
+                    <Box sx={{ mb: 5 }} className='goto-login-form-text'>
+                        <button onClick={() => setLoginOrRegister("login")}>
+                            <a>Or, Login with email</a>
+                        </button>
+                    </Box>
+
 					<Box className='another-login-method'>
 						<Flex direction='column' gap='20px'>
 							<span>Or, Log in with</span>
@@ -229,9 +223,6 @@ const LoginForm = ({ setLoginOrRegister }) => {
 									onClick={signinFacebook}>
 									<FaFacebookF />
 								</BrandBox>
-								{/* <BrandBox bg=' #00acee'>
-											<FaTwitter />
-										</BrandBox> */}
 								<BrandBox
 									bg='#db4a39'
 									onClick={signinGoogle}>
@@ -245,6 +236,8 @@ const LoginForm = ({ setLoginOrRegister }) => {
 							</Flex>
 						</Flex>
 					</Box>
+
+                    
 				</div>
 			</div>
 		</LoginFormContainer>

@@ -49,13 +49,14 @@ export default function Posts() {
         const unsubscribe = onSnapshot(doc(db, `posts/${id}`), (docData) => {
             if (docData.exists()) {
                 setPosts([{ ...docData.data(), id: docData.id }])
+                setLength(docData.data().comments)
             }
         })
         return unsubscribe
     }, [id])
 
     const fetchMore = ()  => {
-        setLength(length + 25)
+        
     }
 
 
@@ -74,11 +75,10 @@ export default function Posts() {
             </div>
             <div  className="flex-grow border-l border-r border-gray-100 dark:border-gray-700 max-w-xl xl:w-[520px]  space-x-5  my-3 mx-3 md:mx-0">
                 <Feed posts={posts} 
-                nactive 
                 len={length}  
                 fetchMore={fetchMore}
                 fromPost={true}
-                inactive={false}
+                inactive={true}
                 />
             </div>
             <div className="hidden  md:inline space-y-5 p-2 item-center px-6 xl:items-end  xl:w-[360px]">
