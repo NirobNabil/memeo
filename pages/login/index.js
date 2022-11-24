@@ -7,7 +7,7 @@ import { LoginWrapper } from "../../styles/LoginOrRegister.styles";
 import Loading from "../../components/Loading";
 import LoginForm from "../../components/loginForm";
 import RegisterForm from "../../components/RegisterForm";
-import ForgetPassWord from "../../components/ForgetPassWord";
+import ForgetPassWord from "../../components/ForgetPassword";
 
 import { auth } from "../../firebase";
 
