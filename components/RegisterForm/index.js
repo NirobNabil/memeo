@@ -98,6 +98,16 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 		event.preventDefault();
 	};
 
+	const checkUserName = async (username) => {
+		const q = query(collection(db, "users"), where("userName", "==", username));
+		const querySnapshot = await getDocs(q);
+		if (querySnapshot.size > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	
 
 	// register new user
@@ -265,6 +275,13 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 										value: 2,
 										message: "Name must be more than 2 characters",
 									},
+									validate: async (value) => {
+										const res = await checkUserName(value);
+										if (res) {
+											return "User name already exists";
+										}
+									}
+
 								})}
 								InputProps={{
 									startAdornment: (
@@ -275,8 +292,8 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 										</InputAdornment>
 									),
 								}}
-								error={Boolean(errors.fullName)}
-								helperText={errors.fullName?.message}
+								error={Boolean(errors.userName)}
+								helperText={errors.userName?.message}
 
 							/>
 						</Box>

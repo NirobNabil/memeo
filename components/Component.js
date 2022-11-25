@@ -3,7 +3,7 @@ import Home from './Home'
 
 
 const Component = (props) => {
-    const { posts, active, follow, following, followers, followingUIDs, followersUIDs, fetchMore, fetchFollow, fetchFollowers, fetchFollowing, userMemes,  fetchUserMemes } = props
+    const { posts, active, follow, following, followers, followingUIDs, followersUIDs, fetchMore, fetchFollow, fetchFollowers, fetchFollowing, userMemes,  fetchUserMemes, Isactive } = props
 
    
     return (
@@ -21,6 +21,7 @@ const Component = (props) => {
             fetchFollowers={fetchFollowers}
             fetchUserMemes={fetchUserMemes}
             userMemes={userMemes}
+            Isactive={Isactive}
            />
     )
 }

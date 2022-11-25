@@ -495,6 +495,7 @@ function Home(props) {
           fetchFollowing={fetchFollowing}
           fetchFollow={fetchFollow}
           fetchFollowers={fetchFollowers}
+          Isactive={true}
           // fetchUserMemes={fetchUserMemes}
           // userMemes={userMemes}
           />
@@ -512,6 +513,7 @@ function Home(props) {
           fetchFollowing={fetchFollowing}
           fetchFollow={fetchFollow}
           fetchFollowers={fetchFollowers}
+          Isactive={true}
           // userMemes={userMemes}
           // fetchUserMemes={fetchUserMemes}
           /> 

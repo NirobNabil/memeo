@@ -4,7 +4,7 @@ import Menu from "./Menu";
 
 
 export default function Home(props) {
-    const { posts, active, inactive, follow, following, followers, followingUIDs, followersUIDs, fetchMore, fetchFollowing, fetchFollow, fetchFollowers, fetchUserMemes, userMemes } = props
+    const { posts, active, inactive, follow, following, followers, followingUIDs, followersUIDs, fetchMore, fetchFollowing, fetchFollow, fetchFollowers, fetchUserMemes, userMemes, Isactive } = props
 
     return (
         <>
@@ -19,6 +19,7 @@ export default function Home(props) {
                 fetchFollowing={fetchFollowing}
                 fetchFollow={fetchFollow}
                 fetchFollowers={fetchFollowers}
+                active={Isactive}
                 />
             </div>
             <div  className="flex-grow border-l border-r border-gray-100 dark:border-gray-700 max-w-xl xl:w-[520px]  space-x-5  my-3 mx-3 md:mx-0">

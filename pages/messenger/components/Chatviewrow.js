@@ -115,8 +115,17 @@ function Users (props) {
       <div className='flex flex-row items-center justify-start w-full h-16 px-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md' 
        onClick={()=>{
         setChatuser(recipientId)}}>
-         <div className="relative w-12">
-                <img className="w-10 h-10 rounded-full" src={recipimg} alt=""/>
+         <div className="relative">
+                <img 
+                style={{
+                  objectFit: 'cover',
+                  objectPosition: 'center',
+                  width: '50px',
+                  height: '40px',
+                  borderRadius: '50%'
+
+                }}
+                src={recipimg} alt=""/>
                <span className={`bottom-0 left-7 absolute z-50  w-3.5 h-3.5 ${reciponline ? "bg-green-400" : "bg-red-400"} border-2 border-white dark:border-gray-800 rounded-full`}></span>
           </div>
         <div className='flex flex-col ml-3 justify-between w-full'
@@ -125,8 +134,8 @@ function Users (props) {
         }}
         >
           <div className='flex flex-row justify-between'>
-            <p className='text-lg font-semibold'>{recipname}</p>
-            <p className='text-xs text-gray-500'>{msg?.msgdate?.toDate().toLocaleTimeString()}</p>
+            <p className='text-sm font-semibold truncate'>{recipname}</p>
+            <p className='text-xs text-gray-500 truncate'>{msg?.msgdate?.toDate().toLocaleTimeString()}</p>
           </div>
           <div className='flex flex-row'>
             <p className='text-sm text-gray-500' dangerouslySetInnerHTML={{__html: lastMsg(msg)}}></p>

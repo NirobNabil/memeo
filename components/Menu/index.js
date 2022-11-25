@@ -3,7 +3,7 @@ import Submenu from "../Submenu";
 
 
 const Menu = (props) => {
-   const {profile, following, followers, follow, followingUIDs, followersUIDs, fetchFollowing, fetchFollow, fetchFollowers} = props
+   const {profile, following, followers, follow, followingUIDs, followersUIDs, fetchFollowing, fetchFollow, fetchFollowers, active} = props
 
   return (
     <div
@@ -19,6 +19,7 @@ const Menu = (props) => {
         fetchFollowing={fetchFollowing}
         fetchFollow={fetchFollow}
         fetchFollowers={fetchFollowers}
+        active={active}
         />
     </div>
   );

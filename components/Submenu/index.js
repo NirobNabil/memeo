@@ -55,7 +55,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 const Submenu1 = (props) => {
 
-	const {profile, following, followers, follow,  followingUIDs, followersUIDs,  fetchFollowing, fetchFollow, fetchFollowers } = props;
+	const {profile, following, followers, follow,  followingUIDs, followersUIDs,  fetchFollowing, fetchFollow, fetchFollowers, active } = props;
 
 
 	const [modalFollowOpen, setModalFollowOpen] = useState(false);
@@ -63,6 +63,8 @@ const Submenu1 = (props) => {
 	const [modalFollowersOpen, setModalFollowersOpen] = useState(false);
 	
 	const [followListRemove , setFollowListRemove] = useState([])
+
+	const [list, setList] = useState([]);
 
 
 	const router = useRouter();
@@ -139,19 +141,19 @@ const Submenu1 = (props) => {
 		
 	};
 
-	const followerFunction = async (id, isTrue) => {
+	const followerFunction = async (post, isTrue) => {
 			const userRef = doc(
 				db,
 				"followers",
 				user.uid,
 				"userFollowers",
-				id
+				post?.id
 			);
 			await deleteDoc(userRef);
 			const userRef2 = doc(
 				db,
 				"following",
-				id,
+				post?.id,
 				"userFollowing",
 				user.uid
 			);
@@ -320,6 +322,9 @@ const Submenu1 = (props) => {
 										from="follow"
 										isTrue={false}
 										setRemoveList={setFollowListRemove}
+										list={list} 
+										setList={setList}
+										active={active}
 										/>
 									))}
 							</InfiniteScroll>
@@ -401,6 +406,9 @@ const Submenu1 = (props) => {
 										text="Unfollow"
 										from="following"
 										isTrue={true}
+										list={list} 
+										setList={setList}
+										active={active}
 										/>
 									))}
 							</InfiniteScroll>
@@ -481,6 +489,9 @@ const Submenu1 = (props) => {
 										func={followerFunction}
 										text="Remove"
 										from="followers"
+										list={list} 
+										setList={setList}
+										active={active}
 										/>
 									))}
 							</InfiniteScroll>

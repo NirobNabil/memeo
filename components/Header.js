@@ -99,8 +99,9 @@ function Header(props) {
 
       const q = query(
         collection(db, "users"),
-        where("name", ">=", e.target.value),
-        orderBy("name"),
+        where("userName", ">=", e.target.value),
+        where("userName", "<=", e.target.value + "\uf8ff"),
+        orderBy("userName", "asc"),
         limit(5)
       );
       getDocs(q).then((querySnapshot) => {
@@ -135,7 +136,7 @@ function Header(props) {
       return 'Sent a photo'
     }
     else {
-      return msg.notifimsg
+      return msg.notifimsg.length > 23 ? msg.notifimsg.substring(0, 23) + '...' : msg.notifimsg
     }
   }
   
@@ -174,10 +175,10 @@ function Header(props) {
             </div>
             <div className="flex flex-col items-start justify-center w-full h-full">
               <div className="flex flex-row items-center justify-start w-full h-6">
-                <p className="font-semibold text-gray-900 dark:text-gray-100 first-letter:capitalize">
-                  {notif?.sender}
+                <p className="font-semibold text-gray-900 dark:text-gray-100 first-letter:capitalize truncate">
+                  {notif?.sender.length > 10 ? notif?.sender.substring(0, 10) + '...' : notif?.sender}
                 </p>
-                <p className="font-normal text-gray-500 ml-2">
+                <p className="font-normal text-gray-500 ml-2 flex flex-row items-center justify-start">
                   {determineNotiMsg(notif)}
                 </p>
               </div>
@@ -231,14 +232,20 @@ function Header(props) {
           {users?.map((user) => (
             <div
               key={user.uid}
-              className="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-[#2D333B] cursor-pointer"
+              className="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
             >
               <Link href={`/Profile?uid=${user.uid}`} passHref>
                 <Avatar src={user.photoURL} />
               </Link>
-              <Link href={`/Profile?uid=${user.uid}`} passHref>
+              <div href={`/Profile?uid=${user.uid}`} 
+              onClick={() => {
+                router.push(`/Profile?uid=${user.uid}`);
+                setShowSearch(false);
+              }}
+              className="flex flex-col items-start justify-center space-y-1">
                 <p className="text-sm">{user.name}</p>
-              </Link>
+                <p className="text-sm text-gray-500">{user.userName}</p>
+              </div>
             </div>
           ))}
         </motion.div>

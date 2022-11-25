@@ -122,7 +122,7 @@ return (
         </div>
          
         <div className="info flex flex-col">
-          <p className='username'>
+          <p className='username truncate'>
             {
             recipname?.length > 15 ?
             recipname.slice(0, 15) + '...' : recipname

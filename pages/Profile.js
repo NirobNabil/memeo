@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState, useEffect, useRef} from 'react'
+import React, { useState, useEffect, useRef, useCallback} from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import Header from '../components/Header'
@@ -65,6 +65,7 @@ export default function Profile(props) {
   const [thisUser, setThisUser] = useState(null)
   const [userMemes, setUserMemes] = useState([])
   const [isOpen, setIsOpen] = useState(false)
+  const [text, setText] = useState('')
 
 
 
@@ -106,8 +107,8 @@ export default function Profile(props) {
       querySnapshot.forEach((docx) => {
         const user = docx.data()
         setUser(docx.data())
-        setBackgroundURL(docx.data()?.backgroundURL || "https://firebasestorage.googleapis.com/v0/b/instagram-clone-2f5b9.appspot.com/o/defaults%2Fbackground.jpg?alt=media&token=7b2b0b0f-8b1f-4b1f-8f9d-1b2f2f2f2f2f")
-        setPhotoURL(docx.data()?.photoURL || "https://firebasestorage.googleapis.com/v0/b/instagram-clone-2f5b9.appspot.com/o/defaults%2Fprofile.jpg?alt=media&token=7b2b0b0f-8b1f-4b1f-8f9d-1b2f2f2f2f2f")
+        setBackgroundURL(docx.data()?.backgroundURL)
+        setPhotoURL(docx.data()?.photoURL)
         setName(docx.data()?.name || "")
         setBio(docx.data()?.bio || "")
         getDocs(collection(db, 'posts', uid, 'userPosts'), orderBy('timestamp', 'desc'), limit(10)).then((querySnapshot) => {
@@ -167,13 +168,15 @@ export default function Profile(props) {
   useEffect(() => {
     if (uid) {
       (async () => {
-        followersUIDs.slice(0, 10).map(async (uid) => {
-          await getDoc(doc(db, 'users', uid)).then((doc) => {
+        let users = []
+        followersUIDs.slice(0, 10).map(async (id) => {
+          await getDoc(doc(db, 'users', id)).then((doc) => {
             if(doc.exists()){
-              setFollowers((followers) => [...followers, {id: doc.id, ...doc.data()}])
+              users.push({id: doc.id, ...doc.data()})
             }
           })
         })
+        setFollowers(users)
       })()
     }
   }, [uid, followersUIDs])
@@ -181,38 +184,44 @@ export default function Profile(props) {
   useEffect(() => {
     if (uid) {
       (async () => {
-        followingUIDs.slice(0, 10).map(async (uid) => {
-          await getDoc(doc(db, 'users', uid)).then((doc) => {
+        let users = []
+        followingUIDs.slice(0, 10).map(async (id) => {
+          await getDoc(doc(db, 'users', id)).then((doc) => {
             if(doc.exists()){
-              setFollowing((following) => [...following, {id: doc.id, ...doc.data()}])
+              users.push({id: doc.id, ...doc.data()})
             }
           })
         })
+        setFollowing(users)
       })()
     }
   }, [uid, followingUIDs])
 
   const fetchMoreFollowers = async () => {
     if(uid && followers?.length > 0 && followersUIDs.length > followers.length){
-      followersUIDs.slice(followers.length, followers.length + 10).map(async (uid) => {
-        await getDoc(doc(db, 'users', uid)).then((doc) => {
+      let users = []
+      followersUIDs.slice(followers.length, followers.length + 10).map(async (id) => {
+        await getDoc(doc(db, 'users', id)).then((doc) => {
           if(doc.exists()){
-            setFollowers((followers) => [...followers, {id: doc.id, ...doc.data()}])
+            users.push({id: id, ...doc.data()})
           }
         })
       })
+      setFollowers([...followers, ...users])
     }
   }
 
   const fetchMoreFollowing = async () => {
     if(uid && following?.length > 0 && followingUIDs.length > following?.length){
-      followingUIDs.slice(following.length, following.length + 10).map(async (uid) => {
-        await getDoc(doc(db, 'users', uid)).then((doc) => {
+      let users = []
+      followingUIDs.slice(following.length, following.length + 10).map(async (id) => {
+        await getDoc(doc(db, 'users', id)).then((doc) => {
           if(doc.exists()){
-            setFollowing((following) => [...following, {id: doc.id, ...doc.data()}])
+            users.push({id: id, ...doc.data()})
           }
         })
       })
+      setFollowing([...following, ...users])
     }
   }
 
@@ -260,6 +269,7 @@ export default function Profile(props) {
     }
   }
 
+  
   const handleFilePhotoURL =  (e) => {
     const file = e.target.files[0]
     if(file) {
@@ -343,10 +353,10 @@ export default function Profile(props) {
 
   }
 
-  const followToggle = async (uid, isTrue) => {
-		if (!isTrue) {
+  const followToggle = async (uid) => {
+		if (text === "Follow") {
 			updateDoc(doc(db, "users", uid, "followers", uid), {
-				followers: arrayUnion(uid),
+				followers: arrayUnion(user.uid),
 			});
 
 			updateDoc(doc(db, "users", user.uid, "following", user?.uid), {
@@ -400,10 +410,21 @@ export default function Profile(props) {
 					following: arrayRemove(uid),
 				});
         setFollowersUIDs(followersUIDs.filter((item) => item !== user.uid));
-			
 		}
 		
 	};
+
+  useEffect(() => { 
+    if(followersUIDs.findIndex((item) => item === user.uid) !== -1) {
+      setText("Following")
+    }
+    else{
+      setText("Follow")
+    }
+    
+  }, [followersUIDs, user?.uid])
+
+
 
   
 
@@ -426,7 +447,7 @@ export default function Profile(props) {
       <div className="flex flex-col items-center justify-center">
         {User && (
            <img
-           src={User.backgroundURL || 'https://i.imgur.com/4hzNTTq.png'}
+           src={User.backgroundURL}
            alt="background pic"
            className="w-full h-40 object-cover cursor-pointer "
           />
@@ -434,12 +455,11 @@ export default function Profile(props) {
          <div className='flex flex-col items-center absolute top-20 bg-opacity-50 bg-white dark:bg-slate-900/50 w-full'>
               {User && (
                     <Image
-                    src={User?.photoURL || 'https://firebasestorage.googleapis.com/v0/b/memex-1.appspot.com/o/photoURL%2Fdefault.png?alt=media&token=0b0b0b0b-0b0b-0b0b-0b0b-0b0b0b0b0b0b'}
+                    src={User?.photoURL}
                     alt="profile pic"
                     width={150}
                     height={150}
                     className="rounded-full border-4 border-white cursor-pointer absolute "
-                    onClick={() => setIsOpen(true)}
                   />
                 )}
            </div>
@@ -451,36 +471,17 @@ export default function Profile(props) {
               <p className='text-gray-500 text-sm'>{User?.bio}</p>
             </div>
 
-            <div className='flex flex-row gap-10 items-center justify-center my-2'>
-              {(followersUIDs?.includes(user?.uid) || followingUIDs?.includes(user?.uid)) && (
-              <button className='flex items-center justify-center  space-x-1  bg-transparent hover:bg-gray-100 dark:hover:bg-slate-800 dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 border border-gray-300 dark:border-slate-800'
-              onClick={() => router.push(`/messenger?id=${User?.uid}`)}
-              >
-                Message
-              </button>
-              )}
-              {uid === user?.uid ? (
-               <button className='flex items-center justify-center  space-x-1  bg-transparent hover:bg-gray-100 dark:hover:bg-slate-800 dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 border border-gray-300 dark:border-slate-800'
-               onClick={() => setIsOpen(true)}
-               >
-                  Edit Profile
-                  </button>
-                  ) : (
-                  <button className='flex items-center justify-center  space-x-1  bg-transparent hover:bg-gray-100 dark:hover:bg-slate-800 dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 border border-gray-300 dark:border-slate-800'
-                  onClick={() => {
-                    if(followersUIDs.includes(user?.uid)) {
-                      followToggle(uid, true);
-                    }
-                    else {
-                      followToggle(uid, false);
-                  }
-                }}
+            <div className='flex items-center justify-center mt-4'>
+              <div className='flex flex-col items-center mr-4'>
+                  <button
+                    className='text-white  py-2 px-4 rounded-full text-sm font-semibold bg-[#1DA1F2] hover:bg-[#1DA1F2] focus:outline-none focus:ring-2 focus:ring-[#1DA1F2] focus:ring-opacity-50'
+                    onClick={() => followToggle(User.uid)}
                   >
-                      {followersUIDs.includes(user?.uid) ? 'Unfollow' : 'Follow'}
+                    {text}
                   </button>
-                )}
+              </div>
             </div>
-            
+
 
             <div className='flex flex-row gap-10 items-center justify-center my-2 '>
               <div className='flex items-center justify-center  space-x-1  bg-transparent hover:bg-gray-100  dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 '>
@@ -520,6 +521,7 @@ export default function Profile(props) {
              fetchFollowers={fetchMoreFollowers}
              followingUIDs={followingUIDs}
              followersUIDs={followersUIDs}
+             active={uid === user?.uid ? true : false}
              />
         </div>
 
@@ -582,7 +584,7 @@ export default function Profile(props) {
               />
               
                 <img
-                src={backgroundURL || 'https://images.unsplash.com/photo-1617670000000-0c0c0c0c0c0c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80'}
+                src={backgroundURL}
                 alt="background pic"
                 className="w-full h-40 object-cover cursor-pointer "
                 onClick={() =>  backgroundURLRef.current.click()}
@@ -597,7 +599,7 @@ export default function Profile(props) {
                 ref={photoURLRef}
               />
                <Image
-                src={photoURL || 'https://firebasestorage.googleapis.com/v0/b/memex-1.appspot.com/o/photoURL%2Fdefault.png?alt=media&token=0b0b0b0b-0b0b-0b0b-0b0b-0b0b0b0b0b0b'}
+                src={photoURL}
                 alt="profile pic"
                 width={150}
                 height={150}
@@ -639,6 +641,7 @@ export default function Profile(props) {
           <div className="modal-action">
             <a href="#" className="btn  btn-sm bg-slate-600/50 dark:bg-slate-800 text-white"
             disabled={loading}
+            onClick={() => setIsOpen(false)}
             >
               {loading ? 'Loading...' : 'Close'}
             </a>

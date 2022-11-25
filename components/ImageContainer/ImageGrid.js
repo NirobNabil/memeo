@@ -31,7 +31,6 @@ export default function ImageGrid(props) {
     const [selectedImage, setSelectedImage] = useState(null);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [images, setImages] = useState([]);
     const [error, setError] = useState(null);
 
    

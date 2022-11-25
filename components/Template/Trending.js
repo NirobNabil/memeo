@@ -50,7 +50,24 @@ import {
 } from "firebase/storage";
 
 import { useSelector } from "react-redux";
-import { moment } from "moment";
+import GridList from "@material-ui/core/GridList";
+import { ImageList } from "@material-ui/core";
+import ImageListItem from "@material-ui/core/ImageListItem";
+import ImageListItemBar from "@material-ui/core/ImageListItemBar";
+
+import Grid from "@material-ui/core/Grid";
+import GridListTile from "@material-ui/core/GridListTile";
+import GridListTileBar from "@material-ui/core/GridListTileBar";
+import IconButton from "@material-ui/core/IconButton";
+import InfoIcon from "@material-ui/icons/Info";
+import SaveIcon from "@material-ui/icons/SaveAlt";
+import Dialog from "@material-ui/core/Dialog";
+import CloseIcon from "@material-ui/icons/Close";
+import Typography from "@material-ui/core/Typography";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import ListSubheader from '@material-ui/core/ListSubheader';
+import InfiniteScroll from "react-infinite-scroll-component";
+
 
 const Trending = ({ data}) => {
 	const [openDownloadMOdal, setOpenDownloadModal] = useState(false);
@@ -58,6 +75,12 @@ const Trending = ({ data}) => {
 	const [openDeleteModal, setOpenDeleteModal] = useState(false);
 	const [openApproveDeleteModal, setOpenApproveDeleteModal] = useState(false);
 	const [openAdModal, setOpenAdModal] = useState(false);
+	const [selectedFile, setSelectedFile] = useState(null);
+	const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+	const [open, setOpen] = useState(false);
+
+	
 
 	const user = useSelector((state) => state.data.currentUser);
 
@@ -90,6 +113,15 @@ const Trending = ({ data}) => {
 		document.body.removeChild(a);
 	};
 
+	const handleOpen = () => {
+        setSelectedFile(data);
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
 	
 
 	const deleteTemplate = async () => {
@@ -116,7 +148,9 @@ const Trending = ({ data}) => {
 
 	return (
 		<>
-        <div className="flex flex-col">
+        <div className="flex flex-col"
+		onClick={handleOpen}
+		>
 			<div className='bg-white dark:bg-slate-800 h-[250px] shadow-md rounded-lg overflow-hidden relative group transition-all duration-300'>
                 {data?.type === "image" ? (
                  <Image
@@ -389,7 +423,32 @@ const Trending = ({ data}) => {
 
 
 				
-					
+			<Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                style={{ 
+                    padding: "0px 0px 0px 0px",
+                    margin: "0px 0px 0px 0px",
+                }}
+            >
+                <CloseIcon className="close" onClick={handleClose} />
+                {selectedFile?.type === "image" ? (
+                <img src={selectedFile.memeURL} alt="" className="dialogImage" />
+                ) : (
+                <video
+                    src={selectedFile?.memeURL}
+                    className="dialogImage"
+                    autoPlay
+                    loop
+                    muted
+                    controls
+                />
+                )}
+            </Dialog>
+            {loading && <LinearProgress />}
+            {error && <Typography variant="h6" color="error">{error}</Typography>}
 					
 
 							

@@ -9,10 +9,6 @@ import thunk from 'redux-thunk';
 
 import rootReducer from '../redux/reducers/index';
 import "filepond/dist/filepond.min.css";
-import "video.js/dist/video-js.css";
-
-
-
 
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'

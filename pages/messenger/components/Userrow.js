@@ -54,7 +54,7 @@ function Userrow (props) {
           dataLength={convos?.length || 0}
           next={fetchMore}
           hasMore={true}
-          loader={<h1>Loading ...</h1>}
+          // loader={<h1>Loading ...</h1>}
           endMessage={
             <p style={{ textAlign: "center" }}>
               <b>Yay! You have seen it all</b>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState} from 'react'
 import Trending from './Template/Trending'
 
 import TemplateSekeleton from './Skeleton/TemplateSekeleton'
@@ -6,16 +6,25 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 
 
 export default function TemplateItem({ memes, fetchMoreMemes, loading, from}) {
+	const [hasMore, setHasMore] = useState(true)
+	const [loadingMore, setLoadingMore] = useState(false)
+
   return (
           <InfiniteScroll
 						dataLength={memes.length}
 						next={fetchMoreMemes}
-						hasMore={true}
-						loader={
-							<div className='flex justify-center items-center'>
-								<span className='text-sm'>Loading...</span>
-							</div>
-				     	}
+						hasMore={hasMore}
+						loader={() => {
+							setLoadingMore(true)
+							setTimeout(() => {
+								setLoadingMore(false)
+							}, 10000)
+							return (
+								<div className="flex justify-center items-center">
+									{loadingMore && <TemplateSekeleton />}
+								</div>
+							)
+						}}
 						endMessage={
 							<p style={{ textAlign: "center" }}>
 								<b>Yay! You have seen it all</b>
@@ -27,7 +36,7 @@ export default function TemplateItem({ memes, fetchMoreMemes, loading, from}) {
 						<div style={{ display: "grid" }} className='grid-cols-3 gap-8'>
 							{memes?.map((template) => 
 			                 <Trending key={template.id} data={template} />)}
-						  {loading && [1, 2, 3, 4].map((item) =>  <TemplateSekeleton key={item} from={from} />)}
+						      {loading && <TemplateSekeleton  from={from} />}
 						</div>
 					 </div>
 			</InfiniteScroll>

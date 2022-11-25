@@ -1,12 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import { useRouter } from 'next/router'
 
-export default function ProfileCard({post, func, text, from, isTrue, setRemoveList}) {
+export default function ProfileCard({post, func, text, from, isTrue, setRemoveList, list, setList, active}) {
 
     const router = useRouter()
     const [buttonBlock, setButtonBlock] = useState(false);
+    const [buttonText, setButtonText] = useState("");
+
+    useEffect(() => {
+        if(list.includes(post.id)){
+            setButtonBlock(true)
+        }
+    }, [list])
+
+    useEffect(() => {
+        if(from === "follow"){
+            setButtonText("Remove")
+        }else {
+            setButtonText("Message")
+        }
+    }, [from])
 
 
 
@@ -28,6 +43,7 @@ export default function ProfileCard({post, func, text, from, isTrue, setRemoveLi
                         {post?.userName}
                     </p>
                 </div>
+                {active && (
                 <div className="flex  space-x-3">
                     <a href="#" className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700"
                     onClick={() => {
@@ -38,17 +54,13 @@ export default function ProfileCard({post, func, text, from, isTrue, setRemoveLi
                             router.push(`/messenger/components/Body?uid=${post.uid}`);
                         }
                     }}>
-                    
-                        {from === "follow" ? (
-                            "Remove"
-                        ) : (
-                            "message"
-                        )}
+                    {buttonText}
                     </a>
-                    <a href="#" className={`inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ${buttonBlock && "cursor-not-allowed"}`}
+                    <a href="#" className={`inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white rounded-lg  focus:ring-4 focus:outline-none focus:ring-gray-200 dark:text-white dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700 ${buttonBlock ? "bg-gray-400" : "bg-blue-500"} text-gray-900`}
                     onClick={() => {
                         setButtonBlock(true);
                         func(post, isTrue);
+                        setList((prev) => [...prev, post.id]);
                     }}
                     disabled={buttonBlock}
                     style={{
@@ -58,6 +70,7 @@ export default function ProfileCard({post, func, text, from, isTrue, setRemoveLi
                     }}
                     >{text}</a>
                 </div>
+                )}
             </div>
         </li>
      )

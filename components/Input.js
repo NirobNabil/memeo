@@ -298,7 +298,8 @@ function Input() {
                     <p className="text-sm font-semibold dark:text-white/75 cursor-pointer hover:text-blue-500"
                     onClick={() => filePickerRef.current.click()}
                     >
-                       <svg ariaHidden="true" className="w-6 h-6 cursor-pointer" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd"></path></svg>
+                       <svg aria-hidden="true" className="w-6 h-6 cursor-pointer text-[#ff2d55] transition duration-150 transform hover:scale-110" 
+                       fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd"></path></svg>
                     </p>
                   
                    
@@ -306,7 +307,7 @@ function Input() {
                   <div className="flex items-center space-x-2">
                     
                     <EmojiHappyIcon
-                      className="h-6 w-6 text-gray-500 dark:text-white/75 cursor-pointer hover:text-blue-500"
+                      className="h-6 w-6 cursor-pointer transition duration-150 transform hover:scale-110 text-[#ff2d55]"
                       onClick={() => setShowEmojis(!showEmojis)}
                       />
                     
@@ -317,7 +318,7 @@ function Input() {
                 <button
                    disabled={!input && !selectedFile}
                    onClick={sendPost}
-                    className={`bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg ${
+                    className={`bg-[#ff4522] text-white font-semibold px-4 py-2 rounded-lg ${
                       !input && !selectedFile && "opacity-50"
                     }`}
 

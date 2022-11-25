@@ -53,8 +53,8 @@ import { HeartIcon as HeartIconSolid } from "@heroicons/react/solid";
 import { ChatAltIcon } from "@heroicons/react/outline";
 import { v4 as uuidv4 } from 'uuid';
 import Modal from "react-modal";
-import Iframe from "react-iframe";
 import Video from './Video'
+
 
 
 function Post({ post, active, modalPost,  setRemoveList,  len }) {
@@ -574,7 +574,11 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
             </p>
             <p   className="text-sm dark:text-white/50 hover:text-blue-500 hover:underline cursor-pointer"
              onClick={() => {
-              router.push(`/posts?id=${post.id}`);
+              setModalIsOpen(true);
+              setModalTitle("Comments");
+              getDocs(collection(db, "posts", post.id, "comments"), orderBy("timestamp", "desc"), limit(commentlen)).then((snapshot) => {
+                setModalUsers(snapshot.docs.map((doc) => ({id: doc.id, ...doc.data(), ...doc.data().user})));
+              });
             }}
             >
               {post?.comments > 0 ? `${minimizeCountLength(post?.comments)} comments •` : null}
@@ -624,21 +628,14 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
             }}
             }
           >
-        
-        <label className="swap swap-flip text-9xl">
-          <input type="checkbox" 
-           checked={liked}
-           onChange={() => {}}
-          />
-           <img src={HaHa.src} width={28} height={28} 
-              className="cursor-pointer object-contain swap-on" />
+            {liked ? (
+             <i className="fas fa-laugh-squint text-2xl text-[#ff4d4d]"></i>
+            ) : (
+              <i className="fas fa-laugh-beam text-2xl"></i>
+            )}
             
-          <img src={HahaInactive.src} width={28} height={28} 
-              className="cursor-pointer object-contain swap-ff" />
-              
-        </label>
-
-            <h4>HaHa</h4>
+            <p className="text-sm font-medium">HaHa</p>
+            
         </button>
 
         <button className="postButton" onClick={() => {
@@ -674,7 +671,11 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
       <div className="flex items-center space-x-2 p-2.5 cursor-pointer">
         <span className="flex items-center space-x-2"
         onClick={() => {
-          setCommentlen(post?.comments);
+          if(commentlen + 3 < post?.comments){
+            setCommentlen(commentlen + 3);
+          }else{
+            setCommentlen(post?.comments);
+          }
         }}
         >
           see all {post?.comments} comments
@@ -759,10 +760,11 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
                       Delete
                     </p>
                   )}
-                  <p className="text-xs dark:text-white/50 cursor-pointer hover:underline  bg-gray-200 dark:bg-gray-700 rounded-full px-1.5 py-0.5 ml-auto mr-2 mt-2">
-                       {comment?.likes?.length > 0 && <i className="fas fa-heart text-red-600"></i>}
-                       {comment?.likes?.length > 0 ? ` ${minimizeCountLength(comment?.likes?.length)}` : null}
-                  </p>
+                  <div className="text-xs dark:text-white/50 cursor-pointer hover:underline  bg-gray-200 dark:bg-gray-700 rounded-full  ml-auto mr-2 mt-1 relative">
+                      <span className="text-xs dark:text-white/50 cursor-pointer hover:underline absolute top-2.5 right-0 rounded-full h-2 w-2 flex items-center justify-center text-gray-600">
+                        {comment?.likes?.length > 0 && <><i className="fas fa-heart text-red-600 mx-0.5"></i>  {minimizeCountLength(comment?.likes?.length)} </>}
+                      </span>
+                  </div>
                 </div>
                 {comment.comments?.sort((a, b) => b.timestamp - a.timestamp).slice(0, len).map((reply) => (
                   <div key={reply.id} className="flex mt-2 space-x-2 flex-row ">
@@ -813,10 +815,12 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
                           Delete
                         </p>
                       )}
-                        <p className=" text-xs dark:text-white/50 cursor-pointer hover:underline  bg-gray-200 dark:bg-gray-700 rounded-full px-1.5 py-0.5 ml-auto mr-2 mt-2">
-                          {reply?.likes?.length > 0 && <i className="fas fa-heart text-red-600"></i>}
-                          {reply?.likes?.length > 0 ? ` ${minimizeCountLength(reply?.likes?.length)}` : null}
-                      </p>
+                        <div className="text-xs dark:text-white/50 cursor-pointer hover:underline  bg-gray-200 dark:bg-gray-700 rounded-full  ml-auto mr-2 mt-1 relative">
+                          <span className="text-xs dark:text-white/50 cursor-pointer hover:underline absolute top-2.5 right-0 rounded-full h-2 w-2 flex items-center justify-center text-gray-600">
+                              {reply?.likes?.length > 0 && <><i className="fas fa-heart text-red-600 mx-0.5"></i>  {minimizeCountLength(reply?.likes?.length)} </>}
+                          </span>
+                       </div>
+
                       </div>
                     </div>
                 </div>
@@ -1038,46 +1042,11 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <div className="flex items-center space-x-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6 text-gray-500 dark:text-white/75"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                      />
-                    </svg>
-                    <p className="text-sm font-semibold dark:text-white/75">
-                      Photo/Video
-                    </p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6 text-gray-500 dark:text-white/75"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                      />
-                    </svg>
-                    <p className="text-sm font-semibold dark:text-white/75">
-                      Tag Friends
-                    </p>
+                    
                   </div>
                 </div>
                 <button
-                  className="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg"
+                  className="text-white font-semibold px-4 py-2 rounded-lg bg-[#ff4d4d] hover:bg-[#ff3333] focus:outline-none"
                   onClick={sharePost}
                 >
                   Share
