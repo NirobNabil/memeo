@@ -3,50 +3,50 @@ import React, { useEffect, useState } from "react";
 import { BsDownload } from "react-icons/bs";
 import { FaTimes } from "react-icons/fa";
 import { FcApproval, FcDisapprove } from "react-icons/fc";
-import { MdDeleteOutline } from "react-icons/md"
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
+import { MdDeleteOutline } from "react-icons/md";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 
 import { db, auth, storage } from "../../firebase";
 import Modal from "react-modal";
 
-import { 
-collection,
-addDoc,
-doc,
-setDoc,
-getFirestore,
-arrayUnion,
-getDoc,
-query,
-where,
-getDocs,
-updateDoc,
-arrayRemove,
-deleteDoc,
-serverTimestamp,
-onSnapshot,
-orderBy,
-limit,
-startAfter,
-endBefore,
-startAt,
-endAt,
-increment,
-decrement,
-runTransaction,
-writeBatch,
-getDocFromCache,
-} from 'firebase/firestore';
-	
+import {
+	collection,
+	addDoc,
+	doc,
+	setDoc,
+	getFirestore,
+	arrayUnion,
+	getDoc,
+	query,
+	where,
+	getDocs,
+	updateDoc,
+	arrayRemove,
+	deleteDoc,
+	serverTimestamp,
+	onSnapshot,
+	orderBy,
+	limit,
+	startAfter,
+	endBefore,
+	startAt,
+	endAt,
+	increment,
+	decrement,
+	runTransaction,
+	writeBatch,
+	getDocFromCache,
+} from "firebase/firestore";
+
 import {
 	ref,
 	getDownloadURL,
 	uploadBytesResumable,
 	getStorage,
-	uploadBytes
+	uploadBytes,
 } from "firebase/storage";
 
 import { useSelector } from "react-redux";
@@ -65,11 +65,10 @@ import Dialog from "@material-ui/core/Dialog";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import ListSubheader from '@material-ui/core/ListSubheader';
+import ListSubheader from "@material-ui/core/ListSubheader";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-
-const Trending = ({ data}) => {
+const Trending = ({ data }) => {
 	const [openDownloadMOdal, setOpenDownloadModal] = useState(false);
 	const [downloadUrl, setDownloadUrl] = useState("");
 	const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -77,16 +76,13 @@ const Trending = ({ data}) => {
 	const [openAdModal, setOpenAdModal] = useState(false);
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+	const [error, setError] = useState(null);
 	const [open, setOpen] = useState(false);
-
-	
 
 	const user = useSelector((state) => state.data.currentUser);
 
-    const { theme } = useTheme();
-    const [chiplen, setChipLen] = useState(3);
-
+	const { theme } = useTheme();
+	const [chiplen, setChipLen] = useState(3);
 
 	useEffect(() => {
 		if (window.innerWidth < 768) {
@@ -105,7 +101,7 @@ const Trending = ({ data}) => {
 		const storageRef = ref(storage, data.memeURL);
 		const downloadUrl = await getDownloadURL(storageRef);
 		const a = document.createElement("a");
-		a.href = downloadUrl 
+		a.href = downloadUrl;
 		a.target = "_blank";
 		a.download = data.memeURL;
 		document.body.appendChild(a);
@@ -114,15 +110,13 @@ const Trending = ({ data}) => {
 	};
 
 	const handleOpen = () => {
-        setSelectedFile(data);
-        setOpen(true);
-    }
+		setSelectedFile(data);
+		setOpen(true);
+	};
 
-    const handleClose = () => {
-        setOpen(false);
-    }
-
-	
+	const handleClose = () => {
+		setOpen(false);
+	};
 
 	const deleteTemplate = async () => {
 		getDoc(doc(db, "memes", data.memeId)).then((Doc) => {
@@ -132,123 +126,165 @@ const Trending = ({ data}) => {
 					deletedAt: serverTimestamp(),
 				}).then(() => {
 					deleteDoc(doc(db, "memes", data.memeId)).then(() => {
-						deleteDoc(doc(db, "memes", user.uid, "userMemes", data.id)).then(() => {
-							setOpenApproveDeleteModal(false);
-						});
+						deleteDoc(doc(db, "memes", user.uid, "userMemes", data.id)).then(
+							() => {
+								setOpenApproveDeleteModal(false);
+							}
+						);
 					});
 				});
 			}
 		});
-		
 	};
-
-
-
-
 
 	return (
 		<>
-        <div className="flex flex-col"
-		onClick={handleOpen}
-		>
-			<div className='bg-white dark:bg-slate-800 h-[250px] shadow-md rounded-lg overflow-hidden relative group transition-all duration-300'>
-                {data?.type === "image" ? (
-                 <Image
-                    src={data.memeURL}
-                    alt={data.name}
-                    layout='fill'
-                    objectFit='cover'
-                    className='rounded-lg'
-                />
-                ) : (
-                    <video
-                     src={data.memeURL}
-                     alt={data.name}
-                     layout='fill'
-                     className='rounded-lg h-full w-full'
-                     autoPlay
-                     loop
-                     muted
-                     security="restricted"
-                     style={{ objectFit: "cover" }}
-                 />
-                )}
+			<div className='flex flex-col' onClick={handleOpen}>
+				<div className='bg-white dark:bg-slate-800 h-[250px] shadow-md rounded-lg overflow-hidden relative group transition-all duration-300'>
+					{data?.type === "image" ? (
+						<Image
+							src={data.memeURL}
+							alt={data.name}
+							layout='fill'
+							objectFit='cover'
+							className='rounded-lg'
+						/>
+					) : (
+						<video
+							src={data.memeURL}
+							alt={data.name}
+							layout='fill'
+							className='rounded-lg h-full w-full'
+							autoPlay
+							loop
+							muted
+							security='restricted'
+							style={{ objectFit: "cover" }}
+						/>
+					)}
 
-					<p className="text-white text-sm text-center absolute bottom-2 left-1/2 transform -translate-x-1/2 overflow-hidden whitespace-nowrap overflow-ellipsis">
+					<p className='text-white text-sm text-center absolute bottom-0 left-0 w-full overflow-hidden whitespace-nowrap py-[14px] px-2 bg-gradient-to-t from-black/80 to-black/10'>
 						{data.name}
 					</p>
-						
 
-				<div className='template-upper-btns absolute left-0 top-0 w-full bg-transparent py-3 px-5 transition-all duration-300'>
-					<div className='w-full flex justify-between'>
-						<div className='varified_badge cursor-pointer'>
-							{!data?.user?.uid && !data?.verified ? (
-								<FcApproval className='text-2xl' />
-							) : (
-								// <FcDisapprove className='text-2xl' />
-								null
-							)}
-						</div>
-						{/* <div className='delete_icon cursor-pointer'>
+					<div className='template-upper-btns absolute left-0 top-0 w-full bg-transparent py-3 px-5 transition-all duration-300'>
+						<div className='w-full flex justify-between'>
+							<div className='varified_badge cursor-pointer'>
+								{!data?.user?.uid && !data?.verified ? (
+									<FcApproval className='text-2xl' />
+								) : // <FcDisapprove className='text-2xl' />
+								null}
+							</div>
+							{/* <div className='delete_icon cursor-pointer'>
 							<MdDeleteOutline className='text-2xl' />
 						</div> */}
-					</div>
-				</div>
-
-				{/* template-buttons lower */}
-				{!data?.user?.uid ? (
-					<div className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-3 px-5 transition-all duration-300'
-					     onClick={() => setOpenDeleteModal(true)}>
-				    	<div className='flex justify-end'>
-				     	    <MdDeleteOutline className='text-2xl' />
-				    	</div>
-			    	</div>
-				) : (
-					<div
-						className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-3 px-5 transition-all duration-300'
-						onClick={() => setOpenDownloadModal(true)}>
-						{/* download icon  */}
-						<div className='flex justify-end'>
-							<BsDownload className='text-2xl' />
 						</div>
 					</div>
-				)}
+
+					{/* template-buttons lower */}
+					{!data?.user?.uid ? (
+						<div
+							className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-3 px-5 transition-all duration-300'
+							onClick={() => setOpenDeleteModal(true)}>
+							<div className='flex justify-end'>
+								<MdDeleteOutline className='text-2xl' />
+							</div>
+						</div>
+					) : (
+						<div
+							className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-3 px-5 transition-all duration-300'
+							onClick={() => setOpenDownloadModal(true)}>
+							{/* download icon  */}
+							<div className='flex justify-end'>
+								<BsDownload className='text-2xl' />
+							</div>
+						</div>
+					)}
+				</div>
+				<div className='flex justify-between items-center mt-2'>
+					<Stack direction='column' spacing={1}>
+						<Stack direction='row' spacing={1} flexWrap='wrap'>
+							{data?.tags?.slice(0, chiplen).map((tag, index) => (
+								<Chip
+									key={index}
+									label={tag}
+									style={
+										theme === "dark"
+											? {
+													color: "#fff",
+													backgroundColor: "#1f2937",
+													margin: "0 5px 5px 0",
+											  }
+											: {
+													color: "#000",
+													backgroundColor: "#fff",
+													margin: "0 5px 5px 0",
+											  }
+									}
+								/>
+							))}
+							{data?.tags?.length > chiplen && (
+								<Chip
+									label={`+${data?.tags?.length - chiplen}`}
+									style={
+										theme === "dark"
+											? {
+													color: "#fff",
+													backgroundColor: "#1f2937",
+													margin: "0 5px 5px 0",
+											  }
+											: {
+													color: "#000",
+													backgroundColor: "#fff",
+													margin: "0 5px 5px 0",
+											  }
+									}
+									onClick={() => setChipLen(data?.tags?.length)}
+								/>
+							)}
+							{data?.tags?.length === 0 && (
+								<Chip
+									label='No tags'
+									style={
+										theme === "dark"
+											? {
+													color: "#fff",
+													backgroundColor: "#1f2937",
+													margin: "0 5px 5px 0",
+											  }
+											: {
+													color: "#000",
+													backgroundColor: "#fff",
+													margin: "0 5px 5px 0",
+											  }
+									}
+								/>
+							)}
+							{data?.tags?.length === chiplen && (
+								<Chip
+									label='Hide'
+									variant='outlined'
+									style={
+										theme === "dark"
+											? {
+													color: "#fff",
+													backgroundColor: "#",
+													margin: "0 5px 5px 0",
+											  }
+											: {
+													color: "#000",
+													backgroundColor: "#fff",
+													margin: "0 5px 5px 0",
+											  }
+									}
+									onClick={() => setChipLen(3)}
+								/>
+							)}
+						</Stack>
+					</Stack>
+				</div>
 			</div>
-            <div className='flex justify-between items-center mt-2'>
-                <Stack direction="column" spacing={1}>
-                    <Stack direction="row" spacing={1} flexWrap="wrap" 
-                    >
-                        {data?.tags?.slice(0, chiplen).map((tag, index) => <Chip key={index} label={tag}
-                        style={
-                            theme === "dark"
-                                ? { color: "#fff", backgroundColor: "#1f2937", margin: "0 5px 5px 0" }
-                                : { color: "#000", backgroundColor: "#fff", margin: "0 5px 5px 0" }
-                        } />)}
-                        {data?.tags?.length > chiplen && <Chip label={`+${data?.tags?.length - chiplen}`} style={
-                            theme === "dark"
-                                ? { color: "#fff", backgroundColor: "#1f2937", margin: "0 5px 5px 0" }
-                                : { color: "#000", backgroundColor: "#fff", margin: "0 5px 5px 0" }
-                        } onClick={() => setChipLen(data?.tags?.length)} />}
-                      {data?.tags?.length === 0 && <Chip label="No tags" style={
-                            theme === "dark"
-                                ? { color: "#fff", backgroundColor: "#1f2937", margin: "0 5px 5px 0" }
-                                : { color: "#000", backgroundColor: "#fff", margin: "0 5px 5px 0" }
-                        } />}
-                        {data?.tags?.length === chiplen && <Chip label="Hide"
-                          variant="outlined"
-                         style={
-                            theme === "dark"
-                                ? { color: "#fff", backgroundColor: "#", margin: "0 5px 5px 0" }
-                                : { color: "#000", backgroundColor: "#fff", margin: "0 5px 5px 0" }
-                        } onClick={() => setChipLen(3)} />}
 
-                      
-
-                    </Stack>
-                </Stack>
-            </div>
-        </div>
-             
 			{/* ----------- */}
 			{/* modal  */}
 			{/* -------------- */}
@@ -267,17 +303,18 @@ const Trending = ({ data}) => {
 						id='download_modal'>
 						<p className='text-center cursor-pointer'>
 							Watch Ad for download{" "}
-							<BsDownload className='text-2xl ml-2 inline font-medium' 
-							onClick={() => {
-								setOpenDownloadModal(false);
-								// setOpenAdModal(true);
-								handleDownload();
-							}} />
+							<BsDownload
+								className='text-2xl ml-2 inline font-medium'
+								onClick={() => {
+									setOpenDownloadModal(false);
+									// setOpenAdModal(true);
+									handleDownload();
+								}}
+							/>
 						</p>
 					</div>
 				</div>
 			</div>
-
 
 			<Modal
 				isOpen={openDeleteModal}
@@ -364,7 +401,8 @@ const Trending = ({ data}) => {
 						className={`bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-400 px-5 py-5 shadow rounded-2xl border border-[#ff4522] w-full`}
 						id='download_modal'>
 						<p className='text-center cursor-pointer'>
-						  	This template is in queue for 30 days. After 30 days, it will be deleted automatically.
+							This template is in queue for 30 days. After 30 days, it will be
+							deleted automatically.
 						</p>
 						<div className='flex justify-center mt-5'>
 							<button
@@ -378,7 +416,6 @@ const Trending = ({ data}) => {
 					</div>
 				</div>
 			</Modal>
-
 
 			<Modal
 				isOpen={openAdModal}
@@ -408,52 +445,48 @@ const Trending = ({ data}) => {
 						src={data?.memeURL}
 						autoPlay
 						// controls
-						style={{ 
+						style={{
 							width: "100%",
 							height: "100%",
 						}}
-						
-						/>
-					<button className='bg-transparent absolute bottom-0 left-0 right-0 mx-auto mb-5 text-white text-2xl' onClick={() => setOpenAdModal(false)}>
+					/>
+					<button
+						className='bg-transparent absolute bottom-0 left-0 right-0 mx-auto mb-5 text-white text-2xl'
+						onClick={() => setOpenAdModal(false)}>
 						Skip Ad
 					</button>
-
 				</div>
 			</Modal>
 
-
-				
 			<Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-                style={{ 
-                    padding: "0px 0px 0px 0px",
-                    margin: "0px 0px 0px 0px",
-                }}
-            >
-                <CloseIcon className="close" onClick={handleClose} />
-                {selectedFile?.type === "image" ? (
-                <img src={selectedFile.memeURL} alt="" className="dialogImage" />
-                ) : (
-                <video
-                    src={selectedFile?.memeURL}
-                    className="dialogImage"
-                    autoPlay
-                    loop
-                    muted
-                    controls
-                />
-                )}
-            </Dialog>
-            {loading && <LinearProgress />}
-            {error && <Typography variant="h6" color="error">{error}</Typography>}
-					
-
-							
-
-
+				open={open}
+				onClose={handleClose}
+				aria-labelledby='alert-dialog-title'
+				aria-describedby='alert-dialog-description'
+				style={{
+					padding: "0px 0px 0px 0px",
+					margin: "0px 0px 0px 0px",
+				}}>
+				<CloseIcon className='close' onClick={handleClose} />
+				{selectedFile?.type === "image" ? (
+					<img src={selectedFile.memeURL} alt='' className='dialogImage' />
+				) : (
+					<video
+						src={selectedFile?.memeURL}
+						className='dialogImage'
+						autoPlay
+						loop
+						muted
+						controls
+					/>
+				)}
+			</Dialog>
+			{loading && <LinearProgress />}
+			{error && (
+				<Typography variant='h6' color='error'>
+					{error}
+				</Typography>
+			)}
 		</>
 	);
 };
