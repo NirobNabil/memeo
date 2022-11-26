@@ -137,6 +137,16 @@ function Home(props) {
     }
   },[])  
 
+  useEffect(() => {
+    // set local storage tab value
+    if(localStorage.getItem('tab')) {
+      setTab(localStorage.getItem('tab'))
+    }
+    else {
+      setTab('home')
+    }
+  }, [])
+
   
 
   useEffect(() => {

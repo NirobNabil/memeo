@@ -100,7 +100,6 @@ function  MemeGenerator(props) {
                 content: {
                     backgroundColor: "rgba(0, 0, 0, 0.5)",
                     border: "none",
-                    borderRadius: "0.5rem",
                     padding: "0",
                     top: "50%",
                     left: "50%",
@@ -108,12 +107,13 @@ function  MemeGenerator(props) {
                     bottom: "auto",
                     marginRight: "-50%",
                     transform: "translate(-50%, -50%)",
-                    width : "70%",
+                    width : "60%",
+                    height : "60%",
                 },
 
             }}
         >
-            <div className='w-full h-full bg-white dark:bg-slate-800 rounded-2xl'>
+            <div className='w-full h-full rounded-2xl'>
                 <div className='p-10'>
                     <div className='flex justify-between items-center'>
                         <h1 className='text-2xl font-bold dark:text-gray-400'>

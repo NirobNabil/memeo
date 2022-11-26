@@ -16,7 +16,15 @@ import {
 import ChipInput from "material-ui-chip-input";
 
 import { db, auth, storage } from "../../firebase";
-
+import {
+	Sort,
+	Filter,
+	FilterList,
+	FilterListOutlined,
+	FilterListRounded,
+	TrendingUp,
+	Star
+} from "@mui/icons-material";
 
 import {
     collection,
@@ -114,17 +122,7 @@ const TemplateMenu1 = (props) => {
 						<div className='card-content-inner'>
 							{/* search box  */}
 							<div className='search-box flex flex-row items-center rounded-xl gap-5 py-2 px-5 bg-gray-100 dark:bg-slate-900 mb-4'>
-								<label htmlFor='search-meme' className=''>
-									{/* <HiSearch className='dark:text-gray-400' /> */}
-									<Chip  className='bg-gray-100 dark:bg-slate-900 text-black dark:text-white text-xs' icon={showTag ? <Search /> : <Tag />}
-									 onClick={() => {
-										setShowTag(!showTag);
-										setSearch("");
-										setSearchTags([]);
-									 }} />
- 
-
-								</label>
+								
 							  {!showTag ? (
 								<>
 									<input
@@ -142,8 +140,14 @@ const TemplateMenu1 = (props) => {
 
 								  <ChipInput
 								    placeholder="Search Tags"
-									className='bg-transparent w-full outline-none text-black dark:text-white flex-grow flex-shrink 
-									 placeholder-black dark:placeholder-white inline-block'
+									className='bg-transparent w-full outline-none  dark:text-white flex-grow flex-shrink 
+									 inline-block'
+									style={{
+										fontSize: "1.1rem",
+										fontWeight: "500",
+										color: theme === "dark" ? "white" : "black",
+
+									}}
 									value={searchTags}
 									onAdd={(chip) => handleAddChip(chip)}
 									onDelete={(chip, index) => {
@@ -155,6 +159,63 @@ const TemplateMenu1 = (props) => {
 								</>
 							  )}
 							</div>
+							<Chip  className='bg-gray-100 dark:bg-slate-900 text-black dark:text-white text-xs mb-2' icon={showTag ? <Search /> : <Tag />}
+							   label={!showTag ? "Search by Tags" : "Search by Text"}
+						    	onClick={() => {
+									setShowTag(!showTag);
+									setSearch("");
+									setSearchTags([]);
+							}} />
+							<p className='text-gray-500 dark:text-gray-400 text-xs mb-2'>
+								{!showTag ? "Search Meme by Tags" : "Search Meme by Name"}
+							</p>
+							{/* <div className='flex flex-row items-center justify-between'>
+								<div className='flex flex-row items-center gap-2'>
+									<Chip
+										className='bg-gray-100 dark:bg-slate-900 text-black dark:text-white text-xs mb-2'
+										icon={<Tag />}
+										label='Tags'
+										onClick={() => {
+											setActiveTab("tags");
+										}}
+									/>
+									<Chip
+										className='bg-gray-100 dark:bg-slate-900 text-black dark:text-white text-xs mb-2'
+										icon={<TrendingUp />}
+										label='Trending'
+										onClick={() => {
+											setActiveTab("trending");
+										}}
+									/>
+									<Chip
+										className='bg-gray-100 dark:bg-slate-900 text-black dark:text-white text-xs mb-2'
+										icon={<Star />}
+										label='Top'
+										onClick={() => {
+											setActiveTab("top");
+										}}
+									/>
+								</div>
+								<div className='flex flex-row items-center gap-2'>
+									<Chip
+										className='bg-gray-100 dark:bg-slate-900 text-black dark:text-white text-xs mb-2'
+										icon={<Filter />}
+										label='Filter'
+										onClick={() => {
+											setShowFilter(!showFilter);
+										}}
+									/>
+									<Chip
+										className='bg-gray-100 dark:bg-slate-900 text-black dark:text-white text-xs mb-2'
+										icon={<Sort />}
+										label='Sort'
+										onClick={() => {
+											setShowSort(!showSort);
+										}}
+									/>
+								</div>
+							</div> */}
+							
 							{showTag && (
 							<Stack direction="column" spacing={1}>
 								<Stack direction="row" spacing={1} flexWrap="wrap" 

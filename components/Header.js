@@ -99,8 +99,8 @@ function Header(props) {
 
       const q = query(
         collection(db, "users"),
-        where("userName", ">=", e.target.value),
-        where("userName", "<=", e.target.value + "\uf8ff"),
+        where("userName", ">=", e.target.value.toUpperCase()),
+        where("userName", "<=", e.target.value.toUpperCase() + "\uf8ff"),
         orderBy("userName", "asc"),
         limit(5)
       );
@@ -260,6 +260,7 @@ function Header(props) {
         active={tab === "home"} 
         handle={() => {
           setTab('home');
+          localStorage.setItem('tab', 'home');
           router.push('/');
           window.scrollTo(0, 0);
           if (window.scrollY > 0) {
@@ -274,6 +275,7 @@ function Header(props) {
         active={tab === "watch"}
         handle={() => {
           setTab("watch")
+          localStorage.setItem('tab', 'watch');
         }}
         />
        
@@ -284,6 +286,7 @@ function Header(props) {
          active={tab === "templates"}
          handle={() => {
           setTab("templates")
+          localStorage.setItem('tab', 'templates');
         }}
          />
           <Popover className="relative">

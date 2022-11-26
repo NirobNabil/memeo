@@ -149,7 +149,7 @@ const Trending = ({ data}) => {
 	return (
 		<>
         <div className="flex flex-col"
-		onClick={handleOpen}
+		
 		>
 			<div className='bg-white dark:bg-slate-800 h-[250px] shadow-md rounded-lg overflow-hidden relative group transition-all duration-300'>
                 {data?.type === "image" ? (
@@ -159,6 +159,7 @@ const Trending = ({ data}) => {
                     layout='fill'
                     objectFit='cover'
                     className='rounded-lg'
+					onClick={handleOpen}
                 />
                 ) : (
                     <video
@@ -171,6 +172,7 @@ const Trending = ({ data}) => {
                      muted
                      security="restricted"
                      style={{ objectFit: "cover" }}
+					 onClick={handleOpen}
                  />
                 )}
 

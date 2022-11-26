@@ -77,6 +77,20 @@ const Picker = dynamic(() => import("emoji-picker-react"), {
 import Modal from "react-modal";
 import Hoverablebutton from './Hoverablebutton'
 
+import Grid from "@material-ui/core/Grid";
+import GridListTile from "@material-ui/core/GridListTile";
+import GridListTileBar from "@material-ui/core/GridListTileBar";
+import IconButton from "@material-ui/core/IconButton";
+import InfoIcon from "@material-ui/icons/Info";
+import SaveIcon from "@material-ui/icons/SaveAlt";
+import Dialog from "@material-ui/core/Dialog";
+import CloseIcon from "@material-ui/icons/Close";
+import Typography from "@material-ui/core/Typography";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import ListSubheader from '@material-ui/core/ListSubheader';
+import InfiniteScroll from "react-infinite-scroll-component";
+
+
 
 
 
@@ -129,6 +143,10 @@ function Dialogue(props) {
   const [chatUsers, setChatUsers] = useState([]);
   const [myNotify, setMyNotify] = useState(false);
 
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [error, setError] = useState(null);
+	const [open, setOpen] = useState(false);
+
 
   const [keyword, setKeyword]=useState('')
   const pattern = new RegExp('\\b' + keyword.replace(/[\W_]+/g,""), 'i')
@@ -136,6 +154,13 @@ function Dialogue(props) {
   const [emojiTypePicker, setEmojiTypePicker] = useState(false)
 
 
+        const handleOpen = () => {
+          setOpen(true);
+      }
+
+      const handleClose = () => {
+          setOpen(false);
+      }
 
     
 
@@ -316,7 +341,7 @@ function Dialogue(props) {
   
   const determineMsgtype = (msg) => {
     if (msg.base64) {
-      return <Img src={msg.message} link={true}/>
+      return <Img src={msg.message} link={true}   />
     }
     else if (msg?.file) {
       return <Filemsg name={msg.name} link={msg.message}/>
@@ -324,7 +349,7 @@ function Dialogue(props) {
       return <Recording src={msg.message}/>
       
     } else if (msg?.video){
-      return <Iframe type='video' link={msg.message}/>
+      return <Iframe type='video' link={msg.message} />
     }
     else if (ytVidId(msg?.message)) {
       return <Iframe link={"https://www.youtube.com/embed/" + ytVidId(msg.message)} />
@@ -430,7 +455,14 @@ function Dialogue(props) {
 
 const showMessages =  messages?.sort((a, b) => b.msgdate - a.msgdate)?.map((msg, index) => {
    return ( 
-           <div  key={index} id={"u" + msg.id} className={msg.senderid === user.uid ? "right m" : "left m"} onContextMenu={(e) => contextMenu(e)}>
+           <div  key={index} id={"u" + msg.id} className={msg.senderid === user.uid ? "right m" : "left m"} onContextMenu={(e) => contextMenu(e)}
+           onClick={() => {
+            if(msg?.base64 || msg?.video){
+                setSelectedFile(msg)
+                handleOpen()
+            }
+            }}
+           >
               <div className="flex text-slate-500 dark:text-white">
                   <span className={determineClass(msg)} contentEditable={false} 
                     style={
@@ -1363,16 +1395,35 @@ const showMessages =  messages?.sort((a, b) => b.msgdate - a.msgdate)?.map((msg,
             </div>
           </div>
         </div>
-
-        
-           
-        
-          
-         
-
         
      </Modal>
 
+     <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            style={{ 
+                padding: "0px 0px 0px 0px",
+                margin: "0px 0px 0px 0px",
+            }}
+        >
+            <CloseIcon className="close" onClick={handleClose} />
+            {selectedFile?.base64 ? (
+            <img src={selectedFile?.message} alt="" className="dialogImage" />
+            ) : (
+            <video
+                src={selectedFile?.message}
+                className="dialogImage"
+                autoPlay
+                loop
+                muted
+                controls
+            />
+            )}
+        </Dialog>
+        {loading && <LinearProgress />}
+        {error && <Typography variant="h6" color="error">{error}</Typography>}
           
               
 

@@ -75,6 +75,7 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
   const [sharePostText, setSharePostText] = useState("");
   const [showCaption, setShowCaption] = useState(false);
   const [commentlen, setCommentlen] = useState(len);
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
   const postRef = useRef(null);
   
@@ -253,7 +254,7 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
     setShareModalIsOpen(false);
   }
 
-  const deletePost = async (post) => {
+  const deletePost = async ( ) => {
     if((post.type === "image" || post.type === "video") && post.share === false && post?.postURL){
       try {
         const storageRef = ref(storage, post.postURL);
@@ -649,7 +650,7 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
           <button
             className="postButton focus:text-gray-100"
             onClick={() => {
-              deletePost(post);
+              setDeleteModalIsOpen(true);
             }}
           >
             <Delete className="h-6 w-6" />
@@ -1149,6 +1150,44 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
                   </div>
                 </div>
               )}
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={deleteModalIsOpen}
+        onRequestClose={() => setDeleteModalIsOpen(false)}
+        className="bg-white text-slate-800 dark:text-gray-300 dark:bg-slate-900 rounded-lg shadow-lg p-4 overflow-y-scroll scrollbar-hide max-h-[600px]"
+        overlayClassName="fixed inset-0 bg-black/50 flex items-center justify-center"
+        style={{
+          overlay: {
+            zIndex: 9999,
+          },
+          content: {
+            width: "540px",
+            height: "100px",
+            margin: "auto",
+            padding: "0px",
+            border: "none",
+            borderRadius: "10px",
+          },
+        }}
+      >
+        <div className="flex flex-col items-center justify-center p-2">
+              Are you sure you want to delete this post?
+          <div className="flex items-center justify-center space-x-4 mt-4">
+            <button
+              className="text-white font-semibold px-4 py-2 rounded-lg bg-[#ff4d4d] hover:bg-[#ff3333] focus:outline-none"
+              onClick={() => setDeleteModalIsOpen(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="text-white font-semibold px-4 py-2 rounded-lg bg-[#ff4d4d] hover:bg-[#ff3333] focus:outline-none"
+              onClick={deletePost}
+            >
+              Delete
+            </button>
           </div>
         </div>
       </Modal>
