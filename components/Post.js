@@ -1244,9 +1244,6 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 								<Video videoURL={post?.postURL} />
 							))}
 
-                )
-              )}
-
               {post?.share && (
                 <div className="flex items-center px-2.5 cursor-pointer  ">
                   <Link href={`/Profile?uid=${post?.user?.uid}`} >

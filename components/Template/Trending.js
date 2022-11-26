@@ -140,9 +140,7 @@ const Trending = ({ data }) => {
 
 	return (
 		<>
-        <div className="flex flex-col"
-		
-		>
+        <div className="flex flex-col">
 			<div className='bg-white dark:bg-slate-800 h-[250px] shadow-md rounded-lg overflow-hidden relative group transition-all duration-300'>
                 {data?.type === "image" ? (
                  <Image
@@ -197,9 +195,7 @@ const Trending = ({ data }) => {
 				    	</div>
 			    	</div>
 				) : (
-					<div
-						className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-3 px-5 transition-all duration-300'
-						>
+					<div className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-3 px-5 transition-all duration-300'>
 						{/* download icon  */}
 						<div className='flex justify-end'
 						>
@@ -207,8 +203,11 @@ const Trending = ({ data }) => {
 							onClick={() => setOpenDownloadModal(true)}
 							/>
 						</div>
+					</div>
 					)}
-				</div>
+
+
+
 				<div className='flex justify-between items-center mt-2'>
 					<Stack direction='column' spacing={1}>
 						<Stack direction='row' spacing={1} flexWrap='wrap'>
@@ -293,9 +292,6 @@ const Trending = ({ data }) => {
 				</div>
 			</div>
 
-			{/* ----------- */}
-			{/* modal  */}
-			{/* -------------- */}
 			<div
 				className={`download-modal fixed w-full h-full z-10 bg-transparent top-0 left-0 ${
 					openDownloadMOdal ? "block" : "hidden"
@@ -323,6 +319,7 @@ const Trending = ({ data }) => {
 					</div>
 				</div>
 			</div>
+		</div>
 
 			<Modal
 				isOpen={openDeleteModal}
