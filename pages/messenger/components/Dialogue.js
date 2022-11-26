@@ -188,7 +188,7 @@ function Dialogue(props) {
 
   const reg = /((?:(?!(?:https?|ftp):\/\/[\S]*\.(?:png|jpe?g|gif|svg|webp)).)+)|((?:https?|ftp):\/\/[\S]*\.(?:png|jpe?g|gif|svg|webp)(?:\?\S+=\S*(?:&\S+=\S*)*)?)/gm;
   const imageRegexB = /(?:https?|ftp):\/\/[\S]*\.(?:png|jpe?g|gif|svg|webp)/g;
-  var urlreg = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+  var urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
   var ureg = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
 
 
@@ -234,7 +234,9 @@ function Dialogue(props) {
       if(Doc.exists()){
       setLoader(false);
       const data = Doc.data();
+      if(data?.customizedconvo?.theme){
       setTheme(data.customizedconvo.theme);
+      }
       setEmojitype(data.customizedconvo.emoji);
       setChatUsers(data.users);
       if(user.uid === data?.users[0]?.uid) {
@@ -456,12 +458,7 @@ function Dialogue(props) {
 const showMessages =  messages?.sort((a, b) => b.msgdate - a.msgdate)?.map((msg, index) => {
    return ( 
            <div  key={index} id={"u" + msg.id} className={msg.senderid === user.uid ? "right m" : "left m"} onContextMenu={(e) => contextMenu(e)}
-           onClick={() => {
-            if(msg?.base64 || msg?.video){
-                setSelectedFile(msg)
-                handleOpen()
-            }
-            }}
+           
            >
               <div className="flex text-slate-500 dark:text-white">
                   <span className={determineClass(msg)} contentEditable={false} 
@@ -476,8 +473,13 @@ const showMessages =  messages?.sort((a, b) => b.msgdate - a.msgdate)?.map((msg,
                         ? { backgroundColor: "#e6e6e6" }
                         : null
                     }
-                    onClick={(e) => clickHandler(e)}
-        
+                    onClick={(e) => {
+                      clickHandler(e);
+                      if(msg?.base64 || msg?.video){
+                          setSelectedFile(msg)
+                          handleOpen()
+                      }
+                      }}
                   > {
                    determineMsgtype(msg)
                   }
@@ -1003,11 +1005,17 @@ const showMessages =  messages?.sort((a, b) => b.msgdate - a.msgdate)?.map((msg,
 
       <div  
       className={
-          `msgs my-1 overflow-y-scroll  ${type === 'small' ? "h-96" : "h-auto"}`
+          `msgs my-1 overflow-y-scroll  ${type === 'small' ? "h-96" : "h-auto"} dark:bg-gray-800 dark:text-white bg-slate-300 text-slate-800`
         }
         style={
-          theme ? { backgroundImage: "url(" + theme + ")" }
-          : { backgroundColor: "" }
+          urlRegex.test(theme) ? {
+            backgroundImage: `url(${theme})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          } : {
+            backgroundColor: theme
+          }
         }
       >
 
