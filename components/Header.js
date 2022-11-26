@@ -100,7 +100,7 @@ function Header(props) {
       const q = query(
         collection(db, "users"),
         where("userName", ">=", e.target.value.toUpperCase()),
-        where("userName", "<=", e.target.value.toUpperCase() + "\uf8ff"),
+        where("userName", "<=", e.target.value.tolowerCase() + "\uf8ff"),
         orderBy("userName", "asc"),
         limit(5)
       );
