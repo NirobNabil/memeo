@@ -69,7 +69,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import InfiniteScroll from "react-infinite-scroll-component";
 
 
-const Trending = ({ data}) => {
+const Trending = ({ data }) => {
 	const [openDownloadMOdal, setOpenDownloadModal] = useState(false);
 	const [downloadUrl, setDownloadUrl] = useState("");
 	const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -104,10 +104,11 @@ const Trending = ({ data}) => {
 		});
 		const storageRef = ref(storage, data.memeURL);
 		const downloadUrl = await getDownloadURL(storageRef);
+		// console.log(downloadUrl, 'downloadUrl');
 		const a = document.createElement("a");
 		a.href = downloadUrl 
 		a.target = "_blank";
-		a.download = data.memeURL;
+		a.download = data.name
 		document.body.appendChild(a);
 		a.click();
 		document.body.removeChild(a);
@@ -134,6 +135,7 @@ const Trending = ({ data}) => {
 					deleteDoc(doc(db, "memes", data.memeId)).then(() => {
 						deleteDoc(doc(db, "memes", user.uid, "userMemes", data.id)).then(() => {
 							setOpenApproveDeleteModal(false);
+							window.location.reload();
 						});
 					});
 				});
@@ -200,18 +202,23 @@ const Trending = ({ data}) => {
 				{/* template-buttons lower */}
 				{!data?.user?.uid ? (
 					<div className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-3 px-5 transition-all duration-300'
-					     onClick={() => setOpenDeleteModal(true)}>
+					     >
 				    	<div className='flex justify-end'>
-				     	    <MdDeleteOutline className='text-2xl' />
+				     	    <MdDeleteOutline className='text-2xl'
+						    	onClick={() => setOpenDeleteModal(true)}
+							 />
 				    	</div>
 			    	</div>
 				) : (
 					<div
 						className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-3 px-5 transition-all duration-300'
-						onClick={() => setOpenDownloadModal(true)}>
+						>
 						{/* download icon  */}
-						<div className='flex justify-end'>
-							<BsDownload className='text-2xl' />
+						<div className='flex justify-end'
+						>
+							<BsDownload className='text-2xl' 
+							onClick={() => setOpenDownloadModal(true)}
+							/>
 						</div>
 					</div>
 				)}

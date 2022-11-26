@@ -32,7 +32,7 @@ import {
   getDocFromCache,
 } from 'firebase/firestore';
 
-import { db, auth } from '../firebase'
+import { db, auth , storage} from '../firebase'
 
 import Trending from '../components/Template/Trending';
 
@@ -62,6 +62,8 @@ import {
   signOut,
 } from 'firebase/auth';
 
+
+
 import moment from 'moment'
 
 import { Modal } from '@mui/material';
@@ -71,6 +73,13 @@ import { ToastSuccess } from '../components/Components/Toast';
 import { useRouter } from 'next/router'
 
 import { ArrowBack } from '@mui/icons-material';
+import { deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getApps,
+} from 'firebase/storage';
 
 export default function Settings() {
 
@@ -352,6 +361,34 @@ export default function Settings() {
               <div className='flex justify-between items-center mt-4'>
                 <h1 className='text-xl font-bold'>{trash.name}</h1>
                 <p className='text-red-500 font-bold'> Deleted {moment(trash.deletedAt.toDate()).fromNow()}</p>
+                <button
+                  className='text-red-500 font-bold'
+                  onClick={() => {
+                    getDoc(doc(db, 'memes', user?.uid, 'Trash', trash.id)).then((Doc) => {
+                      if (Doc.exists()) {
+                        deleteObject(ref(storage, Doc.data().memeURL)).then(() => {
+                          deleteDoc(doc(db, 'memes', user?.uid, 'Trash', trash.id)).then(() => {
+                            setToastMessage('Meme deleted successfully');
+                            setToastShow(true);
+                            setTimeout(() => {
+                              setToastMessage('');
+                              setToastShow(false);
+                            }, 3000);
+                          });
+                        });
+                      } else {
+                        setToastMessage2('Meme does not exist');
+                        setToastShow2(true);
+                        setTimeout(() => {
+                          setToastMessage2('');
+                          setToastShow2(false);
+                        }, 3000);
+                      }
+                    });
+                  }}
+                >
+                  Delete
+                </button>
                 <button className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 dark:shadow-sm-light transition-colors duration-200 ease-in-out'
                   onClick={() => {
                     setOpen(true);

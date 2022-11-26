@@ -139,8 +139,8 @@ function Home(props) {
 
   useEffect(() => {
     // set local storage tab value
-    if(localStorage.getItem('tab')) {
-      setTab(localStorage.getItem('tab'))
+    if(sessionStorage.getItem('tab')) {
+      setTab(sessionStorage.getItem('tab'))
     }
     else {
       setTab('home')
@@ -244,8 +244,9 @@ function Home(props) {
               if (data?.timestamp?.toDate() < oneMonthAgo) {
                   deleteDoc(doc(db, 'posts', user?.uid, 'viewedPosts', id));
               }
-              else if(data?.timestamp?.toDate() < oneDayAgo) {
+              else  {
                 setViewedPostID((viewedPosts) => [...viewedPosts, id]);
+                console.log(id, 'viewedPosts');
               }
           });
       });
@@ -272,7 +273,7 @@ function Home(props) {
       });
       return unsubscribe;
     }
-  }, [user]);
+  }, [user, viewedPostID]);
 
   const fetchPosts = () => {
     if (user && posts?.length > 0) {

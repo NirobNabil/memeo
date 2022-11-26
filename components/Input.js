@@ -143,6 +143,7 @@ function Input() {
           setTaggedFriends([]);
           setTagFriends([]);
           setProgress(0);
+          filePickerRef.current.value = null;
         });
 
   
@@ -203,6 +204,7 @@ function Input() {
         setTaggedFriends([]);
         setTagFriends([]);
         setProgress(0);
+        filePickerRef.current.value = null;
       });
 
 

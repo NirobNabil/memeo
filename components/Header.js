@@ -260,7 +260,7 @@ function Header(props) {
         active={tab === "home"} 
         handle={() => {
           setTab('home');
-          localStorage.setItem('tab', 'home');
+          sessionStorage.setItem('tab', 'home');
           router.push('/');
           window.scrollTo(0, 0);
           if (window.scrollY > 0) {
@@ -275,7 +275,7 @@ function Header(props) {
         active={tab === "watch"}
         handle={() => {
           setTab("watch")
-          localStorage.setItem('tab', 'watch');
+          sessionStorage.setItem('tab', 'watch');
         }}
         />
        
@@ -286,7 +286,7 @@ function Header(props) {
          active={tab === "templates"}
          handle={() => {
           setTab("templates")
-          localStorage.setItem('tab', 'templates');
+          sessionStorage.setItem('tab', 'templates');
         }}
          />
           <Popover className="relative">

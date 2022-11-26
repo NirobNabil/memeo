@@ -350,6 +350,8 @@ export default function Profile(props) {
     }
 
     setLoading(false)
+    setIsOpen(false)
+    window.location.reload()
 
   }
 
@@ -470,7 +472,7 @@ export default function Profile(props) {
               <p className='text-gray-500 text-sm'>{User?.userName}</p>
               <p className='text-gray-500 text-sm'>{User?.bio}</p>
             </div>
-
+            {uid !== user?.uid && (
             <div className='flex items-center justify-center mt-4'>
               <div className='flex flex-col items-center mr-4'>
                   <button
@@ -481,6 +483,21 @@ export default function Profile(props) {
                   </button>
               </div>
             </div>
+            )}
+
+            {uid === user?.uid && (
+              <div className='flex items-center justify-center mt-4'>
+                <div className='flex flex-col items-center mr-4'>
+                  <button
+                    className='text-white  py-2 px-4 rounded-full text-sm font-semibold bg-[#1DA1F2] hover:bg-[#1DA1F2] focus:outline-none focus:ring-2 focus:ring-[#1DA1F2] focus:ring-opacity-50'
+                    onClick={() => setIsOpen(true)}
+                  >
+                    Edit profile
+                  </button>
+                </div>
+              </div>
+            )}
+
 
 
             <div className='flex flex-row gap-10 items-center justify-center my-2 '>

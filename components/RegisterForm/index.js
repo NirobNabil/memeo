@@ -121,7 +121,6 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 			await createUserWithEmailAndPassword(auth, data.email, data.password)
 			.then(async (user) => {
 
-
 				const storageRef = ref(storage, `photoURL/${user.user.uid}`)
 				const uploadTask = await uploadBytesResumable(storageRef, profileImage)
 				const downloadURL = await getDownloadURL(uploadTask.ref)
@@ -130,7 +129,7 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 				setDoc(doc(db, "users", user.user.uid), {
 					uid: user.user.uid,
 					email: user.user.email,
-					photoURL: downloadURL,
+					photoURL: downloadURL || "",
 					name: data.fullName,
 					createdAt: serverTimestamp(),
 					userName: data.userName,
