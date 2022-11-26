@@ -1,7 +1,6 @@
 import React from "react";
 import Submenu from "../Submenu";
 
-
 const Menu = (props) => {
    const {profile, following, followers, follow, followingUIDs, followersUIDs, fetchFollowing, fetchFollow, fetchFollowers, active, fromFavorites} = props
 

@@ -7,47 +7,45 @@ import Trending from "./Template/Trending";
 import MemeGenerator from "./Template/MemeGenerator";
 import InfiniteScroll from "react-infinite-scroll-component";
 
+import {
+	collection,
+	query,
+	where,
+	getDocs,
+	getDoc,
+	doc,
+	setDoc,
+	updateDoc,
+	arrayUnion,
+	arrayRemove,
+	deleteDoc,
+	serverTimestamp,
+	onSnapshot,
+	orderBy,
+	limit,
+	startAfter,
+	endBefore,
+	startAt,
+	endAt,
+	increment,
+	decrement,
+	runTransaction,
+	writeBatch,
+	addDoc,
+	getFirestore,
+	getDocFromCache,
+} from "firebase/firestore";
 
 import {
-    collection,
-    query,
-    where,
-    getDocs,
-    getDoc,
-    doc,
-    setDoc,
-    updateDoc,
-    arrayUnion,
-    arrayRemove,
-    deleteDoc,
-    serverTimestamp,
-    onSnapshot,
-    orderBy,
-    limit,
-    startAfter,
-    endBefore,
-    startAt,
-    endAt,
-    increment,
-    decrement,
-    runTransaction,
-    writeBatch,
-    addDoc,
-    getFirestore,
-    getDocFromCache,
-  } from 'firebase/firestore';
-
-  import { 
-	getDownloadURL, 
+	getDownloadURL,
 	ref,
 	uploadBytes,
 	getStorage,
 	uploadBytesResumable,
-	
-	} from "@firebase/storage";
+} from "@firebase/storage";
 import { auth, db, storage } from "../firebase";
 
-import { connect } from 'react-redux'
+import { connect } from "react-redux";
 import TemplateItem from "./TemplateItem";
 
 function Templates(props) {
@@ -78,7 +76,11 @@ function Templates(props) {
 			if(activeTab === "memes") {
 				setLoading(true);
 				const memesRef = collection(db, "memes");
-				const memesQuery = query(memesRef, orderBy('timestamp', 'desc'), limit(25));
+				const memesQuery = query(
+					memesRef,
+					orderBy("timestamp", "desc"),
+					limit(25)
+				);
 				onSnapshot(memesQuery, (querySnapshot) => {
 					const memes = [];
 					querySnapshot.forEach((doc) => {
@@ -90,7 +92,13 @@ function Templates(props) {
 			}
 			else if(activeTab === "popular") {
 				setLoading(true);
-				getDocs(query(collection(db, "memes"), orderBy("downloaded", "desc"), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						orderBy("downloaded", "desc"),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -100,7 +108,14 @@ function Templates(props) {
 			}
 			else if(activeTab === "image-memes") {
 				setLoading(true);
-				getDocs(query(collection(db, "memes"), where("type", "==", "image"), orderBy("downloaded", "desc"), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("type", "==", "image"),
+						orderBy("downloaded", "desc"),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -110,7 +125,14 @@ function Templates(props) {
 			}
 			else if(activeTab === "video-memes") {
 				setLoading(true);
-				getDocs(query(collection(db, "memes"), where("type", "==", "video"), orderBy("downloaded", "desc"), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("type", "==", "video"),
+						orderBy("downloaded", "desc"),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -122,7 +144,11 @@ function Templates(props) {
 			else if(activeTab === "meme-generator") {
 				// get user's memes templates
 				setLoading(true);
-				getDocs(query(collection(db, "memes", user.uid, "userMemes")), orderBy("timestamp", "desc"), limit(25)).then((querySnapshot) => {
+				getDocs(
+					query(collection(db, "memes", user.uid, "userMemes")),
+					orderBy("timestamp", "desc"),
+					limit(25)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -137,10 +163,15 @@ function Templates(props) {
 	useEffect(() => {
 		if (user && searchTags.length > 0) {
 			// get memes templates on maximum number of downloads
-			if(activeTab === "memes" ) {
+			if (activeTab === "memes") {
 				setLoading(true);
 				const memesRef = collection(db, "memes");
-				const memesQuery = query(memesRef, where("tags", "array-contains-any", searchTags), orderBy('timestamp', 'desc'), limit(25));
+				const memesQuery = query(
+					memesRef,
+					where("tags", "array-contains-any", searchTags),
+					orderBy("timestamp", "desc"),
+					limit(25)
+				);
 				onSnapshot(memesQuery, (querySnapshot) => {
 					const memes = [];
 					querySnapshot.forEach((doc) => {
@@ -149,30 +180,50 @@ function Templates(props) {
 					setMemes(memes);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "popular") {
+			} else if (activeTab === "popular") {
 				setLoading(true);
-				getDocs(query(collection(db, "memes"), where("tags", "array-contains-any", searchTags), orderBy("downloaded", "desc"), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("tags", "array-contains-any", searchTags),
+						orderBy("downloaded", "desc"),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
 					setPopularMemes(data);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "image-memes") {
+			} else if (activeTab === "image-memes") {
 				setLoading(true);
-				getDocs(query(collection(db, "memes"), where("type", "==", "image"), where("tags", "array-contains-any", searchTags), orderBy("downloaded", "desc"), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("type", "==", "image"),
+						where("tags", "array-contains-any", searchTags),
+						orderBy("downloaded", "desc"),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
 					setImageMemes(data);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "video-memes") {
+			} else if (activeTab === "video-memes") {
 				setLoading(true);
-				getDocs(query(collection(db, "memes"), where("type", "==", "video"), where("tags", "array-contains-any", searchTags), orderBy("downloaded", "desc"), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("type", "==", "video"),
+						where("tags", "array-contains-any", searchTags),
+						orderBy("downloaded", "desc"),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -180,11 +231,17 @@ function Templates(props) {
 					console.log(data, "video memes");
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "meme-generator") {
+			} else if (activeTab === "meme-generator") {
 				// get user's memes templates
 				setLoading(true);
-				getDocs(query(collection(db, "memes", user.uid, "userMemes"), where("tags", "array-contains-any", searchTags), orderBy("timestamp", "desc")), limit(25)).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes", user.uid, "userMemes"),
+						where("tags", "array-contains-any", searchTags),
+						orderBy("timestamp", "desc")
+					),
+					limit(25)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -196,8 +253,8 @@ function Templates(props) {
 	}, [searchTags]);
 
 	useEffect(() => {
-		if(user && search.length > 0) {
-			if(activeTab === "memes") {
+		if (user && search.length >= 0) {
+			if (activeTab === "memes") {
 				setLoading(true);
 				const memesRef = collection(db, "memes");
 				const memesQuery = query(memesRef, where('name', '>=', search.toUpperCase()), where('name', '<=', search.toLowerCase() + '\uf8ff'), orderBy('name', 'asc'), limit(25));
@@ -209,8 +266,7 @@ function Templates(props) {
 					setMemes(memes);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "popular") {
+			} else if (activeTab === "popular") {
 				setLoading(true);
 				getDocs(query(collection(db, "memes"), where('name', '>=', search.toUpperCase()), where('name', '<=', search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), limit(25))).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
@@ -219,8 +275,7 @@ function Templates(props) {
 					setPopularMemes(data);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "image-memes") {
+			} else if (activeTab === "image-memes") {
 				setLoading(true);
 				getDocs(query(collection(db, "memes"), where("type", "==", "image"), where('name', '>=', search.toUpperCase()), where('name', '<=', search.toLowerCase() + '\uf8ff'), orderBy("name"), limit(25))).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
@@ -229,8 +284,7 @@ function Templates(props) {
 					setImageMemes(data);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "video-memes") {
+			} else if (activeTab === "video-memes") {
 				setLoading(true);
 				getDocs(query(collection(db, "memes"), where("type", "==", "video"), where('name', '>=', search.toUpperCase()), where('name', '<=', search.toLowerCase() + '\uf8ff'), orderBy("name"), limit(25))).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
@@ -240,8 +294,7 @@ function Templates(props) {
 					console.log(data, "video memes");
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "meme-generator") {
+			} else if (activeTab === "meme-generator") {
 				// get user's memes templates
 				setLoading(true);
 				getDocs(query(collection(db, "memes", user.uid, "userMemes"), where("name", ">=", search.toUpperCase()), where("name", "<=", search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), limit(25))).then((querySnapshot) => {
@@ -253,16 +306,21 @@ function Templates(props) {
 				setLoading(false);
 			}
 		}
-	}, [search]);
+	}, [search, activeTab, user]);
 
 	const fetchMoreMemes = () => {
-		if(user && search.length === 0 && searchTags.length === 0) {
-			if(activeTab === "memes") {
-				if(!memes.length)return
+		if (user && search.length === 0 && searchTags.length === 0) {
+			if (activeTab === "memes") {
+				if (!memes.length) return;
 				setLoading(true);
 				const lastMeme = memes[memes.length - 1];
 				const memesRef = collection(db, "memes");
-				const memesQuery = query(memesRef, orderBy("timestamp", "desc"), startAfter(lastMeme.timestamp), limit(25));
+				const memesQuery = query(
+					memesRef,
+					orderBy("timestamp", "desc"),
+					startAfter(lastMeme.timestamp),
+					limit(25)
+				);
 				onSnapshot(memesQuery, (querySnapshot) => {
 					const memes = [];
 					querySnapshot.forEach((doc) => {
@@ -271,49 +329,74 @@ function Templates(props) {
 					setMemes((prevMemes) => [...prevMemes, ...memes]);
 					setLoading(false);
 				});
-				
-			}
-			else if(activeTab === "popular") {
-				if(!popularMemes.length)return
+			} else if (activeTab === "popular") {
+				if (!popularMemes.length) return;
 				setLoading(true);
 				const lastMeme = popularMemes[popularMemes.length - 1];
-				getDocs(query(collection(db, "memes"), orderBy("downloaded", "desc"), startAfter(lastMeme.downloaded), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						orderBy("downloaded", "desc"),
+						startAfter(lastMeme.downloaded),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
 					setPopularMemes((prevMemes) => [...prevMemes, ...data]);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "image-memes") {
-				if(!imageMemes.length)return
+			} else if (activeTab === "image-memes") {
+				if (!imageMemes.length) return;
 				setLoading(true);
 				const lastMeme = imageMemes[imageMemes.length - 1];
-				getDocs(query(collection(db, "memes"), where("type", "==", "image"), orderBy("downloaded", "desc"), startAfter(lastMeme.downloaded), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("type", "==", "image"),
+						orderBy("downloaded", "desc"),
+						startAfter(lastMeme.downloaded),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
 					setImageMemes((prevMemes) => [...prevMemes, ...data]);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "video-memes") {
-				if(!videoMemes.length)return
+			} else if (activeTab === "video-memes") {
+				if (!videoMemes.length) return;
 				setLoading(true);
 				const lastMeme = videoMemes[videoMemes.length - 1];
-				getDocs(query(collection(db, "memes"), where("type", "==", "video"), orderBy("downloaded", "desc"), startAfter(lastMeme.downloaded), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("type", "==", "video"),
+						orderBy("downloaded", "desc"),
+						startAfter(lastMeme.downloaded),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
 					setVideoMemes((prevMemes) => [...prevMemes, ...data]);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "meme-generator") {
-				if(!myMemes.length)return
+			} else if (activeTab === "meme-generator") {
+				if (!myMemes.length) return;
 				setLoading(true);
 				const lastMeme = myMemes[myMemes.length - 1];
-				getDocs(query(collection(db, "memes", user.uid, "userMemes"), orderBy("timestamp", "desc"), startAfter(lastMeme.timestamp), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes", user.uid, "userMemes"),
+						orderBy("timestamp", "desc"),
+						startAfter(lastMeme.timestamp),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -321,10 +404,9 @@ function Templates(props) {
 					setLoading(false);
 				});
 			}
-		}
-		else if(search.length > 0) {
-			if(activeTab === "memes") {
-				if(!memes.length)return
+		} else if (search.length > 0) {
+			if (activeTab === "memes") {
+				if (!memes.length) return;
 				setLoading(true);
 				const lastMeme = memes[memes.length - 1];
 				const memesRef = collection(db, "memes");
@@ -337,9 +419,8 @@ function Templates(props) {
 					setMemes((prevMemes) => [...prevMemes, ...memes]);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "popular") {
-				if(!popularMemes.length)return
+			} else if (activeTab === "popular") {
+				if (!popularMemes.length) return;
 				setLoading(true);
 				const lastMeme = popularMemes[popularMemes.length - 1];
 				getDocs(query(collection(db, "memes"), where("name", ">=", search.toUpperCase()), where("name", "<=", search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), startAfter(lastMeme.name), limit(25))).then((querySnapshot) => {
@@ -349,9 +430,8 @@ function Templates(props) {
 					setPopularMemes((prevMemes) => [...prevMemes, ...data]);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "image-memes") {
-				if(!imageMemes.length)return
+			} else if (activeTab === "image-memes") {
+				if (!imageMemes.length) return;
 				setLoading(true);
 				const lastMeme = imageMemes[imageMemes.length - 1];
 				getDocs(query(collection(db, "memes"), where("type", "==", "image"), where("name", ">=", search.toUpperCase()), where("name", "<=", search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), startAfter(lastMeme.name), limit(25))).then((querySnapshot) => {
@@ -361,9 +441,8 @@ function Templates(props) {
 					setImageMemes((prevMemes) => [...prevMemes, ...data]);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "video-memes") {
-				if(!videoMemes.length)return
+			} else if (activeTab === "video-memes") {
+				if (!videoMemes.length) return;
 				setLoading(true);
 				const lastMeme = videoMemes[videoMemes.length - 1];
 				getDocs(query(collection(db, "memes"), where("type", "==", "video"), where("name", ">=", search.toUpperCase()), where("name", "<=", search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), startAfter(lastMeme.name), limit(25))).then((querySnapshot) => {
@@ -373,9 +452,8 @@ function Templates(props) {
 					setVideoMemes((prevMemes) => [...prevMemes, ...data]);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "meme-generator") {
-				if(!myMemes.length)return
+			} else if (activeTab === "meme-generator") {
+				if (!myMemes.length) return;
 				setLoading(true);
 				const lastMeme = myMemes[myMemes.length - 1];
 				getDocs(query(collection(db, "memes", user.uid, "userMemes"), where("name", ">=", search.toUpperCase()), where("name", "<=", search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), startAfter(lastMeme.name), limit(25))).then((querySnapshot) => {
@@ -386,17 +464,21 @@ function Templates(props) {
 					setLoading(false);
 				});
 			}
+		} else {
+			if (searchTags.length) return;
 
-		}
-		else {
-			if(searchTags.length)return
-
-			if(activeTab === "memes") {
-				if(!memes.length)return
+			if (activeTab === "memes") {
+				if (!memes.length) return;
 				setLoading(true);
 				const lastMeme = memes[memes.length - 1];
 				const memesRef = collection(db, "memes");
-				const memesQuery = query(memesRef, where("tags", "array-contains-any", searchTags), orderBy("timestamp", "desc"), startAfter(lastMeme.timestamp), limit(25));
+				const memesQuery = query(
+					memesRef,
+					where("tags", "array-contains-any", searchTags),
+					orderBy("timestamp", "desc"),
+					startAfter(lastMeme.timestamp),
+					limit(25)
+				);
 				onSnapshot(memesQuery, (querySnapshot) => {
 					const memes = [];
 					querySnapshot.forEach((doc) => {
@@ -405,48 +487,78 @@ function Templates(props) {
 					setMemes((prevMemes) => [...prevMemes, ...memes]);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "popular") {
-				if(!popularMemes.length)return
+			} else if (activeTab === "popular") {
+				if (!popularMemes.length) return;
 				setLoading(true);
 				const lastMeme = popularMemes[popularMemes.length - 1];
-				getDocs(query(collection(db, "memes"), where("tags", "array-contains-any", searchTags), orderBy("downloaded", "desc"), startAfter(lastMeme.downloaded), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("tags", "array-contains-any", searchTags),
+						orderBy("downloaded", "desc"),
+						startAfter(lastMeme.downloaded),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
 					setPopularMemes((prevMemes) => [...prevMemes, ...data]);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "image-memes") {
-				if(!imageMemes.length)return
+			} else if (activeTab === "image-memes") {
+				if (!imageMemes.length) return;
 				setLoading(true);
 				const lastMeme = imageMemes[imageMemes.length - 1];
-				getDocs(query(collection(db, "memes"), where("type", "==", "image"), where("tags", "array-contains-any", searchTags), orderBy("downloaded", "desc"), startAfter(lastMeme.downloaded), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("type", "==", "image"),
+						where("tags", "array-contains-any", searchTags),
+						orderBy("downloaded", "desc"),
+						startAfter(lastMeme.downloaded),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
 					setImageMemes((prevMemes) => [...prevMemes, ...data]);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "video-memes") {
-				if(!videoMemes.length)return
+			} else if (activeTab === "video-memes") {
+				if (!videoMemes.length) return;
 				setLoading(true);
 				const lastMeme = videoMemes[videoMemes.length - 1];
-				getDocs(query(collection(db, "memes"), where("type", "==", "video"), where("tags", "array-contains-any", searchTags), orderBy("downloaded", "desc"), startAfter(lastMeme.downloaded), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("type", "==", "video"),
+						where("tags", "array-contains-any", searchTags),
+						orderBy("downloaded", "desc"),
+						startAfter(lastMeme.downloaded),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
 					setVideoMemes((prevMemes) => [...prevMemes, ...data]);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "meme-generator") {
-				if(!myMemes.length) return
+			} else if (activeTab === "meme-generator") {
+				if (!myMemes.length) return;
 				setLoading(true);
 				const lastMeme = myMemes[myMemes.length - 1];
-				getDocs(query(collection(db, "memes", user.uid, "userMemes"), where("tags", "array-contains-any", searchTags), orderBy("timestamp", "desc"), startAfter(lastMeme.timestamp), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes", user.uid, "userMemes"),
+						where("tags", "array-contains-any", searchTags),
+						orderBy("timestamp", "desc"),
+						startAfter(lastMeme.timestamp),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -455,45 +567,34 @@ function Templates(props) {
 				});
 			}
 		}
-	}
-		
+	};
+
 	useEffect(() => {
-		if(activeTab === "memes") {
+		if (activeTab === "memes") {
 			setTemplates(memes);
-		}
-		else if(activeTab === "popular") {
+		} else if (activeTab === "popular") {
 			setTemplates(popularMemes);
-		}
-		else if(activeTab === "image-memes") {
+		} else if (activeTab === "image-memes") {
 			setTemplates(imageMemes);
-		}
-		else if(activeTab === "video-memes") {
+		} else if (activeTab === "video-memes") {
 			setTemplates(videoMemes);
-		}
-		else if(activeTab === "meme-generator") {
+		} else if (activeTab === "meme-generator") {
 			setTemplates(myMemes);
 		}
 	}, [activeTab, memes, popularMemes, imageMemes, videoMemes, myMemes]);
 
-
-
-
-
-
-	
-
 	return (
-		<div className='w-[80%] mx-auto py-14 px-10'>
+		<div className='w-[80%] mx-auto pb-14 px-10'>
 			<div style={{ display: "grid" }} className='grid-cols-3 gap-14'>
 				{/* left side  */}
 				<div className='flex flex-col gap-10'>
 					{/* menu  */}
-					<TemplateMenu1 
-					setActiveTab={setActiveTab} 
-					search={search} 
-					setSearch={setSearch} 
-					searchTags={searchTags} 
-					setSearchTags={setSearchTags} 
+					<TemplateMenu1
+						setActiveTab={setActiveTab}
+						search={search}
+						setSearch={setSearch}
+						searchTags={searchTags}
+						setSearchTags={setSearchTags}
 					/>
 
 					{/* earning */}
@@ -510,13 +611,18 @@ function Templates(props) {
 				</div>
 				{/* template container  */}
 				<div className='col-span-2'>
-
 					{activeTab === "meme-generator" && (
-						<MemeGenerator memes={myMemes} setMyMemes={setMyMemes}/>
+						<MemeGenerator memes={myMemes} setMyMemes={setMyMemes} />
 					)}
-														
-					{<TemplateItem memes={templates} fetchMoreMemes={fetchMoreMemes} loading={loading} from={activeTab} />}
-					
+
+					{
+						<TemplateItem
+							memes={templates}
+							fetchMoreMemes={fetchMoreMemes}
+							loading={loading}
+							from={activeTab}
+						/>
+					}
 				</div>
 			</div>
 		</div>
@@ -526,7 +632,7 @@ function Templates(props) {
 const mapStateToProps = (state) => {
 	return {
 		user: state.data.currentUser,
-	}
-}
+	};
+};
 
-export default connect(mapStateToProps)(Templates)
+export default connect(mapStateToProps)(Templates);

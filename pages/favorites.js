@@ -1,42 +1,42 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import {
-    collection,
-    query,
-    where,
-    getDocs,
-    getDoc,
-    doc,
-    setDoc,
-    updateDoc,
-    arrayUnion,
-    arrayRemove,
-    deleteDoc,
-    serverTimestamp,
-    onSnapshot,
-    orderBy,
-    limit,
-    startAfter,
-    endBefore,
-    startAt,
-    endAt,
-    increment,
-    decrement,
-    runTransaction,
-    writeBatch,
-    addDoc,
-    getFirestore,
-    getDocFromCache,
-  } from 'firebase/firestore'
+	collection,
+	query,
+	where,
+	getDocs,
+	getDoc,
+	doc,
+	setDoc,
+	updateDoc,
+	arrayUnion,
+	arrayRemove,
+	deleteDoc,
+	serverTimestamp,
+	onSnapshot,
+	orderBy,
+	limit,
+	startAfter,
+	endBefore,
+	startAt,
+	endAt,
+	increment,
+	decrement,
+	runTransaction,
+	writeBatch,
+	addDoc,
+	getFirestore,
+	getDocFromCache,
+} from "firebase/firestore";
 
-import { db, storage, auth } from '../firebase'
+import { db, storage, auth } from "../firebase";
 
-import Feed from '../components/Feed';
-import Menu from '../components/Menu';
-import Widgets from '../components/Widgets';
-import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/outline'
-import { useRouter } from 'next/router';
-
+import Feed from "../components/Feed";
+import Menu from "../components/Menu";
+import Widgets from "../components/Widgets";
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
+import { useRouter } from "next/router";
+import Header from "../components/Header";
 
 function Favorites(props) {
     const [user, setUser] = useState(null)
@@ -55,40 +55,49 @@ function Favorites(props) {
     const router = useRouter()
 
 
-    useEffect(() => {
-        setUser(props.user)
-    }, [props.user])
+	useEffect(() => {
+		setUser(props.user);
+	}, [props.user]);
 
-    useEffect(() => {
-        if (user) {
-            const q = query(collection(db, 'posts', user.uid, 'userFavorites'), orderBy('timestamp', 'desc'), limit(25))
-            const unsubscribe = onSnapshot(q, (querySnapshot) => {
-                querySnapshot.forEach((docData) => {
-                    getDoc(doc(db, 'posts',  docData.data().id)).then((docElement) => {
-                        if (docElement.exists()) {
-                            setPosts((prev) => prev.filter((post) => post.id !== docElement.id).concat({ id: docElement.id, ...docElement.data() }))
-                        }
-                        else {
-                            deleteDoc(doc(db, 'posts', user.uid, 'userFavorites', docData.id))
-                        }
-                    })
-                });
-            });
-            return unsubscribe;
-        } else {
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    getDoc(doc(db, 'users', user.uid)).then((doc) => {
-                        if (doc.exists()) {
-                            setUser({ ...doc.data(), uid: doc.id })
-                        }
-                    })
-                } else {
-                    setUser(null)
-                }
-            })
-        }
-    }, [user])
+	useEffect(() => {
+		if (user) {
+			const q = query(
+				collection(db, "posts", user.uid, "userFavorites"),
+				orderBy("timestamp", "desc"),
+				limit(25)
+			);
+			const unsubscribe = onSnapshot(q, (querySnapshot) => {
+				querySnapshot.forEach((docData) => {
+					getDoc(doc(db, "posts", docData.data().id)).then((docElement) => {
+						if (docElement.exists()) {
+							setPosts((prev) =>
+								prev
+									.filter((post) => post.id !== docElement.id)
+									.concat({ id: docElement.id, ...docElement.data() })
+							);
+						} else {
+							deleteDoc(
+								doc(db, "posts", user.uid, "userFavorites", docData.id)
+							);
+						}
+					});
+				});
+			});
+			return unsubscribe;
+		} else {
+			auth.onAuthStateChanged((user) => {
+				if (user) {
+					getDoc(doc(db, "users", user.uid)).then((doc) => {
+						if (doc.exists()) {
+							setUser({ ...doc.data(), uid: doc.id });
+						}
+					});
+				} else {
+					setUser(null);
+				}
+			});
+		}
+	}, [user]);
 
     const fetchMore = ()  => {
         if(posts.length > 0) {
@@ -231,9 +240,9 @@ function Favorites(props) {
 }
 
 const mapStateToProps = (state) => {
-    return {
-        user: state.data.currentUser,
-    };
-}
+	return {
+		user: state.data.currentUser,
+	};
+};
 
-export default connect(mapStateToProps)(Favorites)
+export default connect(mapStateToProps)(Favorites);
