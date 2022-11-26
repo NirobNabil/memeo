@@ -244,9 +244,8 @@ function Home(props) {
               if (data?.timestamp?.toDate() < oneMonthAgo) {
                   deleteDoc(doc(db, 'posts', user?.uid, 'viewedPosts', id));
               }
-              else  {
+              else if(data?.timestamp?.toDate() < oneDayAgo) {
                 setViewedPostID((viewedPosts) => [...viewedPosts, id]);
-                console.log(id, 'viewedPosts');
               }
           });
       });
@@ -273,7 +272,7 @@ function Home(props) {
       });
       return unsubscribe;
     }
-  }, [user, viewedPostID]);
+  }, [user]);
 
   const fetchPosts = () => {
     if (user && posts?.length > 0) {

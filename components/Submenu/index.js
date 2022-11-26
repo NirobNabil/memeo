@@ -55,7 +55,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 const Submenu1 = (props) => {
 
-	const {profile, following, followers, follow,  followingUIDs, followersUIDs,  fetchFollowing, fetchFollow, fetchFollowers, active } = props;
+	const {profile, following, followers, follow,  followingUIDs, followersUIDs,  fetchFollowing, fetchFollow, fetchFollowers, active , fromFavorites} = props;
 
 
 	const [modalFollowOpen, setModalFollowOpen] = useState(false);
@@ -212,7 +212,7 @@ const Submenu1 = (props) => {
 											</div>
 										</div>
 									</li>
-									<Link href='/messenger'>
+									{active && (<Link href='/messenger'>
 										<li className='mb-4'>
 											<div
 												className='item-link item-content flex flex-row cursor-pointer items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
@@ -226,6 +226,8 @@ const Submenu1 = (props) => {
 											</div>
 										</li>
 									</Link>
+									)}
+									{active && !fromFavorites && (
 									<li className='mb-4'>
 										<div
 											className='item-link item-content flex flex-row cursor-pointer items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
@@ -239,6 +241,7 @@ const Submenu1 = (props) => {
 											</div>
 										</div>
 									</li>
+									)}
 								</ul>
 							</div>
 						</div>
