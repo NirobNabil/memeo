@@ -312,6 +312,7 @@ function Templates(props) {
 		if (user && search.length === 0 && searchTags.length === 0) {
 			if (activeTab === "memes") {
 				if (!memes.length) return;
+				if (memes.length < 25 || memes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = memes[memes.length - 1];
 				const memesRef = collection(db, "memes");
@@ -331,6 +332,7 @@ function Templates(props) {
 				});
 			} else if (activeTab === "popular") {
 				if (!popularMemes.length) return;
+				if (popularMemes.length < 25 || popularMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = popularMemes[popularMemes.length - 1];
 				getDocs(
@@ -349,6 +351,7 @@ function Templates(props) {
 				});
 			} else if (activeTab === "image-memes") {
 				if (!imageMemes.length) return;
+				if (imageMemes.length < 25 || imageMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = imageMemes[imageMemes.length - 1];
 				getDocs(
@@ -368,6 +371,7 @@ function Templates(props) {
 				});
 			} else if (activeTab === "video-memes") {
 				if (!videoMemes.length) return;
+				if (videoMemes.length < 25 || videoMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = videoMemes[videoMemes.length - 1];
 				getDocs(
@@ -387,6 +391,7 @@ function Templates(props) {
 				});
 			} else if (activeTab === "meme-generator") {
 				if (!myMemes.length) return;
+				if (myMemes.length < 25 || myMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = myMemes[myMemes.length - 1];
 				getDocs(
@@ -407,6 +412,7 @@ function Templates(props) {
 		} else if (search.length > 0) {
 			if (activeTab === "memes") {
 				if (!memes.length) return;
+				if (memes.length < 25 || memes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = memes[memes.length - 1];
 				const memesRef = collection(db, "memes");
@@ -421,6 +427,7 @@ function Templates(props) {
 				});
 			} else if (activeTab === "popular") {
 				if (!popularMemes.length) return;
+				if (popularMemes.length < 25 || popularMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = popularMemes[popularMemes.length - 1];
 				getDocs(query(collection(db, "memes"), where("name", ">=", search.toUpperCase()), where("name", "<=", search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), startAfter(lastMeme.name), limit(25))).then((querySnapshot) => {
@@ -432,6 +439,7 @@ function Templates(props) {
 				});
 			} else if (activeTab === "image-memes") {
 				if (!imageMemes.length) return;
+				if (imageMemes.length < 25 || imageMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = imageMemes[imageMemes.length - 1];
 				getDocs(query(collection(db, "memes"), where("type", "==", "image"), where("name", ">=", search.toUpperCase()), where("name", "<=", search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), startAfter(lastMeme.name), limit(25))).then((querySnapshot) => {
@@ -443,6 +451,7 @@ function Templates(props) {
 				});
 			} else if (activeTab === "video-memes") {
 				if (!videoMemes.length) return;
+				if (videoMemes.length < 25 || videoMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = videoMemes[videoMemes.length - 1];
 				getDocs(query(collection(db, "memes"), where("type", "==", "video"), where("name", ">=", search.toUpperCase()), where("name", "<=", search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), startAfter(lastMeme.name), limit(25))).then((querySnapshot) => {
@@ -454,6 +463,7 @@ function Templates(props) {
 				});
 			} else if (activeTab === "meme-generator") {
 				if (!myMemes.length) return;
+				if (myMemes.length < 25 || myMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = myMemes[myMemes.length - 1];
 				getDocs(query(collection(db, "memes", user.uid, "userMemes"), where("name", ">=", search.toUpperCase()), where("name", "<=", search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), startAfter(lastMeme.name), limit(25))).then((querySnapshot) => {
@@ -469,6 +479,7 @@ function Templates(props) {
 
 			if (activeTab === "memes") {
 				if (!memes.length) return;
+				if (memes.length < 25 || memes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = memes[memes.length - 1];
 				const memesRef = collection(db, "memes");
@@ -489,6 +500,7 @@ function Templates(props) {
 				});
 			} else if (activeTab === "popular") {
 				if (!popularMemes.length) return;
+				if (popularMemes.length < 25 || popularMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = popularMemes[popularMemes.length - 1];
 				getDocs(
@@ -508,6 +520,7 @@ function Templates(props) {
 				});
 			} else if (activeTab === "image-memes") {
 				if (!imageMemes.length) return;
+				if (imageMemes.length < 25 || imageMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = imageMemes[imageMemes.length - 1];
 				getDocs(
@@ -528,6 +541,7 @@ function Templates(props) {
 				});
 			} else if (activeTab === "video-memes") {
 				if (!videoMemes.length) return;
+				if (videoMemes.length < 25 || videoMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = videoMemes[videoMemes.length - 1];
 				getDocs(
@@ -548,6 +562,7 @@ function Templates(props) {
 				});
 			} else if (activeTab === "meme-generator") {
 				if (!myMemes.length) return;
+				if (myMemes.length < 25 || myMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = myMemes[myMemes.length - 1];
 				getDocs(
@@ -621,6 +636,7 @@ function Templates(props) {
 							fetchMoreMemes={fetchMoreMemes}
 							loading={loading}
 							from={activeTab}
+							setMyMemes={setMyMemes}
 						/>
 					}
 				</div>

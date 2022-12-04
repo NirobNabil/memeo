@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 import React, { useEffect, useState } from "react";
 import { BsDownload } from "react-icons/bs";
@@ -67,9 +68,9 @@ import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useRouter } from "next/router";
 
-
-const Trending = ({ data }) => {
+const Trending = ({ data, owner, setMyMemes }) => {
 	const [openDownloadMOdal, setOpenDownloadModal] = useState(false);
 	const [downloadUrl, setDownloadUrl] = useState("");
 	const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -77,10 +78,12 @@ const Trending = ({ data }) => {
 	const [openAdModal, setOpenAdModal] = useState(false);
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [loading, setLoading] = useState(false);
+	const [deleteLoading, setDeleteLoading] = useState(false);
 	const [error, setError] = useState(null);
 	const [open, setOpen] = useState(false);
 
 	const user = useSelector((state) => state.data.currentUser);
+	const router = useRouter();
 
 	const { theme } = useTheme();
 	const [chiplen, setChipLen] = useState(3);
@@ -121,6 +124,7 @@ const Trending = ({ data }) => {
 	};
 
 	const deleteTemplate = async () => {
+		setDeleteLoading(true);
 		getDoc(doc(db, "memes", data.memeId)).then((Doc) => {
 			if (Doc.exists()) {
 				addDoc(collection(db, "memes", user.uid, "Trash"), {
@@ -128,10 +132,15 @@ const Trending = ({ data }) => {
 					deletedAt: serverTimestamp(),
 				}).then(() => {
 					deleteDoc(doc(db, "memes", data.memeId)).then(() => {
-						deleteDoc(doc(db, "memes", user.uid, "userMemes", data.id)).then(() => {
-							setOpenApproveDeleteModal(false);
-							window.location.reload();
-						});
+						deleteDoc(doc(db, "memes", user.uid, "userMemes", data.id)).then(
+							() => {
+								setMyMemes((prev) => {
+									return prev.filter((item) => item.id !== data.id);
+								});
+								setDeleteLoading(false);
+								setOpenApproveDeleteModal(false);
+							}
+						);
 					});
 				});
 			}
@@ -185,7 +194,7 @@ const Trending = ({ data }) => {
 					</div>
 
 				{/* template-buttons lower */}
-				{!data?.user?.uid ? (
+				{owner ? (
 					<div className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-3 px-5 transition-all duration-300'
 					     >
 				    	<div className='flex justify-end'>
@@ -197,15 +206,34 @@ const Trending = ({ data }) => {
 				) : (
 					<div className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-3 px-5 transition-all duration-300'>
 						{/* download icon  */}
-						<div className='flex justify-end'
-						>
-							<BsDownload className='text-2xl' 
-							onClick={() => setOpenDownloadModal(true)}
-							/>
-						</div>
+						<div className='flex justify-between'>
+							<div className='flex'
+							 	onClick={() => router.push(`Profile?uid=${data?.user?.uid}`)}
+							>
+								<img
+									src={data?.user?.photoURL}
+									alt='user'
+									className='h-8 w-8 rounded-full object-cover'
+								/>
+								<div className='flex flex-col ml-2 cursor-pointer text-sm hover:underline'>
+									<p className='text-sm font-semibold'>
+										{data?.user?.name}
+									</p>
+									<p className='text-xs text-gray-200 overflow-hidden whitespace-nowrap'>
+										{data?.user?.name}
+									</p>
+								 </div>
+							</div>
+							<div className='flex'>
+								<BsDownload className='text-2xl' 
+								onClick={() => setOpenDownloadModal(true)}
+								/>
+							</div>
+					 </div>
 					</div>
 					)}
 
+             </div>
 
 
 				<div className='flex justify-between items-center mt-2'>
@@ -290,7 +318,6 @@ const Trending = ({ data }) => {
 						</Stack>
 					</Stack>
 				</div>
-			</div>
 
 			<div
 				className={`download-modal fixed w-full h-full z-10 bg-transparent top-0 left-0 ${
@@ -406,12 +433,12 @@ const Trending = ({ data }) => {
 						className={`bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-400 px-5 py-5 shadow rounded-2xl border border-[#ff4522] w-full`}
 						id='download_modal'>
 						<p className='text-center cursor-pointer'>
-							This template is in queue for 30 days. After 30 days, it will be
-							deleted automatically.
+							After this action, this temlate falls in the trash and after 30 days it will be deleted permanently.
 						</p>
 						<div className='flex justify-center mt-5'>
 							<button
 								className='bg-[#ff4522] text-white px-5 py-2 rounded-md mr-3'
+								disabled={deleteLoading}
 								onClick={() => {
 									deleteTemplate();
 								}}>

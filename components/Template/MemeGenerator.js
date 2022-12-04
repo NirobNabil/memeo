@@ -306,6 +306,7 @@ function  MemeGenerator(props) {
                                         });
                                     }
                                     }}
+                                    disabled={loading || !meme}
                                 >
                                     <p className='text-lg font-bold'>
                                         Upload

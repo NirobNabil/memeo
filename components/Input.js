@@ -113,7 +113,7 @@ function Input() {
             let words = text.split(" ");
             words.filter((word) => word.startsWith("@"));
             taggedFriends.map(async (friend) => {
-              if(words.includes(`@${friend.name}`)) {
+              if(words.includes(`@${friend.userName}`)) {
                await addDoc(collection(db, `notifications/${friend.id}/notifications`), {
                   type: "tag",
                   notifidate: serverTimestamp(),
@@ -175,7 +175,7 @@ function Input() {
           let words = text.split(" ");
           words.filter((word) => word.startsWith("@"));
           taggedFriends.map(async (friend) => {
-            if(words.includes(`@${friend.name}`)) {
+            if(words.includes(`@${friend.userName}`)) {
              await addDoc(collection(db, `notifications/${friend.id}/notifications`), {
                 type: "tag",
                 notifidate: serverTimestamp(),
@@ -237,9 +237,9 @@ function Input() {
 			getDocs(
 				query(
 					collection(db, "users"),
-					where("name", ">=", text),
-					where("name", "<=", text + "\uf8ff"),
-					orderBy("name", "asc"),
+					where("userName", ">=", text),
+					where("userName", "<=", text + "\uf8ff"),
+					orderBy("userName", "asc"),
 					limit(5)
 				)
 			).then((querySnapshot) => {
@@ -344,7 +344,7 @@ function Input() {
 										while (text.length > 0 && text[text.length - 1] !== " ") {
 											text = text.slice(0, -1);
 										}
-										text += `@${friend.name} `;
+										text += `@${friend.userName} `;
 										setInput(text);
 										setTagFriends((prev) => [...prev, friend]);
 										setTagFriend(false);

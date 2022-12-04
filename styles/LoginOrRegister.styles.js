@@ -6,7 +6,6 @@ export const LoginWrapper = styled.div`
 	width: 100%;
 	min-height: 100vh;
 	height: 100vh;
-	background-color: var(--primary-color);
 
 	.loginwrapper_container {
 		height: 100%;

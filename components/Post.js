@@ -77,6 +77,13 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
   const [commentlen, setCommentlen] = useState(len);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
+  const [commentTagUsers, setCommentTagUsers] = useState([]);
+  const [commentTagUsersModalIsOpen, setCommentTagUsersModalIsOpen] =
+    useState(false);
+  const [subCommentTagUsers, setSubCommentTagUsers] = useState([]);
+  const [subCommentTagUsersModalIsOpen, setSubCommentTagUsersModalIsOpen] =
+    useState(false);
+
 	const postRef = useRef(null);
 
 	const router = useRouter();
@@ -199,6 +206,29 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 				});
 				post.comments = docValue.data().comments + 1;
 			}
+		});
+		commentToSend.match(/@(\w+)/g)?.map((tag) => {
+			const userName = tag.replace("@", "");
+			getDocs(query(collection(db, "users"), where("userName", "==", userName))).then(
+				(snapshot) => {
+					snapshot.docs.map((doc) => {
+						if (doc.exists()) {
+							addDoc(collection(db, "notifications", doc.id, "notifications"), {
+								notifimsg: `${user.name} mentioned you in a comment`,
+								type: "comment",
+								postID: post.id,
+								comment: commentToSend,
+								notifidate: serverTimestamp(),
+								read: false,
+								userName: user?.userName,
+								sender: user?.name,
+								senderid: user?.uid,
+								photoURL: user?.photoURL,
+							});
+						}
+					});
+				}
+			);
 		});
 	};
 
@@ -346,6 +376,29 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 			comments: increment(1),
 		});
 		post.comments = post.comments + 1;
+		replyToSend.match(/@(\w+)/g)?.map((tag) => {
+			const userName = tag.replace("@", "");
+			getDocs(query(collection(db, "users"), where("userName", "==", userName))).then(
+				(snapshot) => {
+					snapshot.docs.map((doc) => {
+						if (doc.exists()) {
+							addDoc(collection(db, "notifications", doc.id, "notifications"), {
+								notifimsg: `${user.name} mentioned you in a comment`,
+								type: "comment",
+								postID: post.id,
+								comment: replyToSend,
+								notifidate: serverTimestamp(),
+								read: false,
+								userName: user?.userName,
+								sender: user?.name,
+								senderid: user?.uid,
+								photoURL: user?.photoURL,
+							});
+						}
+					});
+				}
+			);
+		});
 	};
 
 	const loveComment = async (reply, comment) => {
@@ -385,9 +438,7 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 	};
 
 	const truncate = (string, n) => {
-		return string?.length > n
-			? string.substr(0, n - 1) + "...see more"
-			: string;
+		return string.length > n ? string.substr(0, n - 1) + "..." : string;
 	};
 
 	return (
@@ -592,6 +643,7 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 							</div>
 						</div>
 						<div className='px-2.5 break-all md:break-normal'>
+							
 							{showCaption ? (
 								<p onClick={() => setShowCaption(false)}>{post?.caption}</p>
 							) : (
@@ -721,27 +773,27 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 						<p className='text-xs sm:text-base'>Comment</p>
 					</button>
 
-        {user?.userName === post?.user?.userName ? (
-          <button
-            className="postButton focus:text-gray-100"
-            onClick={() => {
-              setDeleteModalIsOpen(true);
-            }}
-          >
-            <Delete className="h-6 w-6" />
-            <h4>Delete post</h4>
-          </button>
-        ) : (
-          <button className="postButton"
-          onClick={() => {
-            setShareModalIsOpen(true);
-          }}
-          >
-            <Share  width={28} height={28} />
-            <h4>Share</h4>
-          </button>
-        )}
-      </div>
+			{user?.userName === post?.user?.userName ? (
+			<button
+				className="postButton focus:text-gray-100"
+				onClick={() => {
+				setDeleteModalIsOpen(true);
+				}}
+			>
+				<Delete className="h-6 w-6" />
+				<h4>Delete post</h4>
+			</button>
+			) : (
+			<button className="postButton"
+			onClick={() => {
+				setShareModalIsOpen(true);
+			}}
+			>
+				<Share  width={28} height={28} />
+				<h4>Share</h4>
+			</button>
+			)}
+		</div>
 
 				{post?.comments > 0 && post?.comments !== commentlen && (
 					<div className='flex items-center space-x-2 p-2.5 cursor-pointer'>
@@ -903,8 +955,7 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 															}}>
 															{reply?.likes?.includes(user?.uid) ? (
 																<span
-																	className='text-blue-500
-                        '>
+																	className='text-blue-500'>
 																	Loved
 																</span>
 															) : (
@@ -965,7 +1016,17 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 													placeholder={`Reply to ${replyTo}`}
 													className='rounded-full p-1 text-sm h-3 bg-gray-100 dark:bg-gray-700 flex-grow px-2 focus:outline-none'
 													value={reply}
-													onChange={(e) => setReply(e.target.value)}
+													onChange={(e) => {
+														if(e.target.value.match(/@([a-zA-Z0-9_]+)/g)){
+															let text = e.target.value.match(/@([a-zA-Z0-9_]+)/g)[e.target.value.match(/@([a-zA-Z0-9_]+)/g).length - 1].replace('@', '')
+															getDocs(query(collection(db, "users"), where("userName", ">=", text), where("userName", "<=", text.toLocaleLowerCase() + "\uf8ff"), limit(5))).then((querySnapshot) => {
+																setSubCommentTagUsers(querySnapshot.docs.map((doc) => doc.data()))
+															})
+														}else{
+															setSubCommentTagUsers([])
+														}
+														setReply(e.target.value)
+													}}
 												/>
 												<button
 													type='submit'
@@ -974,6 +1035,31 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 														e.preventDefault();
 														sendReply(comment);
 													}}></button>
+													{subCommentTagUsers.length > 0 && (
+														<div className='absolute z-50 bg-white dark:bg-gray-800 rounded-md shadow-md w-80 mt-10'>
+															{subCommentTagUsers.map((user) => (
+																<div
+																key={user.uid}
+																	className='flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer'
+																	onClick={() => {
+																		/// replace last taguser with the selected user
+																		setReply(reply.replace(/@([a-zA-Z0-9_]+)$/, `@${user.userName}`))
+																		setSubCommentTagUsers([])
+																	}
+																	}>
+																	<img
+																    	src={user.photoURL}
+																    	alt=''
+																    	className='h-8 w-8 rounded-full object-cover mb-5 cursor-pointer'
+																	/>
+																	<div className='flex flex-col'>
+																		<p className='font-semibold'>{user.name}</p>
+																		<p className='text-gray-500 text-sm'>{user.userName}</p>
+																	</div>
+																</div>
+															))}
+														</div>
+													)}
 											</form>
 										</div>
 									)}
@@ -999,12 +1085,51 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 								placeholder='Add a comment...'
 								className='focus:outline-none flex-1 dark:bg-gray-700 bg-gray-100 dark:text-white/75 text-gray-500 rounded-full py-1.5 px-2'
 								value={comment}
-								onChange={(e) => setComment(e.target.value)}
+								onChange={(e) => {
+									if(e.target.value.match(/@([a-zA-Z0-9_]+)/g)){
+										setCommentTagUsersModalIsOpen(true)
+										let text = e.target.value.match(/@([a-zA-Z0-9_]+)/g)[e.target.value.match(/@([a-zA-Z0-9_]+)/g).length - 1].replace('@', '')
+										getDocs(query(collection(db, "users"), where("userName", ">=", text), where("userName", "<=", text.toLocaleLowerCase() + "\uf8ff"), limit(5))).then((querySnapshot) => {
+											setCommentTagUsers(querySnapshot.docs.map((doc) => doc.data()))
+										})
+									}else{
+										setCommentTagUsersModalIsOpen(false)
+										setCommentTagUsers([])
+									}
+									setComment(e.target.value)
+								}}
+
 							/>
 							<button
 								type='submit'
 								className='hidden'
 								onClick={addComment}></button>
+							{commentTagUsers.length > 0 && (
+								<div className='absolute z-50 bg-white dark:bg-gray-800 rounded-md shadow-md w-80 mt-10'>
+									{commentTagUsers.map((user) => (
+										<div
+										   key={user.uid}
+											className='flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer'
+											onClick={() => {
+												/// replace last taguser with the selected user
+												setComment(comment.replace(/@([a-zA-Z0-9_]+)$/, `@${user.userName}`))
+												setCommentTagUsers([])
+											}
+											}>
+											<img
+											src={user.photoURL}
+											alt=''
+											className='h-8 w-8 rounded-full object-cover mb-5 cursor-pointer'
+											/>
+											<div className='flex flex-col'>
+												<p className='font-semibold'>{user.name}</p>
+												<p className='text-gray-500 text-sm'>{user.userName}</p>
+											</div>
+										</div>
+									))}
+								</div>
+							)}
+						
 						</form>
 					</div>
 				)}
@@ -1217,7 +1342,6 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 								</div>
 							</div>
 						)}
-
 						{post?.caption && (
 							<div className='px-2.5 break-all md:break-normal'>
 								{showInput ? (

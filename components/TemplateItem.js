@@ -1,13 +1,19 @@
-import React, { useState} from 'react'
+import React, { useState, useEffect} from 'react'
 import Trending from './Template/Trending'
 
 import TemplateSekeleton from './Skeleton/TemplateSekeleton'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
 
-export default function TemplateItem({ memes, fetchMoreMemes, loading, from}) {
+export default function TemplateItem({ memes, fetchMoreMemes, loading, from, setMyMemes}) {
 	const [hasMore, setHasMore] = useState(true)
 	const [loadingMore, setLoadingMore] = useState(false)
+
+	useEffect(() => {
+		console.log(memes)
+	}, [memes])
+
+	
 
   return (
           <InfiniteScroll
@@ -35,7 +41,8 @@ export default function TemplateItem({ memes, fetchMoreMemes, loading, from}) {
 					<div className='meme-templates'>
 						<div style={{ display: "grid" }} className='grid-cols-3 gap-8'>
 							{memes?.map((template) => 
-			                 <Trending key={template.id} data={template} />)}
+			                 <Trending key={template.id} data={template} owner={from === 'meme-generator' ? true : false} setMyMemes={setMyMemes}/>
+							)}
 						      {loading && <TemplateSekeleton  from={from} />}
 						</div>
 					 </div>

@@ -164,7 +164,7 @@ function Header(props) {
 							setNotificationsLength(notificationsLength - 1);
 							if (notif?.type === "follow") {
 								router.push(`/Profile?uid=${notif?.senderid}`);
-							} else if (notif?.type === "tag") {
+							} else if (notif?.type === "tag" || notif?.type === "comment") {
 								router.push(`/posts?id=${notif.postID}`);
 							} else {
 								router.push(`/messenger?id=${notif.senderid}`);
