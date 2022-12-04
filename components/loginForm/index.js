@@ -64,7 +64,6 @@ const LoginForm = ({ setLoginOrRegister }) => {
 				})
 		} catch (error) {
 			console.log(error);
-			alert(error.message);
 			setToastErrorMessage(error.message);
 			setToastError(true);
 			setTimeout(() => {
