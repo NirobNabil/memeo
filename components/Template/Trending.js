@@ -108,7 +108,7 @@ const Trending = ({ data, owner, setMyMemes }) => {
 		const a = document.createElement("a");
 		a.href = downloadUrl;
 		a.target = "_blank";
-		a.download = data.name
+		a.download = data.name;
 		document.body.appendChild(a);
 		a.click();
 		document.body.removeChild(a);
@@ -149,34 +149,36 @@ const Trending = ({ data, owner, setMyMemes }) => {
 
 	return (
 		<>
-        <div className="flex flex-col">
-			<div className='bg-white dark:bg-slate-800 h-[250px] shadow-md rounded-lg overflow-hidden relative group transition-all duration-300'>
-                {data?.type === "image" ? (
-                 <Image
-                    src={data.memeURL}
-                    alt={data.name}
-                    layout='fill'
-                    objectFit='cover'
-                    className='rounded-lg'
-					onClick={handleOpen}
-                />
-                ) : (
-                    <video
-                     src={data.memeURL}
-                     alt={data.name}
-                     layout='fill'
-                     className='rounded-lg h-full w-full'
-                     autoPlay
-                     loop
-                     muted
-                     security="restricted"
-                     style={{ objectFit: "cover" }}
-					 onClick={handleOpen}
-                 />
-                )}
+			<div className='flex flex-col'>
+				<div className='bg-white dark:bg-slate-800 h-[250px] shadow-md rounded-lg overflow-hidden relative group transition-all duration-300'>
+					{data?.type === "image" ? (
+						<Image
+							src={data.memeURL}
+							alt={data.name}
+							layout='fill'
+							objectFit='cover'
+							className='rounded-lg'
+							onClick={handleOpen}
+						/>
+					) : (
+						<video
+							src={data.memeURL}
+							alt={data.name}
+							layout='fill'
+							className='rounded-lg h-full w-full'
+							autoPlay
+							loop
+							muted
+							security='restricted'
+							style={{ objectFit: "cover" }}
+							onClick={handleOpen}
+						/>
+					)}
 
-					<p className='text-white text-sm text-center absolute bottom-0 left-0 w-full overflow-hidden whitespace-nowrap py-[14px] px-2 bg-gradient-to-t from-black/80 to-black/10'>
-						{data.name}
+					<p className='text-white text-sm text-center absolute bottom-0 left-0 w-full overflow-hidden whitespace-nowrap py-[28px] bg-gradient-to-t from-black/70 to-black/30'>
+						<span className='absolute w-10/12 mx-auto bottom-0 left-1/2 -translate-x-1/2 overflow-hidden leading-[56px]'>
+							{data.name}
+						</span>
 					</p>
 
 					<div className='template-upper-btns absolute left-0 top-0 w-full bg-transparent py-3 px-5 transition-all duration-300'>
@@ -193,48 +195,45 @@ const Trending = ({ data, owner, setMyMemes }) => {
 						</div>
 					</div>
 
-				{/* template-buttons lower */}
-				{owner ? (
-					<div className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-3 px-5 transition-all duration-300'
-					     >
-				    	<div className='flex justify-end'>
-				     	    <MdDeleteOutline className='text-2xl'
-						    	onClick={() => setOpenDeleteModal(true)}
-							 />
-				    	</div>
-			    	</div>
-				) : (
-					<div className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-3 px-5 transition-all duration-300'>
-						{/* download icon  */}
-						<div className='flex justify-between'>
-							<div className='flex'
-							 	onClick={() => router.push(`Profile?uid=${data?.user?.uid}`)}
-							>
-								<img
-									src={data?.user?.photoURL}
-									alt='user'
-									className='h-8 w-8 rounded-full object-cover'
-								/>
-								<div className='flex flex-col ml-2 cursor-pointer text-sm hover:underline'>
-									<p className='text-sm font-semibold'>
-										{data?.user?.name}
-									</p>
-									<p className='text-xs text-gray-200 overflow-hidden whitespace-nowrap'>
-										{data?.user?.name}
-									</p>
-								 </div>
-							</div>
-							<div className='flex'>
-								<BsDownload className='text-2xl' 
-								onClick={() => setOpenDownloadModal(true)}
+					{/* template-buttons lower */}
+					{owner ? (
+						<div className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-4 px-5 transition-all duration-300'>
+							<div className='flex justify-end'>
+								<MdDeleteOutline
+									className='text-2xl'
+									onClick={() => setOpenDeleteModal(true)}
 								/>
 							</div>
-					 </div>
-					</div>
+						</div>
+					) : (
+						<div className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200   dark:bg-gray-500 py-3 px-5 transition-all duration-300'>
+							{/* download icon  */}
+							<div className='flex justify-between items-center'>
+								<div
+									className='flex'
+									onClick={() => router.push(`Profile?uid=${data?.user?.uid}`)}>
+									<img
+										src={data?.user?.photoURL}
+										alt='user'
+										className='h-8 w-8 rounded-full object-cover'
+									/>
+									<div className='flex flex-col ml-2 cursor-pointer text-sm hover:underline'>
+										<p className='text-sm font-semibold'>{data?.user?.name}</p>
+										<p className='text-[11px] font-bold text-gray-700 dark:text-gray-200 overflow-hidden whitespace-nowrap'>
+											@{data?.user?.userName}
+										</p>
+									</div>
+								</div>
+								<div className='flex cursor-pointer'>
+									<BsDownload
+										className='text-2xl'
+										onClick={() => setOpenDownloadModal(true)}
+									/>
+								</div>
+							</div>
+						</div>
 					)}
-
-             </div>
-
+				</div>
 
 				<div className='flex justify-between items-center mt-2'>
 					<Stack direction='column' spacing={1}>
@@ -319,34 +318,34 @@ const Trending = ({ data, owner, setMyMemes }) => {
 					</Stack>
 				</div>
 
-			<div
-				className={`download-modal fixed w-full h-full z-10 bg-transparent top-0 left-0 ${
-					openDownloadMOdal ? "block" : "hidden"
-				}`}>
-				<div className='flex flex-col h-full justify-center items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-full w-[400px] z-20'>
-					<div
-						className='cross-icon w-full flex justify-end p-3 text-2xl cursor-pointer'
-						onClick={() => setOpenDownloadModal(false)}>
-						<FaTimes />
-					</div>
-					<div
-						className={`bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-400 px-5 py-5 shadow rounded-2xl border border-[#ff4522] w-full`}
-						id='download_modal'>
-						<p className='text-center cursor-pointer'>
-							Watch Ad for download{" "}
-							<BsDownload
-								className='text-2xl ml-2 inline font-medium'
-								onClick={() => {
-									setOpenDownloadModal(false);
-									// setOpenAdModal(true);
-									handleDownload();
-								}}
-							/>
-						</p>
+				<div
+					className={`download-modal fixed w-full h-full z-10 bg-transparent top-0 left-0 ${
+						openDownloadMOdal ? "block" : "hidden"
+					}`}>
+					<div className='flex flex-col h-full justify-center items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-full w-[400px] z-20'>
+						<div
+							className='cross-icon w-full flex justify-end p-3 text-2xl cursor-pointer'
+							onClick={() => setOpenDownloadModal(false)}>
+							<FaTimes />
+						</div>
+						<div
+							className={`bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-400 px-5 py-5 shadow rounded-2xl border border-[#ff4522] w-full`}
+							id='download_modal'>
+							<p className='text-center cursor-pointer'>
+								Watch Ad for download{" "}
+								<BsDownload
+									className='text-2xl ml-2 inline font-medium'
+									onClick={() => {
+										setOpenDownloadModal(false);
+										// setOpenAdModal(true);
+										handleDownload();
+									}}
+								/>
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
 			<Modal
 				isOpen={openDeleteModal}
@@ -433,7 +432,8 @@ const Trending = ({ data, owner, setMyMemes }) => {
 						className={`bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-400 px-5 py-5 shadow rounded-2xl border border-[#ff4522] w-full`}
 						id='download_modal'>
 						<p className='text-center cursor-pointer'>
-							After this action, this temlate falls in the trash and after 30 days it will be deleted permanently.
+							After this action, this temlate falls in the trash and after 30
+							days it will be deleted permanently.
 						</p>
 						<div className='flex justify-center mt-5'>
 							<button

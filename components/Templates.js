@@ -64,16 +64,14 @@ function Templates(props) {
 
 	const [user, setUser] = useState(null);
 
-
-
 	useEffect(() => {
 		setUser(props.user);
 	}, [props.user]);
 
 	useEffect(() => {
-	  if (user && searchTags.length === 0 && search === "") {
+		if (user && searchTags.length === 0 && search === "") {
 			// get memes templates on maximum number of downloads
-			if(activeTab === "memes") {
+			if (activeTab === "memes") {
 				setLoading(true);
 				const memesRef = collection(db, "memes");
 				const memesQuery = query(
@@ -89,8 +87,7 @@ function Templates(props) {
 					setMemes(memes);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "popular") {
+			} else if (activeTab === "popular") {
 				setLoading(true);
 				getDocs(
 					query(
@@ -105,8 +102,7 @@ function Templates(props) {
 					setPopularMemes(data);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "image-memes") {
+			} else if (activeTab === "image-memes") {
 				setLoading(true);
 				getDocs(
 					query(
@@ -122,8 +118,7 @@ function Templates(props) {
 					setImageMemes(data);
 					setLoading(false);
 				});
-			}
-			else if(activeTab === "video-memes") {
+			} else if (activeTab === "video-memes") {
 				setLoading(true);
 				getDocs(
 					query(
@@ -139,9 +134,7 @@ function Templates(props) {
 					setVideoMemes(data);
 					setLoading(false);
 				});
-			}
-			
-			else if(activeTab === "meme-generator") {
+			} else if (activeTab === "meme-generator") {
 				// get user's memes templates
 				setLoading(true);
 				getDocs(
@@ -158,7 +151,6 @@ function Templates(props) {
 			}
 		}
 	}, [user, activeTab, search, searchTags]);
-	
 
 	useEffect(() => {
 		if (user && searchTags.length > 0) {
@@ -257,7 +249,13 @@ function Templates(props) {
 			if (activeTab === "memes") {
 				setLoading(true);
 				const memesRef = collection(db, "memes");
-				const memesQuery = query(memesRef, where('name', '>=', search.toUpperCase()), where('name', '<=', search.toLowerCase() + '\uf8ff'), orderBy('name', 'asc'), limit(25));
+				const memesQuery = query(
+					memesRef,
+					where("name", ">=", search.toUpperCase()),
+					where("name", "<=", search.toLowerCase() + "\uf8ff"),
+					orderBy("name", "asc"),
+					limit(25)
+				);
 				onSnapshot(memesQuery, (querySnapshot) => {
 					const memes = [];
 					querySnapshot.forEach((doc) => {
@@ -268,7 +266,15 @@ function Templates(props) {
 				});
 			} else if (activeTab === "popular") {
 				setLoading(true);
-				getDocs(query(collection(db, "memes"), where('name', '>=', search.toUpperCase()), where('name', '<=', search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("name", ">=", search.toUpperCase()),
+						where("name", "<=", search.toLowerCase() + "\uf8ff"),
+						orderBy("name", "asc"),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -277,7 +283,16 @@ function Templates(props) {
 				});
 			} else if (activeTab === "image-memes") {
 				setLoading(true);
-				getDocs(query(collection(db, "memes"), where("type", "==", "image"), where('name', '>=', search.toUpperCase()), where('name', '<=', search.toLowerCase() + '\uf8ff'), orderBy("name"), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("type", "==", "image"),
+						where("name", ">=", search.toUpperCase()),
+						where("name", "<=", search.toLowerCase() + "\uf8ff"),
+						orderBy("name"),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -286,7 +301,16 @@ function Templates(props) {
 				});
 			} else if (activeTab === "video-memes") {
 				setLoading(true);
-				getDocs(query(collection(db, "memes"), where("type", "==", "video"), where('name', '>=', search.toUpperCase()), where('name', '<=', search.toLowerCase() + '\uf8ff'), orderBy("name"), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("type", "==", "video"),
+						where("name", ">=", search.toUpperCase()),
+						where("name", "<=", search.toLowerCase() + "\uf8ff"),
+						orderBy("name"),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -297,7 +321,15 @@ function Templates(props) {
 			} else if (activeTab === "meme-generator") {
 				// get user's memes templates
 				setLoading(true);
-				getDocs(query(collection(db, "memes", user.uid, "userMemes"), where("name", ">=", search.toUpperCase()), where("name", "<=", search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes", user.uid, "userMemes"),
+						where("name", ">=", search.toUpperCase()),
+						where("name", "<=", search.toLowerCase() + "\uf8ff"),
+						orderBy("name", "asc"),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -416,7 +448,14 @@ function Templates(props) {
 				setLoading(true);
 				const lastMeme = memes[memes.length - 1];
 				const memesRef = collection(db, "memes");
-				const memesQuery = query(memesRef, where("name", ">=", search.toUpperCase()), where("name", "<=", search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), startAfter(lastMeme.name), limit(25));
+				const memesQuery = query(
+					memesRef,
+					where("name", ">=", search.toUpperCase()),
+					where("name", "<=", search.toLowerCase() + "\uf8ff"),
+					orderBy("name", "asc"),
+					startAfter(lastMeme.name),
+					limit(25)
+				);
 				onSnapshot(memesQuery, (querySnapshot) => {
 					const memes = [];
 					querySnapshot.forEach((doc) => {
@@ -430,7 +469,16 @@ function Templates(props) {
 				if (popularMemes.length < 25 || popularMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = popularMemes[popularMemes.length - 1];
-				getDocs(query(collection(db, "memes"), where("name", ">=", search.toUpperCase()), where("name", "<=", search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), startAfter(lastMeme.name), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("name", ">=", search.toUpperCase()),
+						where("name", "<=", search.toLowerCase() + "\uf8ff"),
+						orderBy("name", "asc"),
+						startAfter(lastMeme.name),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -442,7 +490,17 @@ function Templates(props) {
 				if (imageMemes.length < 25 || imageMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = imageMemes[imageMemes.length - 1];
-				getDocs(query(collection(db, "memes"), where("type", "==", "image"), where("name", ">=", search.toUpperCase()), where("name", "<=", search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), startAfter(lastMeme.name), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("type", "==", "image"),
+						where("name", ">=", search.toUpperCase()),
+						where("name", "<=", search.toLowerCase() + "\uf8ff"),
+						orderBy("name", "asc"),
+						startAfter(lastMeme.name),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -454,7 +512,17 @@ function Templates(props) {
 				if (videoMemes.length < 25 || videoMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = videoMemes[videoMemes.length - 1];
-				getDocs(query(collection(db, "memes"), where("type", "==", "video"), where("name", ">=", search.toUpperCase()), where("name", "<=", search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), startAfter(lastMeme.name), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes"),
+						where("type", "==", "video"),
+						where("name", ">=", search.toUpperCase()),
+						where("name", "<=", search.toLowerCase() + "\uf8ff"),
+						orderBy("name", "asc"),
+						startAfter(lastMeme.name),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -466,7 +534,16 @@ function Templates(props) {
 				if (myMemes.length < 25 || myMemes.length % 25 !== 0) return;
 				setLoading(true);
 				const lastMeme = myMemes[myMemes.length - 1];
-				getDocs(query(collection(db, "memes", user.uid, "userMemes"), where("name", ">=", search.toUpperCase()), where("name", "<=", search.toLowerCase() + '\uf8ff'), orderBy("name", "asc"), startAfter(lastMeme.name), limit(25))).then((querySnapshot) => {
+				getDocs(
+					query(
+						collection(db, "memes", user.uid, "userMemes"),
+						where("name", ">=", search.toUpperCase()),
+						where("name", "<=", search.toLowerCase() + "\uf8ff"),
+						orderBy("name", "asc"),
+						startAfter(lastMeme.name),
+						limit(25)
+					)
+				).then((querySnapshot) => {
 					const data = querySnapshot.docs.map((doc) => {
 						return { ...doc.data(), id: doc.id };
 					});
@@ -613,13 +690,18 @@ function Templates(props) {
 					/>
 
 					{/* earning */}
-					<div className='bg-white dark:bg-slate-800 rounded-2xl'>
+					<div className='bg-white dark:bg-slate-800 rounded-2xl relative overflow-hidden'>
 						<div className='px-10 py-5 mt-2'>
 							<div className='flex justify-between items-center'>
 								<div className='item-inner'>
 									<div className='item-title'>Total Earning: </div>
 								</div>
 								<div className='item-media'>$ 0.00</div>
+							</div>
+						</div>
+						<div className='absolute w-full h-full left-0 top-0 bg-black/70'>
+							<div className='flex justify-center items-center h-full'>
+								<p className='text-white font-semibold'>Coming Soon...</p>
 							</div>
 						</div>
 					</div>

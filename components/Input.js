@@ -73,140 +73,142 @@ function Input() {
 			const blob = await response.blob();
 			const type = blob.type.split("/")[1];
 
-      const storageRef = ref(storage, `posts/${user?.uid}/${Date.now()}.${type}`);
-      const task = uploadBytesResumable(storageRef, blob);
-      task.on('state_changed', (snapshot) => {
-        const percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setProgress(percentage);
-      }, (error) => {
-        console.log(error);
-      }, async () => {
-        
-        const downloadURL = await getDownloadURL(task.snapshot.ref);
-        const postRef = await addDoc(collection(db, "posts"), {
-          caption: input,
-          timestamp: serverTimestamp(),
-          type: blob.type.split('/')[0],
-          postURL: downloadURL,
-          likes: 0,
-          comments: 0,
-          shares: 0,
-          share: false,
-          uid: user?.uid,
-          user: {
-            uid: user?.uid,
-            name: user?.name,
-            photoURL: user?.photoURL,
-            userName: user?.userName || user?.email.split('@')[0],
-          }
-        });
-        await updateDoc(doc(db, "posts", postRef.id), {
-          postID: postRef.id,
-        })
-        await addDoc(collection(db, `posts/${user?.uid}/userPosts`), {
-          timestamp: serverTimestamp(),
-          postID: postRef.id,
-        })
-        .then(() => {
-          if(input) {
-            let text = input;
-            let words = text.split(" ");
-            words.filter((word) => word.startsWith("@"));
-            taggedFriends.map(async (friend) => {
-              if(words.includes(`@${friend.userName}`)) {
-               await addDoc(collection(db, `notifications/${friend.id}/notifications`), {
-                  type: "tag",
-                  notifidate: serverTimestamp(),
-                  read: false,
-                  postID: postRef.id,
-                  userName: user?.userName,
-                  notifimsg: `${user?.userName} tagged you in a post`,
-                  sender: user?.name,
-                  senderid: user?.uid,
-                  photoURL: user?.photoURL,
-                });
-                
-              }
-            });
-          }
-          setLoading(false);
-          setInput("");
-          setSelectedFile(null);
-          setShowEmojis(false);
-          setTagFriend(false);
-          setTaggedFriends([]);
-          setTagFriends([]);
-          setProgress(0);
-          filePickerRef.current.value = null;
-        });
-
-  
-        
-      });
-
-    } else {
-      
-      const postRef = await addDoc(collection(db, "posts"), {
-        caption: input,
-        timestamp: serverTimestamp(),
-        type: "text",
-        postURL: "",
-        likes: 0,
-        comments: 0,
-        shares: 0,
-        share: false,
-        uid: user?.uid,
-        user: {
-          uid: user?.uid,
-          name: user?.name,
-          photoURL: user?.photoURL,
-          userName: user?.userName || user?.email.split('@')[0],
-        }
-      });
-      await updateDoc(doc(db, "posts", postRef.id), {
-        postID: postRef.id,
-      });
-     await addDoc(collection(db, `posts/${user?.uid}/userPosts`), {
-        timestamp: serverTimestamp(),
-        postID: postRef.id,
-      }).then(() => {
-        if(input) {
-          let text = input;
-          let words = text.split(" ");
-          words.filter((word) => word.startsWith("@"));
-          taggedFriends.map(async (friend) => {
-            if(words.includes(`@${friend.userName}`)) {
-             await addDoc(collection(db, `notifications/${friend.id}/notifications`), {
-                type: "tag",
-                notifidate: serverTimestamp(),
-                read: false,
-                postID: postRef.id,
-                userName: user?.userName,
-                notifimsg: `${user?.userName} tagged you in a post`,
-                sender: user?.name,
-                senderid: user?.uid,
-                photoURL: user?.photoURL,
-              });
-            }
-          });
-        }
-        setLoading(false);
-        setInput("");
-        setSelectedFile(null);
-        setShowEmojis(false);
-        setTagFriend(false);
-        setTaggedFriends([]);
-        setTagFriends([]);
-        setProgress(0);
-        filePickerRef.current.value = null;
-      });
-
-
-      
-    }
-    
-   
-  };
+			const storageRef = ref(
+				storage,
+				`posts/${user?.uid}/${Date.now()}.${type}`
+			);
+			const task = uploadBytesResumable(storageRef, blob);
+			task.on(
+				"state_changed",
+				(snapshot) => {
+					const percentage =
+						(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+					setProgress(percentage);
+				},
+				(error) => {
+					console.log(error);
+				},
+				async () => {
+					const downloadURL = await getDownloadURL(task.snapshot.ref);
+					const postRef = await addDoc(collection(db, "posts"), {
+						caption: input,
+						timestamp: serverTimestamp(),
+						type: blob.type.split("/")[0],
+						postURL: downloadURL,
+						likes: 0,
+						comments: 0,
+						shares: 0,
+						share: false,
+						uid: user?.uid,
+						user: {
+							uid: user?.uid,
+							name: user?.name,
+							photoURL: user?.photoURL,
+							userName: user?.userName || user?.email.split("@")[0],
+						},
+					});
+					await updateDoc(doc(db, "posts", postRef.id), {
+						postID: postRef.id,
+					});
+					await addDoc(collection(db, `posts/${user?.uid}/userPosts`), {
+						timestamp: serverTimestamp(),
+						postID: postRef.id,
+					}).then(() => {
+						if (input) {
+							let text = input;
+							let words = text.split(" ");
+							words.filter((word) => word.startsWith("@"));
+							taggedFriends.map(async (friend) => {
+								if (words.includes(`@${friend.userName}`)) {
+									await addDoc(
+										collection(db, `notifications/${friend.id}/notifications`),
+										{
+											type: "tag",
+											notifidate: serverTimestamp(),
+											read: false,
+											postID: postRef.id,
+											userName: user?.userName,
+											notifimsg: `${user?.userName} tagged you in a post`,
+											sender: user?.name,
+											senderid: user?.uid,
+											photoURL: user?.photoURL,
+										}
+									);
+								}
+							});
+						}
+						setLoading(false);
+						setInput("");
+						setSelectedFile(null);
+						setShowEmojis(false);
+						setTagFriend(false);
+						setTaggedFriends([]);
+						setTagFriends([]);
+						setProgress(0);
+						filePickerRef.current.value = null;
+					});
+				}
+			);
+		} else {
+			const postRef = await addDoc(collection(db, "posts"), {
+				caption: input,
+				timestamp: serverTimestamp(),
+				type: "text",
+				postURL: "",
+				likes: 0,
+				comments: 0,
+				shares: 0,
+				share: false,
+				uid: user?.uid,
+				user: {
+					uid: user?.uid,
+					name: user?.name,
+					photoURL: user?.photoURL,
+					userName: user?.userName || user?.email.split("@")[0],
+				},
+			});
+			await updateDoc(doc(db, "posts", postRef.id), {
+				postID: postRef.id,
+			});
+			await addDoc(collection(db, `posts/${user?.uid}/userPosts`), {
+				timestamp: serverTimestamp(),
+				postID: postRef.id,
+			}).then(() => {
+				if (input) {
+					let text = input;
+					let words = text.split(" ");
+					words.filter((word) => word.startsWith("@"));
+					taggedFriends.map(async (friend) => {
+						if (words.includes(`@${friend.userName}`)) {
+							await addDoc(
+								collection(db, `notifications/${friend.id}/notifications`),
+								{
+									type: "tag",
+									notifidate: serverTimestamp(),
+									read: false,
+									postID: postRef.id,
+									userName: user?.userName,
+									notifimsg: `${user?.userName} tagged you in a post`,
+									sender: user?.name,
+									senderid: user?.uid,
+									photoURL: user?.photoURL,
+								}
+							);
+						}
+					});
+				}
+				setLoading(false);
+				setInput("");
+				setSelectedFile(null);
+				setShowEmojis(false);
+				setTagFriend(false);
+				setTaggedFriends([]);
+				setTagFriends([]);
+				setProgress(0);
+				filePickerRef.current.value = null;
+			});
+		}
+	};
 
 	const addImageToPost = (e) => {
 		const reader = new FileReader();
@@ -273,7 +275,7 @@ function Input() {
 					<div className='flex flex-col'>
 						<div className='flex items-start flex-col'>
 							<Link href={`/Profile?uid=${user?.uid}`}>
-								<p className='font-semibold dark:text-white/75 cursor-pointer hover:underline'>
+								<p className='text-gray-700 dark:text-white/75 cursor-pointer hover:underline'>
 									{user?.name}
 								</p>
 							</Link>
@@ -302,7 +304,7 @@ function Input() {
 								onClick={() => filePickerRef.current.click()}>
 								<svg
 									aria-hidden='true'
-									className='w-6 h-6 cursor-pointer text-[#ff4522] transition duration-150 transform hover:scale-110'
+									className='w-6 h-6 cursor-pointer text-[#ff4522] transition duration-150 transform hover:opacity-70'
 									fill='currentColor'
 									viewBox='0 0 20 20'
 									xmlns='http://www.w3.org/2000/svg'>
@@ -316,7 +318,7 @@ function Input() {
 							{/* emoji picker */}
 							<div className='flex items-center space-x-2'>
 								<EmojiHappyIcon
-									className='h-6 w-6 cursor-pointer transition duration-150 transform hover:scale-110 text-[#ff4522]'
+									className='h-6 w-6 cursor-pointer transition duration-150 transform hover:opacity-70 text-[#ff4522]'
 									onClick={() => setShowEmojis(!showEmojis)}
 								/>
 							</div>
@@ -324,9 +326,9 @@ function Input() {
 						<button
 							disabled={!input && !selectedFile}
 							onClick={sendPost}
-							className={`bg-[#ff4522] text-white font-semibold px-4 py-2 rounded-lg ${
-								!input && !selectedFile && "opacity-50"
-							}`}>
+							className={`bg-[#ff4522] text-white font-semibold px-4 py-2 rounded-lg ${!input &&
+								!selectedFile &&
+								"opacity-50"}`}>
 							Post
 						</button>
 					</div>

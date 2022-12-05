@@ -1,0 +1,19 @@
+1. both sidebar fixed 
+2. Fixed navbar
+3. Changed messenger icon color
+4. Change template boxes (icon, shades, aligns, sizing, user name)  
+5. Changed Icon in navbar 
+6. add border bottom on focus on search bar
+7. feed bar side border color in light mode
+8. Change favicon 
+9. Removed transition on submenu 
+10. In create post changed Name font weight and icon hover
+11. No memes text 
+12. Payment coming soon
+13. favorite page polishing
+
+
+
+
+problems 
+1. direct favorite page reload dile kichu data rendering e somossa hoi

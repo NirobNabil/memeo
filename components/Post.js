@@ -55,34 +55,35 @@ import { v4 as uuidv4 } from "uuid";
 import Modal from "react-modal";
 import Video from "./Video";
 
+function Post({ post, active, modalPost, setRemoveList, len }) {
+	const user = useSelector((state) => state.data.currentUser);
+	const [showInput, setShowInput] = useState(false);
+	const [liked, setLiked] = useState(false);
+	const [comment, setComment] = useState("");
+	const [comments, setComments] = useState([]);
+	const [showComments, setShowComments] = useState(false);
+	const [isFavorite, setIsFavorite] = useState(false);
+	const [replyTo, setReplyTo] = useState("");
+	const [reply, setReply] = useState("");
+	const [modalIsOpen, setModalIsOpen] = useState(false);
+	const [modalUsers, setModalUsers] = useState([]);
+	const [modalTitle, setModalTitle] = useState("");
+	const [showCommentInput, setShowCommentInput] = useState(false);
+	const [shareModalIsOpen, setShareModalIsOpen] = useState(false);
+	const [sharePostText, setSharePostText] = useState("");
+	const [showCaption, setShowCaption] = useState(false);
+	const [commentlen, setCommentlen] = useState(len);
+	const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
 
-
-function Post({ post, active, modalPost,  setRemoveList,  len }) {
-  const user = useSelector((state) => state.data.currentUser);
-  const [showInput, setShowInput] = useState(false);
-  const [liked, setLiked] = useState(false);
-  const [comment, setComment] = useState("");
-  const [comments, setComments] = useState([]);
-  const [showComments, setShowComments] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [replyTo, setReplyTo] = useState("");
-  const [reply, setReply] = useState("");
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalUsers, setModalUsers] = useState([]);
-  const [modalTitle, setModalTitle] = useState("");
-  const [showCommentInput, setShowCommentInput] = useState(false);
-  const [shareModalIsOpen, setShareModalIsOpen] = useState(false);
-  const [sharePostText, setSharePostText] = useState("");
-  const [showCaption, setShowCaption] = useState(false);
-  const [commentlen, setCommentlen] = useState(len);
-  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
-
-  const [commentTagUsers, setCommentTagUsers] = useState([]);
-  const [commentTagUsersModalIsOpen, setCommentTagUsersModalIsOpen] =
-    useState(false);
-  const [subCommentTagUsers, setSubCommentTagUsers] = useState([]);
-  const [subCommentTagUsersModalIsOpen, setSubCommentTagUsersModalIsOpen] =
-    useState(false);
+	const [commentTagUsers, setCommentTagUsers] = useState([]);
+	const [commentTagUsersModalIsOpen, setCommentTagUsersModalIsOpen] = useState(
+		false
+	);
+	const [subCommentTagUsers, setSubCommentTagUsers] = useState([]);
+	const [
+		subCommentTagUsersModalIsOpen,
+		setSubCommentTagUsersModalIsOpen,
+	] = useState(false);
 
 	const postRef = useRef(null);
 
@@ -209,26 +210,26 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 		});
 		commentToSend.match(/@(\w+)/g)?.map((tag) => {
 			const userName = tag.replace("@", "");
-			getDocs(query(collection(db, "users"), where("userName", "==", userName))).then(
-				(snapshot) => {
-					snapshot.docs.map((doc) => {
-						if (doc.exists()) {
-							addDoc(collection(db, "notifications", doc.id, "notifications"), {
-								notifimsg: `${user.name} mentioned you in a comment`,
-								type: "comment",
-								postID: post.id,
-								comment: commentToSend,
-								notifidate: serverTimestamp(),
-								read: false,
-								userName: user?.userName,
-								sender: user?.name,
-								senderid: user?.uid,
-								photoURL: user?.photoURL,
-							});
-						}
-					});
-				}
-			);
+			getDocs(
+				query(collection(db, "users"), where("userName", "==", userName))
+			).then((snapshot) => {
+				snapshot.docs.map((doc) => {
+					if (doc.exists()) {
+						addDoc(collection(db, "notifications", doc.id, "notifications"), {
+							notifimsg: `${user.name} mentioned you in a comment`,
+							type: "comment",
+							postID: post.id,
+							comment: commentToSend,
+							notifidate: serverTimestamp(),
+							read: false,
+							userName: user?.userName,
+							sender: user?.name,
+							senderid: user?.uid,
+							photoURL: user?.photoURL,
+						});
+					}
+				});
+			});
 		});
 	};
 
@@ -287,15 +288,19 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 		setShareModalIsOpen(false);
 	};
 
-  const deletePost = async ( ) => {
-    if((post.type === "image" || post.type === "video") && post.share === false && post?.postURL){
-      try {
-        const storageRef = ref(storage, post.postURL);
-        await deleteObject(storageRef);
-      } catch (error) {
-        console.log(error);
-      }
-      }
+	const deletePost = async () => {
+		if (
+			(post.type === "image" || post.type === "video") &&
+			post.share === false &&
+			post?.postURL
+		) {
+			try {
+				const storageRef = ref(storage, post.postURL);
+				await deleteObject(storageRef);
+			} catch (error) {
+				console.log(error);
+			}
+		}
 
 		try {
 			if (post.comments > 0) {
@@ -378,26 +383,26 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 		post.comments = post.comments + 1;
 		replyToSend.match(/@(\w+)/g)?.map((tag) => {
 			const userName = tag.replace("@", "");
-			getDocs(query(collection(db, "users"), where("userName", "==", userName))).then(
-				(snapshot) => {
-					snapshot.docs.map((doc) => {
-						if (doc.exists()) {
-							addDoc(collection(db, "notifications", doc.id, "notifications"), {
-								notifimsg: `${user.name} mentioned you in a comment`,
-								type: "comment",
-								postID: post.id,
-								comment: replyToSend,
-								notifidate: serverTimestamp(),
-								read: false,
-								userName: user?.userName,
-								sender: user?.name,
-								senderid: user?.uid,
-								photoURL: user?.photoURL,
-							});
-						}
-					});
-				}
-			);
+			getDocs(
+				query(collection(db, "users"), where("userName", "==", userName))
+			).then((snapshot) => {
+				snapshot.docs.map((doc) => {
+					if (doc.exists()) {
+						addDoc(collection(db, "notifications", doc.id, "notifications"), {
+							notifimsg: `${user.name} mentioned you in a comment`,
+							type: "comment",
+							postID: post.id,
+							comment: replyToSend,
+							notifidate: serverTimestamp(),
+							read: false,
+							userName: user?.userName,
+							sender: user?.name,
+							senderid: user?.uid,
+							photoURL: user?.photoURL,
+						});
+					}
+				});
+			});
 		});
 	};
 
@@ -565,12 +570,6 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 								className='h-6 w-6 text-red-500 cursor-pointer space-x-2 mr-2 hover:opacity-50 transition'
 							/>
 						)}
-						<CloseRoundedIcon
-							className='h-6 w-6 dark:text-white dark:bg-transparent text-black bg-gray-200 space-x-2 rounded-full cursor-pointer hover:dark:opacity-50 transition'
-							onClick={() => {
-								setRemoveList((prev) => [...prev, post.id]);
-							}}
-						/>
 					</div>
 				)}
 
@@ -643,7 +642,6 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 							</div>
 						</div>
 						<div className='px-2.5 break-all md:break-normal'>
-							
 							{showCaption ? (
 								<p onClick={() => setShowCaption(false)}>{post?.caption}</p>
 							) : (
@@ -730,7 +728,7 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 					</div>
 				</div>
 
-				<div className='flex justify-evenly items-center border-t  border-gray-600/80  mx-2.5 pt-2 text-gray-500 dark:text-white/75'>
+				<div className='flex justify-evenly items-center rounded-full  border-gray-600/80 text-gray-500 dark:text-white/75 bg-gray-100 dark:bg-slate-900 w-[80%] mx-auto'>
 					<button
 						className={`postButton `}
 						onClick={() => {
@@ -756,9 +754,9 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 							}
 						}}>
 						{liked ? (
-							<i className='fas fa-laugh-squint text-2xl text-[#ff4522]'></i>
+							<i className='fas fa-laugh-squint text-xl text-[#ff4522]'></i>
 						) : (
-							<i className='fas fa-laugh-beam text-2xl'></i>
+							<i className='fas fa-laugh-beam text-xl text-gray-500'></i>
 						)}
 
 						<p className='text-sm font-medium'>HaHa</p>
@@ -773,27 +771,26 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 						<p className='text-xs sm:text-base'>Comment</p>
 					</button>
 
-			{user?.userName === post?.user?.userName ? (
-			<button
-				className="postButton focus:text-gray-100"
-				onClick={() => {
-				setDeleteModalIsOpen(true);
-				}}
-			>
-				<Delete className="h-6 w-6" />
-				<h4>Delete post</h4>
-			</button>
-			) : (
-			<button className="postButton"
-			onClick={() => {
-				setShareModalIsOpen(true);
-			}}
-			>
-				<Share  width={28} height={28} />
-				<h4>Share</h4>
-			</button>
-			)}
-		</div>
+					{user?.userName === post?.user?.userName ? (
+						<button
+							className='postButton focus:text-gray-100'
+							onClick={() => {
+								setDeleteModalIsOpen(true);
+							}}>
+							<Delete className='h-6 w-6' />
+							<h4>Delete post</h4>
+						</button>
+					) : (
+						<button
+							className='postButton'
+							onClick={() => {
+								setShareModalIsOpen(true);
+							}}>
+							<Share width={28} height={28} />
+							<h4>Share</h4>
+						</button>
+					)}
+				</div>
 
 				{post?.comments > 0 && post?.comments !== commentlen && (
 					<div className='flex items-center space-x-2 p-2.5 cursor-pointer'>
@@ -954,10 +951,7 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 																loveComment(reply, comment);
 															}}>
 															{reply?.likes?.includes(user?.uid) ? (
-																<span
-																	className='text-blue-500'>
-																	Loved
-																</span>
+																<span className='text-blue-500'>Loved</span>
 															) : (
 																"Love"
 															)}
@@ -1017,15 +1011,33 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 													className='rounded-full p-1 text-sm h-3 bg-gray-100 dark:bg-gray-700 flex-grow px-2 focus:outline-none'
 													value={reply}
 													onChange={(e) => {
-														if(e.target.value.match(/@([a-zA-Z0-9_]+)/g)){
-															let text = e.target.value.match(/@([a-zA-Z0-9_]+)/g)[e.target.value.match(/@([a-zA-Z0-9_]+)/g).length - 1].replace('@', '')
-															getDocs(query(collection(db, "users"), where("userName", ">=", text), where("userName", "<=", text.toLocaleLowerCase() + "\uf8ff"), limit(5))).then((querySnapshot) => {
-																setSubCommentTagUsers(querySnapshot.docs.map((doc) => doc.data()))
-															})
-														}else{
-															setSubCommentTagUsers([])
+														if (e.target.value.match(/@([a-zA-Z0-9_]+)/g)) {
+															let text = e.target.value
+																.match(/@([a-zA-Z0-9_]+)/g)
+																[
+																	e.target.value.match(/@([a-zA-Z0-9_]+)/g)
+																		.length - 1
+																].replace("@", "");
+															getDocs(
+																query(
+																	collection(db, "users"),
+																	where("userName", ">=", text),
+																	where(
+																		"userName",
+																		"<=",
+																		text.toLocaleLowerCase() + "\uf8ff"
+																	),
+																	limit(5)
+																)
+															).then((querySnapshot) => {
+																setSubCommentTagUsers(
+																	querySnapshot.docs.map((doc) => doc.data())
+																);
+															});
+														} else {
+															setSubCommentTagUsers([]);
 														}
-														setReply(e.target.value)
+														setReply(e.target.value);
 													}}
 												/>
 												<button
@@ -1035,31 +1047,37 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 														e.preventDefault();
 														sendReply(comment);
 													}}></button>
-													{subCommentTagUsers.length > 0 && (
-														<div className='absolute z-50 bg-white dark:bg-gray-800 rounded-md shadow-md w-80 mt-10'>
-															{subCommentTagUsers.map((user) => (
-																<div
+												{subCommentTagUsers.length > 0 && (
+													<div className='absolute z-50 bg-white dark:bg-gray-800 rounded-md shadow-md w-80 mt-10'>
+														{subCommentTagUsers.map((user) => (
+															<div
 																key={user.uid}
-																	className='flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer'
-																	onClick={() => {
-																		/// replace last taguser with the selected user
-																		setReply(reply.replace(/@([a-zA-Z0-9_]+)$/, `@${user.userName}`))
-																		setSubCommentTagUsers([])
-																	}
-																	}>
-																	<img
-																    	src={user.photoURL}
-																    	alt=''
-																    	className='h-8 w-8 rounded-full object-cover mb-5 cursor-pointer'
-																	/>
-																	<div className='flex flex-col'>
-																		<p className='font-semibold'>{user.name}</p>
-																		<p className='text-gray-500 text-sm'>{user.userName}</p>
-																	</div>
+																className='flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer'
+																onClick={() => {
+																	/// replace last taguser with the selected user
+																	setReply(
+																		reply.replace(
+																			/@([a-zA-Z0-9_]+)$/,
+																			`@${user.userName}`
+																		)
+																	);
+																	setSubCommentTagUsers([]);
+																}}>
+																<img
+																	src={user.photoURL}
+																	alt=''
+																	className='h-8 w-8 rounded-full object-cover mb-5 cursor-pointer'
+																/>
+																<div className='flex flex-col'>
+																	<p className='font-semibold'>{user.name}</p>
+																	<p className='text-gray-500 text-sm'>
+																		{user.userName}
+																	</p>
 																</div>
-															))}
-														</div>
-													)}
+															</div>
+														))}
+													</div>
+												)}
 											</form>
 										</div>
 									)}
@@ -1083,22 +1101,38 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 							<input
 								type='text'
 								placeholder='Add a comment...'
-								className='focus:outline-none flex-1 dark:bg-gray-700 bg-gray-100 dark:text-white/75 text-gray-500 rounded-full py-1.5 px-2'
+								className='focus:outline-none flex-1 dark:bg-gray-700 bg-gray-100 dark:text-white/75 text-gray-500 rounded-full py-1.5 px-4'
 								value={comment}
 								onChange={(e) => {
-									if(e.target.value.match(/@([a-zA-Z0-9_]+)/g)){
-										setCommentTagUsersModalIsOpen(true)
-										let text = e.target.value.match(/@([a-zA-Z0-9_]+)/g)[e.target.value.match(/@([a-zA-Z0-9_]+)/g).length - 1].replace('@', '')
-										getDocs(query(collection(db, "users"), where("userName", ">=", text), where("userName", "<=", text.toLocaleLowerCase() + "\uf8ff"), limit(5))).then((querySnapshot) => {
-											setCommentTagUsers(querySnapshot.docs.map((doc) => doc.data()))
-										})
-									}else{
-										setCommentTagUsersModalIsOpen(false)
-										setCommentTagUsers([])
+									if (e.target.value.match(/@([a-zA-Z0-9_]+)/g)) {
+										setCommentTagUsersModalIsOpen(true);
+										let text = e.target.value
+											.match(/@([a-zA-Z0-9_]+)/g)
+											[
+												e.target.value.match(/@([a-zA-Z0-9_]+)/g).length - 1
+											].replace("@", "");
+										getDocs(
+											query(
+												collection(db, "users"),
+												where("userName", ">=", text),
+												where(
+													"userName",
+													"<=",
+													text.toLocaleLowerCase() + "\uf8ff"
+												),
+												limit(5)
+											)
+										).then((querySnapshot) => {
+											setCommentTagUsers(
+												querySnapshot.docs.map((doc) => doc.data())
+											);
+										});
+									} else {
+										setCommentTagUsersModalIsOpen(false);
+										setCommentTagUsers([]);
 									}
-									setComment(e.target.value)
+									setComment(e.target.value);
 								}}
-
 							/>
 							<button
 								type='submit'
@@ -1108,18 +1142,22 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 								<div className='absolute z-50 bg-white dark:bg-gray-800 rounded-md shadow-md w-80 mt-10'>
 									{commentTagUsers.map((user) => (
 										<div
-										   key={user.uid}
+											key={user.uid}
 											className='flex items-center space-x-2 px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer'
 											onClick={() => {
 												/// replace last taguser with the selected user
-												setComment(comment.replace(/@([a-zA-Z0-9_]+)$/, `@${user.userName}`))
-												setCommentTagUsers([])
-											}
-											}>
+												setComment(
+													comment.replace(
+														/@([a-zA-Z0-9_]+)$/,
+														`@${user.userName}`
+													)
+												);
+												setCommentTagUsers([]);
+											}}>
 											<img
-											src={user.photoURL}
-											alt=''
-											className='h-8 w-8 rounded-full object-cover mb-5 cursor-pointer'
+												src={user.photoURL}
+												alt=''
+												className='h-8 w-8 rounded-full object-cover mb-5 cursor-pointer'
 											/>
 											<div className='flex flex-col'>
 												<p className='font-semibold'>{user.name}</p>
@@ -1129,7 +1167,6 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 									))}
 								</div>
 							)}
-						
 						</form>
 					</div>
 				)}
@@ -1368,70 +1405,74 @@ function Post({ post, active, modalPost,  setRemoveList,  len }) {
 								<Video videoURL={post?.postURL} />
 							))}
 
-              {post?.share && (
-                <div className="flex items-center px-2.5 cursor-pointer  ">
-                  <Link href={`/Profile?uid=${post?.user?.uid}`} >
-                    <div>
-                      {post?.user?.photoURL && <img src={post?.user?.photoURL} className="!h-10 !w-10 cursor-pointer rounded-full object-cover" />}
-                    </div>
-                  </Link>
-                  <div className="mr-auto ml-2 leading-none">
-                    <Link href={`/Profile?uid=${post?.shareFrom?.uid}`} >
-                      <h6 className="font-medium hover:text-blue-500 hover:underline">
-                        {post?.user?.name}
-                      </h6>
-                    </Link>
-                    <p className="text-sm dark:text-white/50 p-y-1 ">{post?.user?.userName}</p>
-                    <TimeAgo
-                      datetime={post?.timestamp?.toDate()}
-                      className="text-xs dark:text-white/50 "
-                    />
-                  </div>
-                </div>
-              )}
-          </div>
-        </div>
-      </Modal>
+						{post?.share && (
+							<div className='flex items-center px-2.5 cursor-pointer  '>
+								<Link href={`/Profile?uid=${post?.user?.uid}`}>
+									<div>
+										{post?.user?.photoURL && (
+											<img
+												src={post?.user?.photoURL}
+												className='!h-10 !w-10 cursor-pointer rounded-full object-cover'
+											/>
+										)}
+									</div>
+								</Link>
+								<div className='mr-auto ml-2 leading-none'>
+									<Link href={`/Profile?uid=${post?.shareFrom?.uid}`}>
+										<h6 className='font-medium hover:text-blue-500 hover:underline'>
+											{post?.user?.name}
+										</h6>
+									</Link>
+									<p className='text-sm dark:text-white/50 p-y-1 '>
+										{post?.user?.userName}
+									</p>
+									<TimeAgo
+										datetime={post?.timestamp?.toDate()}
+										className='text-xs dark:text-white/50 '
+									/>
+								</div>
+							</div>
+						)}
+					</div>
+				</div>
+			</Modal>
 
-      <Modal
-        isOpen={deleteModalIsOpen}
-        onRequestClose={() => setDeleteModalIsOpen(false)}
-        className="bg-white text-slate-800 dark:text-gray-300 dark:bg-slate-900 rounded-lg shadow-lg p-4 overflow-y-scroll scrollbar-hide max-h-[600px]"
-        overlayClassName="fixed inset-0 bg-black/50 flex items-center justify-center"
-        style={{
-          overlay: {
-            zIndex: 9999,
-          },
-          content: {
-            width: "540px",
-            height: "100px",
-            margin: "auto",
-            padding: "0px",
-            border: "none",
-            borderRadius: "10px",
-          },
-        }}
-      >
-        <div className="flex flex-col items-center justify-center p-2">
-              Are you sure you want to delete this post?
-          <div className="flex items-center justify-center space-x-4 mt-4">
-            <button
-              className="text-white font-semibold px-4 py-2 rounded-lg bg-[#ff4d4d] hover:bg-[#ff3333] focus:outline-none"
-              onClick={() => setDeleteModalIsOpen(false)}
-            >
-              Cancel
-            </button>
-            <button
-              className="text-white font-semibold px-4 py-2 rounded-lg bg-[#ff4d4d] hover:bg-[#ff3333] focus:outline-none"
-              onClick={deletePost}
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      </Modal>
-    </>
-    );
+			<Modal
+				isOpen={deleteModalIsOpen}
+				onRequestClose={() => setDeleteModalIsOpen(false)}
+				className='bg-white text-slate-800 dark:text-gray-300 dark:bg-slate-900 rounded-lg shadow-lg p-4 overflow-y-scroll scrollbar-hide max-h-[600px]'
+				overlayClassName='fixed inset-0 bg-black/50 flex items-center justify-center'
+				style={{
+					overlay: {
+						zIndex: 9999,
+					},
+					content: {
+						width: "540px",
+						height: "100px",
+						margin: "auto",
+						padding: "0px",
+						border: "none",
+						borderRadius: "10px",
+					},
+				}}>
+				<div className='flex flex-col items-center justify-center p-2'>
+					Are you sure you want to delete this post?
+					<div className='flex items-center justify-center space-x-4 mt-4'>
+						<button
+							className='text-white font-semibold px-4 py-2 rounded-lg bg-[#ff4d4d] hover:bg-[#ff3333] focus:outline-none'
+							onClick={() => setDeleteModalIsOpen(false)}>
+							Cancel
+						</button>
+						<button
+							className='text-white font-semibold px-4 py-2 rounded-lg bg-[#ff4d4d] hover:bg-[#ff3333] focus:outline-none'
+							onClick={deletePost}>
+							Delete
+						</button>
+					</div>
+				</div>
+			</Modal>
+		</>
+	);
 }
 
 export default Post;

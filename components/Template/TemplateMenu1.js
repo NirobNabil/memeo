@@ -23,7 +23,7 @@ import {
 	FilterListOutlined,
 	FilterListRounded,
 	TrendingUp,
-	Star
+	Star,
 } from "@mui/icons-material";
 
 import {
@@ -124,50 +124,50 @@ const TemplateMenu1 = (props) => {
 						<div className='card-content-inner'>
 							{/* search box  */}
 							<div className='search-box flex flex-row items-center rounded-xl gap-5 py-2 px-5 bg-gray-100 dark:bg-slate-900 mb-4'>
-								
-							  {!showTag ? (
-								<>
-									<input
-									type='text'
-									id='search-meme'
-									value={search}
-									onChange={(e) => setSearch(e.target.value)}
-									name='search-meme'
-									placeholder='Search Meme'
-									className='bg-transparent w-full outline-none'
-								/>
-								</>
-							  ) : (
-								<>
-
-								  <ChipInput
-								    placeholder="Search Tags"
-									className='bg-transparent w-full outline-none  dark:text-white flex-grow flex-shrink 
+								{!showTag ? (
+									<>
+										<input
+											type='text'
+											id='search-meme'
+											value={search}
+											onChange={(e) => setSearch(e.target.value)}
+											name='search-meme'
+											placeholder='Search Meme'
+											className='bg-transparent w-full outline-none'
+										/>
+									</>
+								) : (
+									<>
+										<ChipInput
+											placeholder='Search Tags'
+											className='bg-transparent w-full outline-none  dark:text-white flex-grow flex-shrink 
 									 inline-block'
-									style={{
-										fontSize: "1.1rem",
-										fontWeight: "500",
-										color: theme === "dark" ? "white" : "black",
-
-									}}
-									value={searchTags}
-									onAdd={(chip) => handleAddChip(chip)}
-									onDelete={(chip, index) => {
-										const newTags = [...searchTags];
-										newTags.splice(index, 1);
-										setSearchTags(newTags);
-									}}
-								/>
-								</>
-							  )}
+											style={{
+												fontSize: "1.1rem",
+												fontWeight: "500",
+												color: theme === "dark" ? "white" : "black",
+											}}
+											value={searchTags}
+											onAdd={(chip) => handleAddChip(chip)}
+											onDelete={(chip, index) => {
+												const newTags = [...searchTags];
+												newTags.splice(index, 1);
+												setSearchTags(newTags);
+											}}
+										/>
+									</>
+								)}
 							</div>
-							<Chip  className='bg-gray-100 dark:bg-slate-900 text-black dark:text-white text-xs mb-2' icon={showTag ? <Search /> : <Tag />}
-							   label={!showTag ? "Search by Tags" : "Search by Text"}
-						    	onClick={() => {
+							<Chip
+								className='bg-gray-100 dark:bg-slate-900 text-black dark:text-white text-xs mb-2'
+								icon={showTag ? <Search /> : <Tag />}
+								label={!showTag ? "Search by Tags" : "Search by Text"}
+								onClick={() => {
 									setShowTag(!showTag);
 									setSearch("");
 									setSearchTags([]);
-							}} />
+								}}
+							/>
 							<p className='text-gray-500 dark:text-gray-400 text-xs mb-2'>
 								{!showTag ? "Search Meme by Tags" : "Search Meme by Name"}
 							</p>
@@ -217,7 +217,7 @@ const TemplateMenu1 = (props) => {
 									/>
 								</div>
 							</div> */}
-							
+
 							{showTag && (
 								<Stack direction='column' spacing={1}>
 									<Stack direction='row' spacing={1} flexWrap='wrap'>
@@ -305,7 +305,7 @@ const TemplateMenu1 = (props) => {
 									<li className='mb-4' onClick={() => setActiveTab("memes")}>
 										<div
 											className='item-link item-content flex flex-row flex-start cursor-pointer  items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
-								          	transform hover:-translate-y-1 hover:scale-110'>
+								          	transform '>
 											<div className='item-media'>
 												<HiOutlineTemplate className='w-6 h-6 mr-6' />
 											</div>
@@ -318,7 +318,7 @@ const TemplateMenu1 = (props) => {
 									<li className='mb-4' onClick={() => setActiveTab("popular")}>
 										<div
 											className='item-link item-content flex flex-row cursor-pointer items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
-									transform hover:-translate-y-1 hover:scale-110'>
+									transform '>
 											<div className='item-media'>
 												<HiBadgeCheck className='w-6 h-6 mr-6' />
 											</div>
@@ -332,7 +332,7 @@ const TemplateMenu1 = (props) => {
 										onClick={() => setActiveTab("image-memes")}>
 										<div
 											className='item-link item-content flex flex-row cursor-pointer items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
-								           	transform hover:-translate-y-1 hover:scale-110'>
+								           	transform '>
 											<div className='item-media'>
 												<HiCamera className='w-6 h-6 mr-6' />
 											</div>
@@ -346,7 +346,7 @@ const TemplateMenu1 = (props) => {
 										onClick={() => setActiveTab("video-memes")}>
 										<div
 											className='item-link item-content flex flex-row cursor-pointer items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
-												transform hover:-translate-y-1 hover:scale-110'>
+												transform '>
 											<div className='item-media'>
 												<HiFilm className='w-6 h-6 mr-6' />
 											</div>
@@ -360,7 +360,7 @@ const TemplateMenu1 = (props) => {
 										onClick={() => setActiveTab("meme-generator")}>
 										<div
 											className='item-link item-content flex flex-row cursor-pointer items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out
-								        	transform hover:-translate-y-1 hover:scale-110'>
+								        	transform '>
 											<div className='item-media'>
 												<HiOutlineUserGroup className='w-6 h-6 mr-6' />
 											</div>

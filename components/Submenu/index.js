@@ -33,7 +33,6 @@ import {
 	setDoc,
 	arrayUnion,
 	arrayRemove,
-
 } from "firebase/firestore";
 
 import {
@@ -49,23 +48,32 @@ import {
 
 import { useSelector } from "react-redux";
 
-import Modal from 'react-modal';
+import Modal from "react-modal";
 import ProfileCard from "../Components/ProfileCard";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const Submenu1 = (props) => {
-
-	const {profile, following, followers, follow,  followingUIDs, followersUIDs,  fetchFollowing, fetchFollow, fetchFollowers, active , fromFavorites} = props;
-
+	const {
+		profile,
+		following,
+		followers,
+		follow,
+		followingUIDs,
+		followersUIDs,
+		fetchFollowing,
+		fetchFollow,
+		fetchFollowers,
+		active,
+		fromFavorites,
+	} = props;
 
 	const [modalFollowOpen, setModalFollowOpen] = useState(false);
 	const [modalFollowingOpen, setModalFollowingOpen] = useState(false);
 	const [modalFollowersOpen, setModalFollowersOpen] = useState(false);
-	
-	const [followListRemove , setFollowListRemove] = useState([])
+
+	const [followListRemove, setFollowListRemove] = useState([]);
 
 	const [list, setList] = useState([]);
-
 
 	const router = useRouter();
 	const user = useSelector((state) => state.data.currentUser);
@@ -79,92 +87,80 @@ const Submenu1 = (props) => {
 			updateDoc(doc(db, "users", user.uid, "following", user?.uid), {
 				following: arrayUnion(post?.uid),
 			});
-				
-			  const id = [user.uid, post?.uid].sort().join("");
-			  getDoc(doc(db, "conversations", id)).then((Doc) => {
+
+			const id = [user.uid, post?.uid].sort().join("");
+			getDoc(doc(db, "conversations", id)).then((Doc) => {
 				if (!Doc.exists()) {
-			  setDoc(doc(db, "conversations", id), {
-				customizedconvo: {
-				  theme: "https://i.imgur.com/4hzNTTq.png",
-				  emoji: "🤗"
-				},
-				uid: [user.uid, post?.uid].sort().join(""), //sorts the uid's alphabetically and joins them together
-				uids: [user.uid, post?.uid],
-				users: [{
-				  uid: user?.uid,
-				  name: user?.name,
-				  photoURL: user?.photoURL,
-				}, {
-				  uid: post?.uid,
-				  name: post?.name,
-				  photoURL: post?.photoURL,
-				}],
-				nickname1: '',
-				nickname2: '',
-				notifications1: true,
-				notifications2: true,
-				lastmsgdate: serverTimestamp(),
-			  });
-			  addDoc(collection(db, "conversations", id, "messages"), {
-				message: "Welcome to your new conversation!",
-				reaction1: "",
-				reaction2: "",
-				msgdate: serverTimestamp(),
-				read: false,
-				senderid: user?.uid || "",
-				sendername: user?.name || "",
-				editing: false,
-			  });
-			  
-		    	addDoc(collection(db, "notifications", post?.uid, "notifications"), {
-					notifimsg: `${user?.name} started following you`,
-					notifidate: serverTimestamp(),
-					read: false,
-					sender: user.name,
-					senderid: user.uid,
-					photoURL: user.photoURL,
-					type: "follow",
-				})
-			}
-		  });
+					setDoc(doc(db, "conversations", id), {
+						customizedconvo: {
+							theme: "https://i.imgur.com/4hzNTTq.png",
+							emoji: "🤗",
+						},
+						uid: [user.uid, post?.uid].sort().join(""), //sorts the uid's alphabetically and joins them together
+						uids: [user.uid, post?.uid],
+						users: [
+							{
+								uid: user?.uid,
+								name: user?.name,
+								photoURL: user?.photoURL,
+							},
+							{
+								uid: post?.uid,
+								name: post?.name,
+								photoURL: post?.photoURL,
+							},
+						],
+						nickname1: "",
+						nickname2: "",
+						notifications1: true,
+						notifications2: true,
+						lastmsgdate: serverTimestamp(),
+					});
+					addDoc(collection(db, "conversations", id, "messages"), {
+						message: "Welcome to your new conversation!",
+						reaction1: "",
+						reaction2: "",
+						msgdate: serverTimestamp(),
+						read: false,
+						senderid: user?.uid || "",
+						sendername: user?.name || "",
+						editing: false,
+					});
 
+					addDoc(collection(db, "notifications", post?.uid, "notifications"), {
+						notifimsg: `${user?.name} started following you`,
+						notifidate: serverTimestamp(),
+						read: false,
+						sender: user.name,
+						senderid: user.uid,
+						photoURL: user.photoURL,
+						type: "follow",
+					});
+				}
+			});
 		} else {
-				await updateDoc(doc(db, "users", post?.uid, "followers", post?.uid), {
-					followers: arrayRemove(user?.uid),
-				});
+			await updateDoc(doc(db, "users", post?.uid, "followers", post?.uid), {
+				followers: arrayRemove(user?.uid),
+			});
 
-				await updateDoc(doc(db, "users", user.uid, "following", user?.uid), {
-					following: arrayRemove(post?.uid),
-				});
-			
+			await updateDoc(doc(db, "users", user.uid, "following", user?.uid), {
+				following: arrayRemove(post?.uid),
+			});
 		}
-		
 	};
 
 	const followerFunction = async (post, isTrue) => {
-			const userRef = doc(
-				db,
-				"followers",
-				user.uid,
-				"userFollowers",
-				post?.id
-			);
-			await deleteDoc(userRef);
-			const userRef2 = doc(
-				db,
-				"following",
-				post?.id,
-				"userFollowing",
-				user.uid
-			);
-			await deleteDoc(userRef2);
+		const userRef = doc(db, "followers", user.uid, "userFollowers", post?.id);
+		await deleteDoc(userRef);
+		const userRef2 = doc(db, "following", post?.id, "userFollowing", user.uid);
+		await deleteDoc(userRef2);
 	};
 
 	return (
 		<>
 			<div className='container'>
 				<div className='card'>
-					<div className='card-content mt-2 p-10'>
+					<div className='card-content mt-2 px-10 py-5'>
 						<div className='card-content-inner'>
 							<div className='list-block media-list'>
 								<ul className='text-gray-600 dark:text-gray-400'>
@@ -172,9 +168,8 @@ const Submenu1 = (props) => {
 										<li className='mb-4'>
 											<div
 												className='item-link item-content flex flex-row flex-start cursor-pointer  items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
-								             	transform hover:-translate-y-1 hover:scale-110'
-												onClick={() => setModalFollowOpen(true)}
-											>
+								             	transform'
+												onClick={() => setModalFollowOpen(true)}>
 												<div className='item-media'>
 													<FiUser className='w-6 h-6 mr-6' />
 												</div>
@@ -187,9 +182,8 @@ const Submenu1 = (props) => {
 									<li className='mb-4'>
 										<div
 											className='item-link item-content flex flex-row cursor-pointer items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
-								         	transform hover:-translate-y-1 hover:scale-110'
-											onClick={() => setModalFollowingOpen(true)}
-										>
+								         	transform  '
+											onClick={() => setModalFollowingOpen(true)}>
 											<div className='item-media'>
 												<FiUsers className='w-6 h-6 mr-6' />
 											</div>
@@ -201,9 +195,8 @@ const Submenu1 = (props) => {
 									<li className='mb-4'>
 										<div
 											className='item-link item-content flex flex-row cursor-pointer items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
-									transform hover:-translate-y-1 hover:scale-110'
-											onClick={() => setModalFollowersOpen(true)}
-										>
+									transform  '
+											onClick={() => setModalFollowersOpen(true)}>
 											<div className='item-media'>
 												<FiUsers className='w-6 h-6 mr-6' />
 											</div>
@@ -212,35 +205,36 @@ const Submenu1 = (props) => {
 											</div>
 										</div>
 									</li>
-									{active && (<Link href='/messenger'>
+									{active && (
+										<Link href='/messenger'>
+											<li className='mb-4'>
+												<div
+													className='item-link item-content flex flex-row cursor-pointer items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
+									transform  '>
+													<div className='item-media'>
+														<FiMessageCircle className='w-6 h-6 mr-6' />
+													</div>
+													<div className='item-inner'>
+														<div className='item-title'>Messenger</div>
+													</div>
+												</div>
+											</li>
+										</Link>
+									)}
+									{active && !fromFavorites && (
 										<li className='mb-4'>
 											<div
 												className='item-link item-content flex flex-row cursor-pointer items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
-									transform hover:-translate-y-1 hover:scale-110'>
+									transform  '
+												onClick={() => router.push("/favorites")}>
 												<div className='item-media'>
-													<FiMessageCircle className='w-6 h-6 mr-6' />
+													<FiHeart className='w-6 h-6 mr-6' />
 												</div>
 												<div className='item-inner'>
-													<div className='item-title'>Messenger</div>
+													<div className='item-title'>Favourites </div>
 												</div>
 											</div>
 										</li>
-									</Link>
-									)}
-									{active && !fromFavorites && (
-									<li className='mb-4'>
-										<div
-											className='item-link item-content flex flex-row cursor-pointer items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
-									transform hover:-translate-y-1 hover:scale-110'
-											onClick={() => router.push("/favorites")}>
-											<div className='item-media'>
-												<FiHeart className='w-6 h-6 mr-6' />
-											</div>
-											<div className='item-inner'>
-												<div className='item-title'>Favourites </div>
-											</div>
-										</div>
-									</li>
 									)}
 								</ul>
 							</div>
@@ -249,95 +243,96 @@ const Submenu1 = (props) => {
 				</div>
 			</div>
 
-			{!profile  && (
-			  <Modal 
-				isOpen={modalFollowOpen}
-				onRequestClose={() => setModalFollowOpen(false)}
-				style={{
-					overlay: {
-						backgroundColor: "rgba(0, 0, 0, 0.5)",
-						zIndex: 1000,
-					},
-					content: {
-						backgroundColor: "transparent",
-						border: "none",
-						top: "50%",
-						left: "50%",
-						right: "auto",
-						bottom: "auto",
-						marginRight: "-50%",
-						transform: "translate(-50%, -50%)",
-						padding: 0,
-						width: "100%",
-						maxWidth: "550px",
-						height: "100%",
-						maxHeight: "550px",
-						overflow: "scroll",
-					},
-				}}
-				contentLabel='Example Modal'
-				ariaHideApp={false}>
-					
-					<div className="w-full  p-4 bg-white border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-						<div className="flex items-center justify-between mb-4">
-							<h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">Follow</h5>
+			{!profile && (
+				<Modal
+					isOpen={modalFollowOpen}
+					onRequestClose={() => setModalFollowOpen(false)}
+					style={{
+						overlay: {
+							backgroundColor: "rgba(0, 0, 0, 0.5)",
+							zIndex: 1000,
+						},
+						content: {
+							backgroundColor: "transparent",
+							border: "none",
+							top: "50%",
+							left: "50%",
+							right: "auto",
+							bottom: "auto",
+							marginRight: "-50%",
+							transform: "translate(-50%, -50%)",
+							padding: 0,
+							width: "100%",
+							maxWidth: "550px",
+							height: "100%",
+							maxHeight: "550px",
+							overflow: "scroll",
+						},
+					}}
+					contentLabel='Example Modal'
+					ariaHideApp={false}>
+					<div className='w-full  p-4 bg-white border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700'>
+						<div className='flex items-center justify-between mb-4'>
+							<h5 className='text-xl font-bold leading-none text-gray-900 dark:text-white'>
+								Follow
+							</h5>
 							<button
-								className="text-gray-600 dark:text-gray-200 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:text-gray-500 dark:focus:text-gray-400"
-								aria-label="close"
-								onClick={() => setModalFollowOpen(false)}
-							>
-								<svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
+								className='text-gray-600 dark:text-gray-200 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:text-gray-500 dark:focus:text-gray-400'
+								aria-label='close'
+								onClick={() => setModalFollowOpen(false)}>
+								<svg className='w-5 h-5' viewBox='0 0 24 24' fill='none'>
 									<path
-										d="M6 18L18 6M6 6l12 12"
-										stroke="currentColor"
-										strokeWidth="2"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-									></path>
+										d='M6 18L18 6M6 6l12 12'
+										stroke='currentColor'
+										strokeWidth='2'
+										strokeLinecap='round'
+										strokeLinejoin='round'></path>
 								</svg>
 							</button>
-					</div>
-					<div className="flow-root">
-				    	<ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
-							<InfiniteScroll
-								dataLength={follow.length}
-								next={fetchFollow}
-								hasMore={true}
-								loader={<h4>Loading...</h4>}
-								endMessage={
-									<p style={{ textAlign: "center" }}>
-										<b>Yay! You have seen it all</b>
-									</p>
-								}
-								height={400}
-								scrollableTarget="scrollableDiv">
-								
+						</div>
+						<div className='flow-root'>
+							<ul
+								role='list'
+								className='divide-y divide-gray-200 dark:divide-gray-700'>
+								<InfiniteScroll
+									dataLength={follow.length}
+									next={fetchFollow}
+									hasMore={true}
+									loader={<h4>Loading...</h4>}
+									endMessage={
+										<p style={{ textAlign: "center" }}>
+											<b>Yay! You have seen it all</b>
+										</p>
+									}
+									height={400}
+									scrollableTarget='scrollableDiv'>
 									{follow.length === 0 && (
-								    	<div className='text-center'>No Follow</div>
-							    	)}
-									{follow.filter((item) => followListRemove.indexOf(item.id) === -1)
-									?.map((item) => (
-										<ProfileCard 
-										key={item.id} 
-										post={item} 
-										func={followUser}
-										text="Start Following"
-										from="follow"
-										isTrue={false}
-										setRemoveList={setFollowListRemove}
-										list={list} 
-										setList={setList}
-										active={active}
-										/>
-									))}
-							</InfiniteScroll>
-						</ul>
+										<div className='text-center'>No Follow</div>
+									)}
+									{follow
+										.filter((item) => followListRemove.indexOf(item.id) === -1)
+										?.map((item) => (
+											<ProfileCard
+												key={item.id}
+												post={item}
+												func={followUser}
+												text='Start Following'
+												from='follow'
+												isTrue={false}
+												setRemoveList={setFollowListRemove}
+												list={list}
+												setList={setList}
+												active={active}
+											/>
+										))}
+								</InfiniteScroll>
+							</ul>
+						</div>
 					</div>
-				</div>
-			</Modal>
+				</Modal>
 			)}
 
-			<Modal 
+			<Modal
 				isOpen={modalFollowingOpen}
 				onRequestClose={() => setModalFollowingOpen(false)}
 				style={{
@@ -364,27 +359,29 @@ const Submenu1 = (props) => {
 				}}
 				contentLabel='Example Modal'
 				ariaHideApp={false}>
-					
-					<div className="w-full  p-4 bg-white border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-						<div className="flex items-center justify-between mb-4">
-							<h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">Following</h5>
-							<button
-								className="text-gray-600 dark:text-gray-200 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:text-gray-500 dark:focus:text-gray-400"
-								aria-label="close"
-								onClick={() => setModalFollowingOpen(false)}>
-								<svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
-									<path
-										d="M6 18L18 6M6 6l12 12"
-										stroke="currentColor"
-										strokeWidth="2"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-									></path>
-								</svg>
-							</button>
+				<div className='w-full  p-4 bg-white border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700'>
+					<div className='flex items-center justify-between mb-4'>
+						<h5 className='text-xl font-bold leading-none text-gray-900 dark:text-white'>
+							Following
+						</h5>
+						<button
+							className='text-gray-600 dark:text-gray-200 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:text-gray-500 dark:focus:text-gray-400'
+							aria-label='close'
+							onClick={() => setModalFollowingOpen(false)}>
+							<svg className='w-5 h-5' viewBox='0 0 24 24' fill='none'>
+								<path
+									d='M6 18L18 6M6 6l12 12'
+									stroke='currentColor'
+									strokeWidth='2'
+									strokeLinecap='round'
+									strokeLinejoin='round'></path>
+							</svg>
+						</button>
 					</div>
-					<div className="flow-root">
-				    	<ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
+					<div className='flow-root'>
+						<ul
+							role='list'
+							className='divide-y divide-gray-200 dark:divide-gray-700'>
 							<InfiniteScroll
 								dataLength={following.length}
 								next={fetchFollowing}
@@ -396,31 +393,30 @@ const Submenu1 = (props) => {
 									</p>
 								}
 								height={400}
-								scrollableTarget="scrollableDiv">
-								
-									{following.length === 0 && (
-								    	<div className='text-center'>No Followings</div>
-							    	)}
-									{following.map((item) => (
-										<ProfileCard 
-										key={item.id} 
-										post={item} 
+								scrollableTarget='scrollableDiv'>
+								{following.length === 0 && (
+									<div className='text-center'>No Followings</div>
+								)}
+								{following.map((item) => (
+									<ProfileCard
+										key={item.id}
+										post={item}
 										func={followUser}
-										text="Unfollow"
-										from="following"
+										text='Unfollow'
+										from='following'
 										isTrue={true}
-										list={list} 
+										list={list}
 										setList={setList}
 										active={active}
-										/>
-									))}
+									/>
+								))}
 							</InfiniteScroll>
 						</ul>
 					</div>
 				</div>
 			</Modal>
 
-			<Modal 
+			<Modal
 				isOpen={modalFollowersOpen}
 				onRequestClose={() => setModalFollowersOpen(false)}
 				style={{
@@ -447,28 +443,29 @@ const Submenu1 = (props) => {
 				}}
 				contentLabel='Example Modal'
 				ariaHideApp={false}>
-					
-					<div className="w-full  p-4 bg-white border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-						<div className="flex items-center justify-between mb-4">
-							<h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">Followers</h5>
-							<button
-								className="text-gray-600 dark:text-gray-200 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:text-gray-500 dark:focus:text-gray-400"
-								aria-label="close"
-								onClick={() => setModalFollowersOpen(false)}>
-
-								<svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
-									<path
-										d="M6 18L18 6M6 6l12 12"
-										stroke="currentColor"
-										strokeWidth="2"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-									></path>
-								</svg>
-							</button>
+				<div className='w-full  p-4 bg-white border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700'>
+					<div className='flex items-center justify-between mb-4'>
+						<h5 className='text-xl font-bold leading-none text-gray-900 dark:text-white'>
+							Followers
+						</h5>
+						<button
+							className='text-gray-600 dark:text-gray-200 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:text-gray-500 dark:focus:text-gray-400'
+							aria-label='close'
+							onClick={() => setModalFollowersOpen(false)}>
+							<svg className='w-5 h-5' viewBox='0 0 24 24' fill='none'>
+								<path
+									d='M6 18L18 6M6 6l12 12'
+									stroke='currentColor'
+									strokeWidth='2'
+									strokeLinecap='round'
+									strokeLinejoin='round'></path>
+							</svg>
+						</button>
 					</div>
-					<div className="flow-root">
-				    	<ul role="list" className="divide-y divide-gray-200 dark:divide-gray-700">
+					<div className='flow-root'>
+						<ul
+							role='list'
+							className='divide-y divide-gray-200 dark:divide-gray-700'>
 							<InfiniteScroll
 								dataLength={followers.length}
 								next={fetchFollowers}
@@ -480,23 +477,22 @@ const Submenu1 = (props) => {
 									</p>
 								}
 								height={400}
-								scrollableTarget="scrollableDiv">
-								
-									{followers.length === 0 && (
-								    	<div className='text-center'>No Followers</div>
-							    	)}
-									{followers.map((item) => (
-										<ProfileCard 
-										key={item.id} 
-										post={item} 
+								scrollableTarget='scrollableDiv'>
+								{followers.length === 0 && (
+									<div className='text-center'>No Followers</div>
+								)}
+								{followers.map((item) => (
+									<ProfileCard
+										key={item.id}
+										post={item}
 										func={followerFunction}
-										text="Remove"
-										from="followers"
-										list={list} 
+										text='Remove'
+										from='followers'
+										list={list}
 										setList={setList}
 										active={active}
-										/>
-									))}
+									/>
+								))}
 							</InfiniteScroll>
 						</ul>
 					</div>

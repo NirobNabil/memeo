@@ -2,12 +2,18 @@
 /* eslint-disable jsx-a11y/alt-text */
 import Image from "next/image";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import {
+	RiHomeFill,
+	RiHomeLine,
+	RiLayoutMasonryLine,
+	RiNotificationLine as RiNotificationFill,
+	RiNotificationOffLine as RiNotificationOffFill,
+	RiMoonFill,
+	RiSunFill,
+} from "react-icons/ri";
+import { HiOutlineVideoCamera as RiVideoFill } from "react-icons/hi2";
 import HeaderLink from "./HeaderLink";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import NotificationsIconActive from "@mui/icons-material/NotificationsActive";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import AppsOutlinedIcon from "@mui/icons-material/AppsOutlined";
-import { YouTube } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import { useEffect, useState, useCallback } from "react";
 import { useTheme } from "next-themes";
@@ -16,7 +22,6 @@ import { useSelector } from "react-redux";
 import { UserCircleIcon } from "@heroicons/react/outline";
 import { CogIcon } from "@heroicons/react/solid";
 import { LogoutIcon } from "@heroicons/react/outline";
-import { TemplateIcon } from "@heroicons/react/solid";
 import { ChatAlt2Icon } from "@heroicons/react/outline";
 
 import { db, auth } from "../firebase";
@@ -93,32 +98,26 @@ function Header(props) {
 		if (e.target.value.length > 0) {
 			setShowSearch(true);
 
-      const q = query(
-        collection(db, "users"),
-        where("userName", ">=", e.target.value),
-        where("userName", "<=", e.target.value.toLowerCase() + "\uf8ff"),
-        orderBy("userName", "asc"),
-        limit(5)
-      );
-      getDocs(q).then((querySnapshot) => {
-        const users = [];
-        querySnapshot.forEach((doc) => {
-          users.push(doc.data());
-        });
-        setUsers(users);
-      });
+			const q = query(
+				collection(db, "users"),
+				where("userName", ">=", e.target.value),
+				where("userName", "<=", e.target.value.toLowerCase() + "\uf8ff"),
+				orderBy("userName", "asc"),
+				limit(5)
+			);
+			getDocs(q).then((querySnapshot) => {
+				const users = [];
+				querySnapshot.forEach((doc) => {
+					users.push(doc.data());
+				});
+				setUsers(users);
+			});
+		} else {
+			setShowSearch(false);
+		}
+	};
 
-    } else {
-      setShowSearch(false);
-    }
-  };
-
- 
-
-  
-
-
-  const imageRegexB = /(?:https?|ftp):\/\/[\S]*\.(?:png|jpe?g|gif|svg|webp)/g;
+	const imageRegexB = /(?:https?|ftp):\/\/[\S]*\.(?:png|jpe?g|gif|svg|webp)/g;
 
 	function determineNotiMsg(msg) {
 		if (msg.gif) {
@@ -219,111 +218,108 @@ function Header(props) {
 						/>
 					</div>
 				</Link>
+				{/* search bar */}
 				<div className='flex items-center space-x-1 dark:md:bg-gray-700 py-2.5 px-4 rounded w-auto'>
 					<SearchRoundedIcon />
 					<input
 						type='text'
 						placeholder='Search'
-						className='flex  md:inline-flex bg-transparent text-sm focus:outline-none placeholder-black/70  dark:placeholder-white/75 flex-grow'
+						className='flex  md:inline-flex bg-transparent text-sm focus:outline-none placeholder-black/70  dark:placeholder-white/75 flex-grow pb-[2px] border-0 border-b-2 border-transparent focus:border-gray-300 transition-[border-bottom]'
 						value={text}
 						onChange={handleSearch}
 					/>
 				</div>
 			</div>
 
-      {/* show search user list */}
-      {showSearch && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={spring}
-          className="absolute top-14 left-20  bg-white dark:bg-[#1D2226] rounded-md shadow-md  w-72 z-50 "
-        >
-          {users?.map((user) => (
-            <div
-              key={user.uid}
-              className="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
-            >
-              <Link href={`/Profile?uid=${user.uid}`} passHref>
-                <Avatar src={user.photoURL} />
-              </Link>
-              <div href={`/Profile?uid=${user.uid}`} 
-              onClick={() => {
-                router.push(`/Profile?uid=${user.uid}`);
-                setShowSearch(false);
-              }}
-              className="flex flex-col items-start justify-center space-y-1">
-                <p className="text-sm">{user.name}</p>
-                <p className="text-sm text-gray-500">{user.userName}</p>
-              </div>
-            </div>
-          ))}
-        </motion.div>
-      )}
+			{/* show search user list */}
+			{showSearch && (
+				<motion.div
+					initial={{ opacity: 0, y: -10 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={spring}
+					className='absolute top-14 left-20  bg-white dark:bg-[#1D2226] rounded-md shadow-md  w-72 z-50 '>
+					{users?.map((user) => (
+						<div
+							key={user.uid}
+							className='flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer'>
+							<Link href={`/Profile?uid=${user.uid}`} passHref>
+								<Avatar src={user.photoURL} />
+							</Link>
+							<div
+								href={`/Profile?uid=${user.uid}`}
+								onClick={() => {
+									router.push(`/Profile?uid=${user.uid}`);
+									setShowSearch(false);
+								}}
+								className='flex flex-col items-start justify-center space-y-1'>
+								<p className='text-sm'>{user.name}</p>
+								<p className='text-sm text-gray-500'>{user.userName}</p>
+							</div>
+						</div>
+					))}
+				</motion.div>
+			)}
 
-      
-      <div className="flex items-center  xl:w-auto w-full justify-around xl:-ml-12  xl:justify-between xl:space-x-20 transition-all duration-300">
-        <HeaderLink 
-        Icon={HomeRoundedIcon} 
-        text="Home" 
-        feed 
-        active={tab === "home"} 
-        handle={() => {
-          setTab('home');
-          sessionStorage.setItem('tab', 'home');
-          router.push('/');
-          window.scrollTo(0, 0);
-          if (window.scrollY > 0) {
-            window.location.reload();
-          }
-        }}
-        />
-        <HeaderLink 
-        Icon={YouTube}
-        text="Watch" 
-        feed 
-        active={tab === "watch"}
-        handle={() => {
-          setTab("watch")
-          sessionStorage.setItem('tab', 'watch');
-        }}
-        />
-       
-        <HeaderLink 
-         Icon={TemplateIcon} 
-         text="Templates" 
-         feed
-         active={tab === "templates"}
-         handle={() => {
-          setTab("templates")
-          sessionStorage.setItem('tab', 'templates');
-        }}
-         />
-          <Popover className="relative">
-            {({ open }) => (
-              <>
-                <Popover.Button >
-                  
-                    <HeaderLink 
-                      Icon={open ? NotificationsIconActive  : NotificationsIcon}
-                      text="Notifications" 
-                      feed
-                      active={tab === "notifications"}
-                      notificationsLength={ open ? 0 : notificationsLength}
-                      open={open}
-                      />
-                </Popover.Button>
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-200"
-                  enterFrom="opacity-0 translate-y-1"
-                  enterTo="opacity-100 translate-y-0"
-                  leave="transition ease-in duration-150"
-                  leaveFrom="opacity-100 translate-y-0"
-                  leaveTo="opacity-0 translate-y-1"
-                >
-                  <Popover.Panel 
-                    className={`
+			<div className='flex items-center  xl:w-auto w-full justify-around xl:-ml-12  xl:justify-between xl:space-x-20 transition-all duration-300'>
+				<HeaderLink
+					Icon={RiHomeLine}
+					text='Home'
+					feed
+					active={tab === "home"}
+					handle={() => {
+						setTab("home");
+						sessionStorage.setItem("tab", "home");
+						router.push("/");
+						window.scrollTo(0, 0);
+						if (window.scrollY > 0) {
+							window.location.reload();
+						}
+					}}
+				/>
+				<HeaderLink
+					Icon={RiVideoFill}
+					text='Watch'
+					feed
+					active={tab === "watch"}
+					handle={() => {
+						setTab("watch");
+						sessionStorage.setItem("tab", "watch");
+					}}
+				/>
+
+				<HeaderLink
+					Icon={RiLayoutMasonryLine}
+					text='Templates'
+					feed
+					active={tab === "templates"}
+					handle={() => {
+						setTab("templates");
+						sessionStorage.setItem("tab", "templates");
+					}}
+				/>
+				<Popover className='relative'>
+					{({ open }) => (
+						<>
+							<Popover.Button>
+								<HeaderLink
+									Icon={open ? RiNotificationFill : RiNotificationOffFill}
+									text='Notifications'
+									feed
+									active={tab === "notifications"}
+									notificationsLength={open ? 0 : notificationsLength}
+									open={open}
+								/>
+							</Popover.Button>
+							<Transition
+								as={Fragment}
+								enter='transition ease-out duration-200'
+								enterFrom='opacity-0 translate-y-1'
+								enterTo='opacity-100 translate-y-0'
+								leave='transition ease-in duration-150'
+								leaveFrom='opacity-100 translate-y-0'
+								leaveTo='opacity-0 translate-y-1'>
+								<Popover.Panel
+									className={`
                       absolute z-10  right-0 mt-3 w-[420px]  rounded-md shadow-lg bg-white ring-1 ring-slate-800 ring-opacity-5 focus:outline-none dark:bg-slate-700/100 
                       ${open ? "" : "hidden"}
                     `}>
@@ -359,9 +355,9 @@ function Header(props) {
 											) : (
 												<div className='flex flex-col items-center justify-center w-full h-full'>
 													<div className='flex flex-col items-center justify-center w-full h-full'>
-														<div className='flex flex-row items-center justify-center w-full h-6'>
+														<div className='flex flex-row items-center justify-end w-full h-6 px-5'>
 															<p
-																className='font-semibold text-gray-900 dark:text-gray-100 first-letter:capitalize cursor-pointer'
+																className='font-semibold text-gray-900 dark:text-gray-100 first-letter:capitalize cursor-pointer px-5 py-2 rounded-md bg-orange-red/50 hover:bg-orange-red transition duration-200 shadow text-sm'
 																onClick={() => {
 																	notifications?.map((notif) => {
 																		if (notif.read === false) {

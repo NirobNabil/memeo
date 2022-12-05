@@ -37,7 +37,7 @@ export default function Home(props) {
 						active={Isactive}
 					/>
 				</div>
-				<div className='flex-grow border-l border-r border-gray-100 dark:border-gray-700 max-w-xl xl:w-[520px] space-x-5 my-[17px] mx-3 md:mx-0'>
+				<div className='flex-grow border-l border-r border-gray-400 dark:border-gray-700 max-w-xl xl:w-[520px] space-x-5 my-[17px] mx-3 md:mx-0'>
 					<Feed
 						posts={posts}
 						inactive={inactive}
