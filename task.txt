@@ -11,9 +11,46 @@
 11. No memes text 
 12. Payment coming soon
 13. favorite page polishing
-
+14. No memes/post text after loading
+15. share post @ missing (solved)
+16. shared post go to own profile problem (solved)
+17. profile,follwo,following,followers @ missing (solved)
+18. Bio re design (with add bio btn)
+19. Profile page title section 
+20. Profile page removed cover, aligned everthing, fixed back button 
+21. Add back title in profile back button
+22. Edit profile modal fixed
 
 
 
 problems 
-1. direct favorite page reload dile kichu data rendering e somossa hoi
+- direct favorite page reload dile kichu data rendering e somossa hoi
+- share post timestamp problem (sharefrom) 
+- shared post doesn't appear in profile(maybe late for longer)
+- Self following
+- Direct profile page reloading problem (data fetching)
+ 
+4. 
+5. Tag problem
+6. messenger reload not show + not back
+7. 
+8. templat box re-design
+9. own profile following problem
+10. user name always small latter
+11. in comment  profile name cursor problem
+12. cover pic cancel.
+13. all back button problem
+14. memex name replace to memeo 
+15. messenger problem ( home screen + in setting )
+16. edite profile front end re-design, cover remove, font colour change as your choice, edite profile button colour change use primary colour..
+17. edite profile default pic + cover remove.
+18. profile ring (use primary colour).
+19. profile all container align top equal.
+20. template image show design change.
+21. in profile template section change.
+22. After template delete show ( Delete item going to trash in setting )
+23. hide option problem.
+24. video template (no item yet now )
+25. user name light, main name bold (as your choice)
+26. post container width fix as like instagram.
+27. After delete option cancel delete button going white.

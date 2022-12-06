@@ -55,7 +55,7 @@ function Feed({ posts, inactive, active, len, fetchMore, fromPost }) {
 						<b>Yay! You have seen it all</b>
 					</p>
 				}>
-				{posts?.length === 0 && (
+				{!loading && posts?.length === 0 && (
 					<div className='min-h-[300px] flex justify-center items-center'>
 						<p className='font-bold text-gray-400 text-center text-2xl'>
 							No posts yet!

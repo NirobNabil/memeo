@@ -50,7 +50,7 @@ export default function TemplateItem({
 						/>
 					))}
 					{loading && <TemplateSekeleton from={from} />}
-					{memes?.length === 0 && (
+					{!loading && memes?.length === 0 && (
 						<div className='py-10 font-bold text-gray-400 text-center text-2xl col-span-3'>
 							<p>Please upload at least one</p>
 						</div>

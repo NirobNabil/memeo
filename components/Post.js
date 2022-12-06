@@ -466,6 +466,7 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 							</div>
 						</Link>
 						<div className='mr-auto ml-2 leading-none'>
+							{console.log(post?.shareFrom?.uid, post?.user?.uid)}
 							<Link href={`/Profile?uid=${post?.shareFrom?.uid}`}>
 								<h6 className='font-medium hover:text-blue-500 hover:underline'>
 									{post?.shareFrom?.name}{" "}
@@ -474,8 +475,8 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 									</span>
 								</h6>
 							</Link>
-							<p className='text-sm dark:text-white/50 p-y-1 '>
-								{post?.shareFrom?.userName}
+							<p className='font-semibold text-xs dark:text-white/50 p-y-1 '>
+								@{post?.shareFrom?.userName}
 							</p>
 							<p className='text-sm dark:text-white/50 p-y-1 '>
 								{moment(post?.timestamp?.toDate()).fromNow()}
@@ -512,12 +513,6 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 								className='h-6 w-6 text-red-500 cursor-pointer space-x-2 mr-2 hover:opacity-50 transition'
 							/>
 						)}
-						<CloseRoundedIcon
-							className='h-6 w-6 dark:text-white  text-black dark:bg-transparent bg-gray-200 space-x-2 rounded-full cursor-pointer hover:dark:opacity-50 transition'
-							onClick={() => {
-								setRemoveList((prev) => [...prev, post.id]);
-							}}
-						/>
 					</div>
 				) : (
 					<div className='flex items-center px-2.5 cursor-pointer  '>
@@ -537,7 +532,7 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 									{post?.user?.name}
 								</h6>
 							</Link>
-							<p className='text-sm dark:text-white/50 p-y-2 font-bold'>
+							<p className='text-xs dark:text-white/50 p-y-2 font-bold'>
 								@{post?.user?.userName}
 							</p>
 							<TimeAgo
@@ -627,13 +622,13 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 								</div>
 							</Link>
 							<div className='mr-auto ml-2 leading-none'>
-								<Link href={`/Profile?uid=${post?.shareFrom?.uid}`}>
+								<Link href={`/Profile?uid=${post?.user?.uid}`}>
 									<h6 className='font-medium hover:text-blue-500 hover:underline'>
 										{post?.user?.name}
 									</h6>
 								</Link>
-								<p className='text-sm dark:text-white/50 p-y-1 '>
-									{post?.user?.userName}
+								<p className='font-semibold text-xs dark:text-white/50 p-y-1 '>
+									@{post?.user?.userName}
 								</p>
 								<TimeAgo
 									datetime={post?.timestamp?.toDate()}
@@ -1261,7 +1256,7 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 						borderRadius: "10px",
 					},
 				}}>
-				<div className='flex flex-col p-2 '>
+				<div className='flex flex-col p-4 '>
 					<div className='flex items-center justify-between'>
 						<h1 className='text-lg  font-semibold dark:text-white/75'>
 							Share Post
@@ -1294,13 +1289,15 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 								/>
 							</Link>
 							<div className='flex flex-col'>
-								<div className='flex items-center space-x-2 flex-col'>
+								<div className='flex flex-col'>
 									<Link href={`/Profile?uid=${user?.uid}`}>
-										<p className='font-semibold dark:text-white/75 cursor-pointer hover:underline'>
+										<p className='dark:text-white/75 cursor-pointer hover:underline'>
 											{user?.name}
 										</p>
 									</Link>
-									<p className='text-xs dark:text-white/50'>{user?.userName}</p>
+									<p className='text-xs dark:text-white/50 p-y-2 font-bold'>
+										@{user?.userName}
+									</p>
 								</div>
 							</div>
 						</div>
@@ -1343,8 +1340,8 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 											</span>
 										</h6>
 									</Link>
-									<p className='text-sm dark:text-white/50 p-y-1 '>
-										{post?.shareFrom?.userName}
+									<p className='text-xs font-semibold dark:text-white/50 p-y-1'>
+										@{post?.shareFrom?.userName}
 									</p>
 									<p className='text-sm dark:text-white/50 p-y-1 '>
 										{moment(post?.timestamp?.toDate()).fromNow()}
@@ -1369,8 +1366,8 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 											{post?.user?.name}
 										</h6>
 									</Link>
-									<p className='text-sm dark:text-white/50 p-y-2 '>
-										{post?.user?.userName}
+									<p className='font-semibold text-xs dark:text-white/50 p-y-2 '>
+										@{post?.user?.userName}
 									</p>
 									<TimeAgo
 										datetime={post?.timestamp?.toDate()}
@@ -1423,8 +1420,8 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 											{post?.user?.name}
 										</h6>
 									</Link>
-									<p className='text-sm dark:text-white/50 p-y-1 '>
-										{post?.user?.userName}
+									<p className='font-semibold text-xs dark:text-white/50 p-y-1 '>
+										@{post?.user?.userName}
 									</p>
 									<TimeAgo
 										datetime={post?.timestamp?.toDate()}
