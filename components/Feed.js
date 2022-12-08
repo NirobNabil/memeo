@@ -38,7 +38,7 @@ function Feed({ posts, inactive, active, len, fetchMore, fromPost }) {
 	if (user?.uid === undefined) return <Postskeleton />;
 
 	return (
-		<div className='space-y-6 pb-24 max-w-2xl overflow-y-scroll scrollbar-hide'>
+		<div className='space-y-6 pb-24 max-w-[545px] mx-auto overflow-y-scroll scrollbar-hide'>
 			{!inactive && <Input />}
 
 			<InfiniteScroll

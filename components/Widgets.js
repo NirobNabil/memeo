@@ -17,10 +17,9 @@ function Widgets(props) {
 			{!fromProfile && (
 				<div className='bg-white dark:bg-slate-800 py-2.5 rounded-lg space-y-2 w-full overflow-hidden border border-gray-300 dark:border-none'>
 					<div className='items-center justify-between font-bold px-2.5 flex'>
-						<h4>Memex News</h4>
+						<h4>Memeo News</h4>
 						<InfoRoundedIcon className='h-5 w-5' />
 					</div>
-
 					<div className='space-y-1'></div>
 				</div>
 			)}
@@ -42,7 +41,7 @@ function Widgets(props) {
 					}}>
 					<div className='items-center justify-between font-bold px-2.5 flex'>
 						<h4>Template</h4>
-						<InfoRoundedIcon className='h-5 w-5' />
+						{/* <InfoRoundedIcon className='h-5 w-5' /> */}
 					</div>
 					<ImageGrid fetchUserMemes={fetchUserMemes} userMemes={userMemes} />
 				</div>

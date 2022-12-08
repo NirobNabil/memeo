@@ -20,7 +20,15 @@
 20. Profile page removed cover, aligned everthing, fixed back button 
 21. Add back title in profile back button
 22. Edit profile modal fixed
-
+23. cover pic cancel. (solved)
+24. memex name replace to memeo (solved)
+25. in comment  profile name cursor problem (solved)
+26. all back button problem (solved)
+27. News feed size fixed
+28. edit profile default pic + cover remove (solved)
+29. profile all container align top equal. (solved)
+30. user name light (should bold and small), main name (should light and large) (as your choice)
+31. post container width fix as like instagram.(solved)
 
 
 problems 
@@ -29,28 +37,30 @@ problems
 - shared post doesn't appear in profile(maybe late for longer)
 - Self following
 - Direct profile page reloading problem (data fetching)
+- own profile following problem
+- profile ring (use primary colour) (Do not need)
  
 4. 
 5. Tag problem
 6. messenger reload not show + not back
 7. 
 8. templat box re-design
-9. own profile following problem
+9. 
 10. user name always small latter
-11. in comment  profile name cursor problem
-12. cover pic cancel.
-13. all back button problem
-14. memex name replace to memeo 
+11. 
+12. 
+13. 
+14. 
 15. messenger problem ( home screen + in setting )
 16. edite profile front end re-design, cover remove, font colour change as your choice, edite profile button colour change use primary colour..
-17. edite profile default pic + cover remove.
-18. profile ring (use primary colour).
-19. profile all container align top equal.
+17. .
+18. .
+19. 
 20. template image show design change.
 21. in profile template section change.
 22. After template delete show ( Delete item going to trash in setting )
 23. hide option problem.
 24. video template (no item yet now )
-25. user name light, main name bold (as your choice)
-26. post container width fix as like instagram.
+25. 
+26. 
 27. After delete option cancel delete button going white.

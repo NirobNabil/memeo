@@ -817,7 +817,7 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 								<div className='flex flex-col  '>
 									<div className='flex items-center space-x-1'>
 										<Link href={`/Profile?uid=${comment?.user?.uid}`}>
-											<h4 className='font-semibold text-sm dark:text-white/75'>
+											<h4 className='font-semibold text-sm dark:text-white/75 cursor-pointer'>
 												{comment?.user?.name}
 											</h4>
 										</Link>
@@ -1065,8 +1065,8 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 																/>
 																<div className='flex flex-col'>
 																	<p className='font-semibold'>{user.name}</p>
-																	<p className='text-gray-500 text-sm'>
-																		{user.userName}
+																	<p className='text-gray-500 text-xs font-semibold'>
+																		@{user.userName}
 																	</p>
 																</div>
 															</div>
@@ -1156,7 +1156,9 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 											/>
 											<div className='flex flex-col'>
 												<p className='font-semibold'>{user.name}</p>
-												<p className='text-gray-500 text-sm'>{user.userName}</p>
+												<p className='text-gray-500 text-xs font-semibold'>
+													@{user.userName}
+												</p>
 											</div>
 										</div>
 									))}
@@ -1226,8 +1228,8 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 												{doc?.name}
 											</p>
 										</Link>
-										<p className='text-xs dark:text-white/50'>
-											{doc?.userName}
+										<p className='text-xs font-semibold dark:text-white/50'>
+											@{doc?.userName}
 										</p>
 									</div>
 								</div>

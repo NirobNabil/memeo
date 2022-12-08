@@ -482,7 +482,7 @@ export default function Profile(props) {
 			</Head>
 			<div className=' dark:bg-slate-900 dark:text-gray-400 text-gray-600 bg-white min-h-screen'>
 				<div
-					className='cursor-pointer w-12 h-12 flex justify-center items-center text-2xl text-center rounded-full text-gray-600 dark:text-gray-300 fixed top-4 left-4 hover:shadow-black/30 transition hover:shadow-sm'
+					className='cursor-pointer w-12 h-12 flex justify-center items-center text-2xl text-center rounded-full text-gray-600 dark:text-gray-300 fixed top-4 left-4 hover:shadow-black/30 transition hover:shadow-sm z-50'
 					onClick={() => router.back()}
 					title='Back'>
 					<span>
@@ -492,13 +492,15 @@ export default function Profile(props) {
 				<div className='flex flex-col items-center justify-center gap-5 pt-20'>
 					<div className='flex flex-col items-center bg-opacity-50 bg-white dark:bg-slate-900/50 w-full'>
 						{User && (
-							<Image
-								src={User?.photoURL}
-								alt='profile pic'
-								width={150}
-								height={150}
-								className='rounded-full border-4 border-white cursor-pointer absolute '
-							/>
+							<span className=''>
+								<Image
+									src={User?.photoURL}
+									alt='profile pic'
+									width={150}
+									height={150}
+									className='rounded-full border-4 border-white cursor-pointer absolute'
+								/>
+							</span>
 						)}
 					</div>
 					<div className=' bg-white dark:bg-slate-900/50  '>
@@ -570,8 +572,8 @@ export default function Profile(props) {
 
 				<div
 					// className="bg-[#F3F2EF] dark:bg-black dark:text-white flex flex-row md:flex-row gap-10 fixed w-full h-full  md:space-y-6 justify-center "
-					className='bg-[#F3F2EF] relative top-20  dark:bg-slate-900 dark:text-white min-h-screen flex  flex-row w-full mx-auto md:space-y-6 justify-center '>
-					<div className='hidden md:flex xl:flex flex-col items-center xl:items-start xl:w-[360px] p-2'>
+					className='bg-[#F3F2EF] relative top-20  dark:bg-slate-900 dark:text-white min-h-screen flex  flex-row w-full mx-auto justify-center '>
+					<div className='hidden md:flex xl:flex flex-col items-center xl:items-start xl:w-[360px] p-2 mt-[34px]'>
 						<Menu
 							following={following}
 							followers={followers}
@@ -584,7 +586,7 @@ export default function Profile(props) {
 						/>
 					</div>
 
-					<div className='flex-grow border-l border-r border-gray-100 dark:border-gray-700 max-w-xl xl:w-[520px]  space-x-5  my-3 mt-20 '>
+					<div className='flex-grow border-l border-r border-gray-400 dark:border-gray-700 max-w-xl xl:w-[520px] space-x-5 my-[28px] mx-3 md:mx-0'>
 						<Feed
 							posts={userPost}
 							inactive
@@ -593,7 +595,7 @@ export default function Profile(props) {
 							active={false}
 						/>
 					</div>
-					<div className='hidden  md:inline space-y-5 p-2 item-center px-6 xl:items-end  xl:w-[360px]'>
+					<div className='hidden  md:inline space-y-5 p-2 item-center px-6 xl:items-end  xl:w-[360px] mt-[34px]'>
 						<Widgets
 							fetchUserMemes={fetchUserMemes}
 							userMemes={userMemes}
