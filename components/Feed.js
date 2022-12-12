@@ -29,8 +29,10 @@ import Postskeleton from "./Skeleton/Postskeleton";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import { useSelector } from "react-redux";
+import AlertBox from "./Components/AlertBox";
 
 function Feed({ posts, inactive, active, len, fetchMore, fromPost }) {
+	const [isDeleted, setIsDeleted] = useState(false);
 	const [removeList, setRemoveList] = useState([]);
 	const user = useSelector((state) => state?.data?.currentUser);
 	const [loading, setLoading] = useState(false);
@@ -71,6 +73,7 @@ function Feed({ posts, inactive, active, len, fetchMore, fromPost }) {
 								setRemoveList={setRemoveList}
 								len={len}
 								active={active}
+								setIsDeleted={setIsDeleted}
 							/>
 						);
 					} else {
@@ -90,6 +93,12 @@ function Feed({ posts, inactive, active, len, fetchMore, fromPost }) {
 						);
 					}
 				})}
+				<AlertBox
+					show={isDeleted}
+					text='Deleted Successfully!'
+					severity='success'
+					setShow={setIsDeleted}
+				/>
 			</InfiniteScroll>
 		</div>
 	);

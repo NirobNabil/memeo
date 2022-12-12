@@ -35,11 +35,11 @@ function Widgets(props) {
 			{/* ImagesGrid */}
 			{fromProfile && (
 				<div
-					className='bg-white dark:bg-slate-800 py-2.5 rounded-lg space-y-2 w-full border border-gray-300 dark:border-none  overflow-y-scroll scrollbar-hide'
+					className='bg-white dark:bg-slate-800 py-2.5 rounded-lg space-y-2 w-full border border-gray-300 dark:border-none  overflow-y-auto scrollbar-hide relative'
 					style={{
 						height: "520px",
 					}}>
-					<div className='items-center justify-between font-bold px-2.5 flex'>
+					<div className='items-center justify-between font-bold px-2.5 flex sticky top-0'>
 						<h4>Template</h4>
 						{/* <InfoRoundedIcon className='h-5 w-5' /> */}
 					</div>

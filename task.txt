@@ -29,6 +29,20 @@
 29. profile all container align top equal. (solved)
 30. user name light (should bold and small), main name (should light and large) (as your choice)
 31. post container width fix as like instagram.(solved)
+32. Profile template scroll bar removed 
+33. Custom scroll bar removed 
+34. Profile template sticky 
+35. Profile template structure change 
+36. video template (no item yet now )
+37. Delete alert after deleting templates 
+38. Upload meme simple fixes 
+39. Upload meme add tag can't get fixed 
+40. templat box re-design
+41. in profile template section change.(solved)
+42. profile ring (use primary colour) (Do not need)
+43. No add bio in others profile 
+44. Post Deleted successfully alert added
+45. After delete option cancel delete button going white.
 
 
 problems 
@@ -38,29 +52,17 @@ problems
 - Self following
 - Direct profile page reloading problem (data fetching)
 - own profile following problem
-- profile ring (use primary colour) (Do not need)
- 
+- After updating profile, page should not reload, (potential solution: take a state of object, after loading first time, fetch the user details and store the neccessary details in that state, after updating anything just update the state.)
+- user name should contain always small latter
+- Template add kore instant delete korle error ashe 
+- Template tab er meme tab loading time e jdi onno tab(my template) e jai tahole error ashe 
+
+
 4. 
 5. Tag problem
 6. messenger reload not show + not back
-7. 
-8. templat box re-design
-9. 
-10. user name always small latter
-11. 
-12. 
-13. 
-14. 
 15. messenger problem ( home screen + in setting )
-16. edite profile front end re-design, cover remove, font colour change as your choice, edite profile button colour change use primary colour..
-17. .
-18. .
-19. 
 20. template image show design change.
-21. in profile template section change.
-22. After template delete show ( Delete item going to trash in setting )
 23. hide option problem.
-24. video template (no item yet now )
-25. 
-26. 
-27. After delete option cancel delete button going white.
+27. 
+Comment box

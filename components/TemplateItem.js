@@ -3,6 +3,7 @@ import Trending from "./Template/Trending";
 
 import TemplateSekeleton from "./Skeleton/TemplateSekeleton";
 import InfiniteScroll from "react-infinite-scroll-component";
+import AlertBox from "./Components/AlertBox";
 
 export default function TemplateItem({
 	memes,
@@ -10,9 +11,11 @@ export default function TemplateItem({
 	loading,
 	from,
 	setMyMemes,
+	activeTab,
 }) {
 	const [hasMore, setHasMore] = useState(true);
 	const [loadingMore, setLoadingMore] = useState(false);
+	const [isDeleted, setIsDeleted] = useState(false);
 
 	useEffect(() => {
 		console.log(memes);
@@ -47,16 +50,27 @@ export default function TemplateItem({
 							data={template}
 							owner={from === "meme-generator" ? true : false}
 							setMyMemes={setMyMemes}
+							setIsDeleted={setIsDeleted}
 						/>
 					))}
 					{loading && <TemplateSekeleton from={from} />}
 					{!loading && memes?.length === 0 && (
 						<div className='py-10 font-bold text-gray-400 text-center text-2xl col-span-3'>
-							<p>Please upload at least one</p>
+							{activeTab === "meme-generator" ? (
+								<p>Please upload at least one</p>
+							) : (
+								<p>No memes found!!!</p>
+							)}
 						</div>
 					)}
 				</div>
 			</div>
+			<AlertBox
+				show={isDeleted}
+				text='Go to trash Successfully!'
+				severity='success'
+				setShow={setIsDeleted}
+			/>
 		</InfiniteScroll>
 	);
 }

@@ -719,6 +719,7 @@ function Templates(props) {
 							loading={loading}
 							from={activeTab}
 							setMyMemes={setMyMemes}
+							activeTab={activeTab}
 						/>
 					}
 				</div>

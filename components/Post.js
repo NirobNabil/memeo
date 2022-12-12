@@ -54,8 +54,9 @@ import { ChatAltIcon } from "@heroicons/react/outline";
 import { v4 as uuidv4 } from "uuid";
 import Modal from "react-modal";
 import Video from "./Video";
+import AlertBox from "./Components/AlertBox";
 
-function Post({ post, active, modalPost, setRemoveList, len }) {
+function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 	const user = useSelector((state) => state.data.currentUser);
 	const [showInput, setShowInput] = useState(false);
 	const [liked, setLiked] = useState(false);
@@ -352,6 +353,11 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 		}
 		try {
 			await deleteDoc(doc(db, "posts", post.id));
+			console.log("Deleted");
+			setIsDeleted(true);
+			setTimeout(() => {
+				setIsDeleted(false);
+			}, 2000);
 		} catch (error) {
 			console.log(error);
 		}
@@ -768,7 +774,7 @@ function Post({ post, active, modalPost, setRemoveList, len }) {
 
 					{user?.userName === post?.user?.userName ? (
 						<button
-							className='postButton focus:text-gray-100'
+							className='postButton '
 							onClick={() => {
 								setDeleteModalIsOpen(true);
 							}}>

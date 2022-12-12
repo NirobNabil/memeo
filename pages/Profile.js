@@ -503,26 +503,32 @@ export default function Profile(props) {
 							</span>
 						)}
 					</div>
+
 					<div className=' bg-white dark:bg-slate-900/50  '>
 						<div className='flex flex-col items-center justify-center'>
 							<div className='flex flex-col items-center'>
+								{console.log(user?.uid, User?.uid)}
 								<h1 className='text-xl font-bold'>{User?.name}</h1>
 								<p className='text-gray-500 text-sm font-semibold'>
 									@{User?.userName}
 								</p>
 								<p className='text-gray-500 text-sm'>
-									{User?.bio ? (
-										<p className='mt-4'>Bio: {User?.bio}</p>
-									) : (
-										<div className='flex items-center justify-center mt-4'>
-											<div className='flex flex-col items-center'>
-												<button
-													className='text-white  py-2 px-4 rounded-full text-sm font-semibold bg-[#1DA1F2] hover:bg-[#1DA1F2] focus:outline-none focus:ring-2 focus:ring-[#1DA1F2] focus:ring-opacity-50'
-													onClick={() => setIsOpen(true)}>
-													Add Bio
-												</button>
+									{uid === user?.uid &&
+										(User?.bio ? (
+											<p className='mt-4'>Bio: {User?.bio}</p>
+										) : (
+											<div className='flex items-center justify-center mt-4'>
+												<div className='flex flex-col items-center'>
+													<button
+														className='text-white  py-2 px-4 rounded-full text-sm font-semibold bg-[#1DA1F2] hover:bg-[#1DA1F2] focus:outline-none focus:ring-2 focus:ring-[#1DA1F2] focus:ring-opacity-50'
+														onClick={() => setIsOpen(true)}>
+														Add Bio
+													</button>
+												</div>
 											</div>
-										</div>
+										))}
+									{uid !== user?.uid && (
+										<p className='mt-4'>Bio: {User?.bio}</p>
 									)}
 								</p>
 							</div>
@@ -595,12 +601,15 @@ export default function Profile(props) {
 							active={false}
 						/>
 					</div>
+
 					<div className='hidden  md:inline space-y-5 p-2 item-center px-6 xl:items-end  xl:w-[360px] mt-[34px]'>
-						<Widgets
-							fetchUserMemes={fetchUserMemes}
-							userMemes={userMemes}
-							fromProfile={true}
-						/>
+						<div className=' sticky top-20'>
+							<Widgets
+								fetchUserMemes={fetchUserMemes}
+								userMemes={userMemes}
+								fromProfile={true}
+							/>
+						</div>
 					</div>
 				</div>
 			</div>

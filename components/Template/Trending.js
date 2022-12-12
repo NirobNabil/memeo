@@ -69,8 +69,9 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from "next/router";
+import AlertBox from "../Components/AlertBox";
 
-const Trending = ({ data, owner, setMyMemes }) => {
+const Trending = ({ data, owner, setMyMemes, setIsDeleted }) => {
 	const [openDownloadMOdal, setOpenDownloadModal] = useState(false);
 	const [downloadUrl, setDownloadUrl] = useState("");
 	const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -139,6 +140,10 @@ const Trending = ({ data, owner, setMyMemes }) => {
 								});
 								setDeleteLoading(false);
 								setOpenApproveDeleteModal(false);
+								setIsDeleted(true);
+								setTimeout(() => {
+									setIsDeleted(false);
+								}, 2000);
 							}
 						);
 					});
