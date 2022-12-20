@@ -570,6 +570,18 @@ function Home(props) {
 					notificationsLength={notificationsLength}
 					setNotificationsLength={setNotificationsLength}
 					fetchMore={fetchNotifications}
+					posts={posts}
+					active={true}
+					following={following}
+					follow={follow}
+					followers={followers}
+					followingUIDs={followingUIDs}
+					followersUIDs={followersUIDs}
+					fetchMorePosts={fetchPosts}
+					fetchFollowing={fetchFollowing}
+					fetchFollow={fetchFollow}
+					fetchFollowers={fetchFollowers}
+					Isactive={true}
 				/>
 				<main className='min-h-screen flex  mx-auto  flex-col dark:bg-slate-900 dark:text-white bg-[#F3F2EF] text-black pt-[105px]'>
 					<Suspense fallback={<Loading loading={true} />}>

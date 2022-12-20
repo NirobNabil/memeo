@@ -332,6 +332,7 @@ const Submenu1 = (props) => {
 				</Modal>
 			)}
 
+			{/* following  */}
 			<Modal
 				isOpen={modalFollowingOpen}
 				onRequestClose={() => setModalFollowingOpen(false)}
@@ -416,6 +417,7 @@ const Submenu1 = (props) => {
 				</div>
 			</Modal>
 
+			{/* followers  */}
 			<Modal
 				isOpen={modalFollowersOpen}
 				onRequestClose={() => setModalFollowersOpen(false)}

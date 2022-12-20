@@ -43,6 +43,14 @@
 43. No add bio in others profile 
 44. Post Deleted successfully alert added
 45. After delete option cancel delete button going white.
+46. Comment overflow problem solved 
+47. Comment see more added, and multiple see more problem solved with different partition of comments 
+48. Auto detect link
+
+
+
+Responsive todo 
+1. Home page 
 
 
 problems 
