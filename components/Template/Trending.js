@@ -53,6 +53,7 @@ import {
 import { useSelector } from "react-redux";
 import GridList from "@material-ui/core/GridList";
 import { ImageList } from "@material-ui/core";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import ImageListItem from "@material-ui/core/ImageListItem";
 import ImageListItemBar from "@material-ui/core/ImageListItemBar";
 
@@ -223,8 +224,10 @@ const Trending = ({ data, owner, setMyMemes, setIsDeleted }) => {
 										className='h-8 w-8 rounded-full object-cover'
 									/>
 									<div className='flex flex-col ml-2 cursor-pointer text-sm hover:underline'>
-										<p className='text-sm font-semibold'>{data?.user?.name}</p>
-										<p className='text-[11px] font-bold text-gray-700 dark:text-gray-200 overflow-hidden whitespace-nowrap'>
+										<p className='text-sm font-semibold text-ellipsis overflow-hidden whitespace-nowrap w-[85px]'>
+											{data?.user?.name}
+										</p>
+										<p className='text-[11px] font-bold text-gray-700 dark:text-gray-200 overflow-hidden whitespace-nowrap text-ellipsis w-[85px]'>
 											@{data?.user?.userName}
 										</p>
 									</div>

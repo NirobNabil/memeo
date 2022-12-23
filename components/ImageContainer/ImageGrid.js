@@ -75,6 +75,13 @@ export default function ImageGrid(props) {
 
 	return (
 		<>
+			{userMemes.length === 0 && (
+				<div className='min-h-[300px] flex justify-center items-center'>
+					<p className='font-bold text-gray-400 text-center text-2xl'>
+						No memes upload yet!
+					</p>
+				</div>
+			)}
 			<InfiniteScroll
 				dataLength={userMemes.length}
 				next={fetchUserMemes}

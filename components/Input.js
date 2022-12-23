@@ -371,9 +371,9 @@ function Input() {
 				)}
 
 				{selectedFile && (
-					<div className='flex flex-col space-y-3 px-1 relative'>
+					<div className='flex flex-col space-y-3 px-1 relative py-8'>
 						<div
-							className='absolute w-8 h-8 bg-[#15181c] hover:bg-[#272c26] bg-opacity-75 rounded-full flex items-center justify-center cursor-pointer z-10 dark:bg-slate-900 left-20 top-8 dark:hover:bg-slate-800'
+							className='absolute w-8 h-8 bg-[#15181c] hover:bg-[#272c26] bg-opacity-75 rounded-full flex items-center justify-center cursor-pointer z-10 dark:bg-slate-900 left-20 top-0 dark:hover:bg-slate-800'
 							onClick={() => setSelectedFile(null)}>
 							<XIcon className='h-5 w-5 text-white dark:text-white/75 cursor-pointer hover:text-blue-500 dark:hover:text-blue-500' />
 						</div>

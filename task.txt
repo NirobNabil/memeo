@@ -57,6 +57,7 @@ Responsive todo
 3. Template page 
 4. Favorite page
 5. Profile 
+6. Setting 
 
 
 problems 
@@ -71,3 +72,10 @@ problems
 - Template add kore instant delete korle error ashe 
 - Template tab er meme tab loading time e jdi onno tab(my template) e jai tahole error ashe 
 - Messenger page load problem 
+- Profile timeline not fixed, latest uploaded post doesn't come to first 
+- Template delete from trash problem 
+- Setting page direct reload problem 
+- After hitting setting route, application crashed with undefined msg (can't read properties of undefined (reading indexof))
+  specially this types of line 
+  query(collection(db, "memes", user.uid, "Trash")
+- Could not delete trashed item and trash item could not load image 

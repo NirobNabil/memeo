@@ -501,9 +501,9 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 				)}
 
 				{!post?.share && post?.caption && (
-					<div className='px-2.5 break-all md:break-normal'>
+					<div className='px-2.5 break-all'>
 						{showInput ? (
-							<p onClick={() => setShowInput(false)}>
+							<p onClick={() => setShowInput(false)} className='break-all'>
 								<Linkify className='text-white'>{post?.caption}</Linkify>
 							</p>
 						) : (
@@ -517,9 +517,9 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 				)}
 
 				{post?.share && post?.shareFrom.caption && (
-					<div className='px-2.5 break-all md:break-normal'>
+					<div className='px-2.5 break-all'>
 						{showInput ? (
-							<p onClick={() => setShowInput(false)}>
+							<p onClick={() => setShowInput(false)} className='break-all'>
 								<Linkify>{post?.shareFrom.caption}</Linkify>
 							</p>
 						) : (
@@ -572,9 +572,9 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 								/>
 							</div>
 						</div>
-						<div className='px-2.5 break-all md:break-normal'>
+						<div className='px-2.5 break-all'>
 							{showCaption ? (
-								<p onClick={() => setShowCaption(false)}>
+								<p onClick={() => setShowCaption(false)} className='break-all'>
 									<Linkify className='text-white'>{post?.caption}</Linkify>
 								</p>
 							) : (

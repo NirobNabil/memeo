@@ -314,7 +314,7 @@ function Header(props) {
 
 	return (
 		<>
-			<header className='fixed w-full top-0 z-40 bg-white dark:bg-slate-800/100 flex items-center justify-around py-1.5 px-3 focus-within:shadow-lg '>
+			<header className='fixed w-full top-0 z-40 bg-white dark:bg-slate-800/100 flex items-center justify-around py-1.5 px-3 focus-within:shadow-lg shadow-lg'>
 				{/* search bar and logo */}
 				<div className='flex items-center sm:space-x-2'>
 					<Link href='/' passHref>
@@ -567,48 +567,28 @@ function Header(props) {
 													/>
 													Profile
 												</Popover.Button>
+
 												<Popover.Button
-													className='flex items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
-													onClick={() => router.push("/messenger")}>
-													<ChatAlt2Icon
-														className='w-5 h-5 mr-3'
-														aria-hidden='true'
-													/>
-													Messenger
+													className='flex sm:hidden items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
+													onClick={() => setModalFollowOpen(true)}>
+													<FiUser className='w-5 h-5 mr-3' />
+													Follow
 												</Popover.Button>
+
 												<Popover.Button
-													className='flex items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
-													onClick={() => router.push("/settings")}>
-													<CogIcon
-														className='w-5 h-5 mr-3'
-														aria-hidden='true'
-													/>
-													Settings
+													className='flex sm:hidden items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
+													onClick={() => setModalFollowingOpen(true)}>
+													<FiUsers className='w-5 h-5 mr-3' />
+													Following
 												</Popover.Button>
-												{tab !== "templates" && (
-													<Popover.Button
-														className='flex sm:hidden items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
-														onClick={() => setModalFollowOpen(true)}>
-														<FiUser className='w-5 h-5 mr-3' />
-														Follow
-													</Popover.Button>
-												)}
-												{tab !== "templates" && (
-													<Popover.Button
-														className='flex sm:hidden items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
-														onClick={() => setModalFollowingOpen(true)}>
-														<FiUsers className='w-5 h-5 mr-3' />
-														Following
-													</Popover.Button>
-												)}
-												{tab !== "templates" && (
-													<Popover.Button
-														className='flex sm:hidden items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
-														onClick={() => setModalFollowersOpen(true)}>
-														<FiUsers className='w-5 h-5 mr-3' />
-														Followers
-													</Popover.Button>
-												)}
+
+												<Popover.Button
+													className='flex sm:hidden items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
+													onClick={() => setModalFollowersOpen(true)}>
+													<FiUsers className='w-5 h-5 mr-3' />
+													Followers
+												</Popover.Button>
+
 												{active && (
 													<Popover.Button
 														className='flex sm:hidden items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
@@ -625,6 +605,15 @@ function Header(props) {
 														Favorites
 													</Popover.Button>
 												)}
+												<Popover.Button
+													className='flex items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
+													onClick={() => router.push("/settings")}>
+													<CogIcon
+														className='w-5 h-5 mr-3'
+														aria-hidden='true'
+													/>
+													Settings
+												</Popover.Button>
 												<Popover.Button
 													className='flex items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
 													onClick={() => {
