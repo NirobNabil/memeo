@@ -43,7 +43,9 @@ export default function TemplateItem({
 				</p>
 			}>
 			<div className='meme-templates'>
-				<div style={{ display: "grid" }} className='grid-cols-3 gap-8'>
+				<div
+					style={{ display: "grid" }}
+					className='grid-cols-2 sm:grid-cols-3 gap-8'>
 					{memes?.map((template) => (
 						<Trending
 							key={template.id}

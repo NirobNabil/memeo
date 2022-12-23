@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import TemplateMenu1 from "./Template/TemplateMenu1";
-import { AiOutlinePlus } from "react-icons/ai";
+
 import { useRouter } from "next/router";
 
 import Trending from "./Template/Trending";
@@ -676,10 +676,10 @@ function Templates(props) {
 	}, [activeTab, memes, popularMemes, imageMemes, videoMemes, myMemes]);
 
 	return (
-		<div className='w-[80%] mx-auto pb-14 px-10'>
-			<div style={{ display: "grid" }} className='grid-cols-3 gap-14'>
+		<div className='w-[90%] sm:w-[80%] mx-auto pb-20 sm:pb-14 sm:px-10'>
+			<div style={{ display: "grid" }} className='grid-cols-3 gap-8 sm:gap-14'>
 				{/* left side  */}
-				<div className='flex flex-col gap-10'>
+				<div className='flex flex-col gap-10 col-span-3 sm:col-span-1'>
 					{/* menu  */}
 					<TemplateMenu1
 						setActiveTab={setActiveTab}
@@ -690,7 +690,7 @@ function Templates(props) {
 					/>
 
 					{/* earning */}
-					<div className='bg-white dark:bg-slate-800 rounded-2xl relative overflow-hidden'>
+					<div className='bg-white dark:bg-slate-800 rounded-2xl relative overflow-hidden sm:block hidden'>
 						<div className='px-10 py-5 mt-2'>
 							<div className='flex justify-between items-center'>
 								<div className='item-inner'>
@@ -706,8 +706,9 @@ function Templates(props) {
 						</div>
 					</div>
 				</div>
+
 				{/* template container  */}
-				<div className='col-span-2'>
+				<div className='col-span-3 sm:col-span-2'>
 					{activeTab === "meme-generator" && (
 						<MemeGenerator memes={myMemes} setMyMemes={setMyMemes} />
 					)}

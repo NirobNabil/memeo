@@ -51,6 +51,9 @@
 
 Responsive todo 
 1. Home page 
+2. Video page
+3. Template page 
+4. Favorite page 
 
 
 problems 

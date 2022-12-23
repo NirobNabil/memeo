@@ -333,7 +333,7 @@ function Header(props) {
 						<input
 							type='text'
 							placeholder='Search'
-							className='flex  md:inline-flex bg-transparent text-sm focus:outline-none placeholder-black/70  dark:placeholder-white/75 flex-grow pb-[2px] border-0 border-b-2 border-transparent focus:border-gray-300 transition-[border-bottom] text-gray-700 sm:text-gray-300'
+							className='flex  md:inline-flex bg-transparent text-sm focus:outline-none placeholder-black/70  dark:placeholder-white/75 flex-grow pb-[2px] border-0 border-b-2 border-transparent focus:border-gray-300 transition-[border-bottom] text-gray-700 dark:text-gray-300 sm:text-gray-300'
 							value={text}
 							onChange={handleSearch}
 						/>
@@ -585,24 +585,30 @@ function Header(props) {
 													/>
 													Settings
 												</Popover.Button>
-												<Popover.Button
-													className='flex sm:hidden items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
-													onClick={() => setModalFollowOpen(true)}>
-													<FiUser className='w-5 h-5 mr-3' />
-													Follow
-												</Popover.Button>
-												<Popover.Button
-													className='flex sm:hidden items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
-													onClick={() => setModalFollowingOpen(true)}>
-													<FiUsers className='w-5 h-5 mr-3' />
-													Following
-												</Popover.Button>
-												<Popover.Button
-													className='flex sm:hidden items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
-													onClick={() => setModalFollowersOpen(true)}>
-													<FiUsers className='w-5 h-5 mr-3' />
-													Followers
-												</Popover.Button>
+												{tab !== "templates" && (
+													<Popover.Button
+														className='flex sm:hidden items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
+														onClick={() => setModalFollowOpen(true)}>
+														<FiUser className='w-5 h-5 mr-3' />
+														Follow
+													</Popover.Button>
+												)}
+												{tab !== "templates" && (
+													<Popover.Button
+														className='flex sm:hidden items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
+														onClick={() => setModalFollowingOpen(true)}>
+														<FiUsers className='w-5 h-5 mr-3' />
+														Following
+													</Popover.Button>
+												)}
+												{tab !== "templates" && (
+													<Popover.Button
+														className='flex sm:hidden items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
+														onClick={() => setModalFollowersOpen(true)}>
+														<FiUsers className='w-5 h-5 mr-3' />
+														Followers
+													</Popover.Button>
+												)}
 												{active && (
 													<Popover.Button
 														className='flex sm:hidden items-center px-4 py-2 sm:text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-[#2D333B] dark:hover:text-white'
