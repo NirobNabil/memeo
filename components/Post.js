@@ -1057,7 +1057,7 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 							</div>
 						)}
 						{post?.caption && (
-							<div className='px-2.5 break-all md:break-normal'>
+							<div className='px-2.5 break-all'>
 								{showInput ? (
 									<p onClick={() => setShowInput(false)}>
 										<Linkify className='text-white'>{post?.caption}</Linkify>
