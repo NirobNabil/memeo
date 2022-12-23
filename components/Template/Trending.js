@@ -180,7 +180,7 @@ const Trending = ({ data, owner, setMyMemes, setIsDeleted }) => {
 						/>
 					)}
 
-					<p className='text-white text-sm text-center absolute bottom-0 left-0 w-full overflow-hidden whitespace-nowrap py-[28px] bg-gradient-to-t from-black/70 to-black/30'>
+					<p className='hidden sm:block text-white text-sm text-center absolute bottom-0 left-0 w-full overflow-hidden whitespace-nowrap py-[28px] bg-gradient-to-t from-black/70 to-black/30'>
 						<span className='absolute w-10/12 mx-auto bottom-0 left-1/2 -translate-x-1/2 overflow-hidden leading-[56px]'>
 							{data.name}
 						</span>
@@ -202,7 +202,7 @@ const Trending = ({ data, owner, setMyMemes, setIsDeleted }) => {
 
 					{/* template-buttons lower */}
 					{owner ? (
-						<div className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-500 py-4 px-5 transition-all duration-300'>
+						<div className='template-buttons absolute left-0 bottom-0 sm:-bottom-full group-hover:bottom-0 w-full bg-gray-200  cursor-pointer dark:bg-gray-800/50 py-4 px-5 transition-all duration-300'>
 							<div className='flex justify-end'>
 								<MdDeleteOutline
 									className='text-2xl'
@@ -211,7 +211,7 @@ const Trending = ({ data, owner, setMyMemes, setIsDeleted }) => {
 							</div>
 						</div>
 					) : (
-						<div className='template-buttons absolute left-0 -bottom-full group-hover:bottom-0 w-full bg-gray-200   dark:bg-gray-500 py-3 px-5 transition-all duration-300'>
+						<div className='template-buttons absolute left-0 bottom-0 sm:-bottom-full group-hover:bottom-0 w-full bg-gray-200   dark:bg-gray-500 py-3 px-5 transition-all duration-300'>
 							{/* download icon  */}
 							<div className='flex justify-between items-center'>
 								<div
@@ -238,6 +238,11 @@ const Trending = ({ data, owner, setMyMemes, setIsDeleted }) => {
 							</div>
 						</div>
 					)}
+				</div>
+				<div className='sm:hidden'>
+					<p className='text-white text-sm text-center left-0 w-full py-[5px]'>
+						<span className='w-10/12 mx-auto overflow-hidden'>{data.name}</span>
+					</p>
 				</div>
 
 				<div className='flex justify-between items-center mt-2'>

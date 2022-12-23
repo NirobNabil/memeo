@@ -96,24 +96,18 @@ function MemeGenerator(props) {
 						border: "none",
 						borderRadius: "20px",
 						padding: "0",
-						top: "50%",
-						left: "50%",
-						right: "auto",
-						bottom: "auto",
-						marginRight: "-50%",
-						transform: "translate(-50%, -50%)",
-						width: "60%",
-						height: "60%",
 					},
-				}}>
-				<div className='w-full h-full rounded-2xl'>
-					<div className='p-10'>
-						<div className='flex justify-between items-center'>
+				}}
+				shouldCloseOnEsc={true}
+				className='w-[95%] sm:w-[60%] h-[60%] left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 absolute'>
+				<div className='w-full h-full rounded-2xl overflow-auto'>
+					<div className='p-6 sm:p-10'>
+						<div className='flex justify-between items-center flex-col-reverse sm:flex-row'>
 							<h1 className='text-2xl font-bold dark:text-gray-400'>
 								Upload Your Meme Template
 							</h1>
 							<button
-								className='text-2xl font-bold dark:text-gray-400'
+								className='text-2xl font-bold dark:text-gray-400 self-end'
 								onClick={() => setModalIsOpen(false)}>
 								X
 							</button>

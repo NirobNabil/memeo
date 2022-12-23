@@ -8,9 +8,8 @@
 	}
 
 	a {
-		color: #0000ee;
-		@apply dark:text-blue-500;
-		text-decoration: underline;
+		color: rgb(59, 130, 246) !important;
+		text-decoration: underline !important;
 	}
 }
 

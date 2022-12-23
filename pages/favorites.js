@@ -223,7 +223,7 @@ function Favorites(props) {
 	return (
 		<div className='bg-[#F3F2EF] dark:bg-slate-900 dark:text-white min-h-screen flex  flex-row w-full mx-auto md:space-y-6 justify-center pt-[50px]'>
 			<div
-				className='flex left-4 top-4 absolute items-center justify-center h-12 w-12 rounded-full bg-white dark:bg-slate-800 shadow-md cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700'
+				className='flex left-4 top-4 fixed items-center justify-center h-12 w-12 rounded-full bg-white dark:bg-slate-800 shadow-md cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 z-50'
 				onClick={() => router.back()}>
 				<ArrowLeftIcon className='h-6 w-6' />
 			</div>

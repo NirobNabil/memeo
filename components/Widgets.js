@@ -12,7 +12,7 @@ function Widgets(props) {
 	const user = useSelector((state) => state.data.currentUser);
 
 	return (
-		<div className='hidden xl:inline space-y-2 overflow-y-auto overflow-x-hidden scrollbar-hide'>
+		<div className='inline space-y-2 overflow-y-auto overflow-x-hidden scrollbar-hide'>
 			{/* News */}
 			{!fromProfile && (
 				<div className='bg-white dark:bg-slate-800 py-2.5 rounded-lg space-y-2 w-full overflow-hidden border border-gray-300 dark:border-none'>
@@ -39,7 +39,7 @@ function Widgets(props) {
 					style={{
 						height: "520px",
 					}}>
-					<div className='items-center justify-between font-bold px-2.5 flex sticky top-0'>
+					<div className='items-center justify-between font-bold px-2.5 flex sticky top-0 z-40'>
 						<h4>Template</h4>
 						{/* <InfoRoundedIcon className='h-5 w-5' /> */}
 					</div>

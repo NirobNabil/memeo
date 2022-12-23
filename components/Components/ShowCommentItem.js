@@ -150,7 +150,7 @@ const ShowCommentItem = ({
 					</Link>
 				</div>
 				<p
-					className={`text-sm dark:text-white/50 text-dark break-words max-w-[94%] ${comment
+					className={`text-sm dark:text-white/50 text-dark break-all sm:break-words max-w-[94%] ${comment
 						?.comment.length > 100 && "cursor-pointer"}`}
 					onClick={() => {
 						setShowComments((prevState) => !prevState);

@@ -65,6 +65,7 @@ export default function Profile(props) {
 	const [userMemes, setUserMemes] = useState([]);
 	const [isOpen, setIsOpen] = useState(false);
 	const [text, setText] = useState("");
+	const [tab, setTab] = useState("feed");
 
 	const user = useSelector((state) => state?.data?.currentUser);
 	const dispatch = useDispatch();
@@ -576,9 +577,23 @@ export default function Profile(props) {
 					</div>
 				</div>
 
-				<div
-					// className="bg-[#F3F2EF] dark:bg-black dark:text-white flex flex-row md:flex-row gap-10 fixed w-full h-full  md:space-y-6 justify-center "
-					className='bg-[#F3F2EF] relative top-20  dark:bg-slate-900 dark:text-white min-h-screen flex  flex-row w-full mx-auto justify-center '>
+				{/* // tab */}
+				<div className='tab flex justify-center gap-8 text-xl mt-10 sm:hidden'>
+					<div
+						onClick={() => setTab("feed")}
+						className={`${tab === "feed" &&
+							"text-orange-red underline"} cursor-pointer`}>
+						<p>Feed</p>
+					</div>
+					<div
+						onClick={() => setTab("templates")}
+						className={`${tab === "templates" &&
+							"text-orange-red underline"} cursor-pointer`}>
+						<p>Templates</p>
+					</div>
+				</div>
+
+				<div className='bg-[#F3F2EF] relative top-20  dark:bg-slate-900 dark:text-white min-h-screen flex  flex-row w-full mx-auto justify-center '>
 					<div className='hidden md:flex xl:flex flex-col items-center xl:items-start xl:w-[360px] p-2 mt-[34px]'>
 						<Menu
 							following={following}
@@ -592,25 +607,29 @@ export default function Profile(props) {
 						/>
 					</div>
 
-					<div className='flex-grow border-l border-r border-gray-400 dark:border-gray-700 max-w-xl xl:w-[520px] space-x-5 my-[28px] mx-3 md:mx-0'>
-						<Feed
-							posts={userPost}
-							inactive
-							len={1}
-							fetchMore={fetchMorePosts}
-							active={false}
-						/>
-					</div>
-
-					<div className='hidden  md:inline space-y-5 p-2 item-center px-6 xl:items-end  xl:w-[360px] mt-[34px]'>
-						<div className=' sticky top-20'>
-							<Widgets
-								fetchUserMemes={fetchUserMemes}
-								userMemes={userMemes}
-								fromProfile={true}
+					{tab === "feed" && (
+						<div className='flex-grow border-l border-r border-gray-400 dark:border-gray-700 max-w-xl xl:w-[520px] space-x-5 sm:my-[28px] mx-3 md:mx-0'>
+							<Feed
+								posts={userPost}
+								inactive
+								len={1}
+								fetchMore={fetchMorePosts}
+								active={false}
 							/>
 						</div>
-					</div>
+					)}
+
+					{tab === "templates" && (
+						<div className='grow inline space-y-5 p-2 item-center px-6 xl:items-end  xl:w-[360px] sm:mt-[34px]'>
+							<div className='sm:sticky sm:top-20'>
+								<Widgets
+									fetchUserMemes={fetchUserMemes}
+									userMemes={userMemes}
+									fromProfile={true}
+								/>
+							</div>
+						</div>
+					)}
 				</div>
 			</div>
 			<Modal

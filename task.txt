@@ -46,6 +46,8 @@
 46. Comment overflow problem solved 
 47. Comment see more added, and multiple see more problem solved with different partition of comments 
 48. Auto detect link
+49. Long comment break 
+50. Back icon in favorites 
 
 
 
@@ -54,6 +56,7 @@ Responsive todo
 2. Video page
 3. Template page 
 4. Favorite page 
+5. Profile 
 
 
 problems 
@@ -67,13 +70,4 @@ problems
 - user name should contain always small latter
 - Template add kore instant delete korle error ashe 
 - Template tab er meme tab loading time e jdi onno tab(my template) e jai tahole error ashe 
-
-
-4. 
-5. Tag problem
-6. messenger reload not show + not back
-15. messenger problem ( home screen + in setting )
-20. template image show design change.
-23. hide option problem.
-27. 
-Comment box
+- Messenger page load problem 
