@@ -900,7 +900,7 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 									/>
 								</Link>
 								<div className='flex flex-col'>
-									<div className='flex items-center space-x-2 flex-col'>
+									<div className='flex items-start flex-col'>
 										<Link href={`/Profile?uid=${doc?.uid}`}>
 											<p className='font-semibold dark:text-white/75 cursor-pointer hover:underline'>
 												{doc?.name}

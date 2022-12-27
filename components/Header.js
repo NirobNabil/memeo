@@ -117,6 +117,8 @@ function Header(props) {
 		profile,
 	} = props;
 
+	console.log(follow, following, followers);
+
 	// After mounting, we have access to the theme
 	useEffect(() => setMounted(true), []);
 	const router = useRouter();
@@ -804,7 +806,7 @@ function Header(props) {
 			</div>
 
 			{/* modals for follow followers  */}
-			<Modal
+			{/* <Modal
 				isOpen={modalFollowingOpen}
 				onRequestClose={() => setModalFollowingOpen(false)}
 				style={{
@@ -829,7 +831,7 @@ function Header(props) {
 						overflow: "scroll",
 					},
 				}}
-				contentLabel='Example Modal'
+				contentLabel='Follow List'
 				ariaHideApp={false}>
 				<div className='w-full  p-4 bg-white border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700'>
 					<div className='flex items-center justify-between mb-4'>
@@ -1058,7 +1060,7 @@ function Header(props) {
 						</div>
 					</div>
 				</Modal>
-			)}
+			)} */}
 		</>
 	);
 }
