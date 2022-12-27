@@ -20,49 +20,56 @@ import {
 	FaGoogle,
 	FaGithub,
 	FaBirthdayCake,
-	FaUserCircle
+	FaUserCircle,
 } from "react-icons/fa";
 import { SiNamebase } from "react-icons/si";
 import { LoginFormContainer } from "./RegisterForm.styles";
 import { useForm } from "react-hook-form";
 
 import { auth, storage, db } from "../../firebase";
-import { signInWithPopup, GithubAuthProvider, GoogleAuthProvider, FacebookAuthProvider, createUserWithEmailAndPassword , createUserWithPhoneNumber} from "firebase/auth";
-import { 
-collection,
-addDoc,
-doc,
-setDoc,
-getFirestore,
-arrayUnion,
-getDoc,
-query,
-where,
-getDocs,
-updateDoc,
-arrayRemove,
-deleteDoc,
-serverTimestamp,
-onSnapshot,
-orderBy,
-limit,
-startAfter,
-endBefore,
-startAt,
-endAt,
-increment,
-decrement,
-runTransaction,
-writeBatch,
-getDocFromCache,
-} from 'firebase/firestore';
+import {
+	signInWithPopup,
+	GithubAuthProvider,
+	GoogleAuthProvider,
+	FacebookAuthProvider,
+	createUserWithEmailAndPassword,
+	createUserWithPhoneNumber,
+} from "firebase/auth";
+import {
+	collection,
+	addDoc,
+	doc,
+	setDoc,
+	getFirestore,
+	arrayUnion,
+	getDoc,
+	query,
+	where,
+	getDocs,
+	updateDoc,
+	arrayRemove,
+	deleteDoc,
+	serverTimestamp,
+	onSnapshot,
+	orderBy,
+	limit,
+	startAfter,
+	endBefore,
+	startAt,
+	endAt,
+	increment,
+	decrement,
+	runTransaction,
+	writeBatch,
+	getDocFromCache,
+} from "firebase/firestore";
 
 import {
 	ref,
 	getDownloadURL,
 	uploadBytesResumable,
 	getStorage,
-	uploadBytes
+	uploadBytes,
 } from "firebase/storage";
 
 import { ToastSuccess } from "../Components/Toast";
@@ -78,8 +85,6 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 	const [toastMessage, setToastMessage] = useState("");
 	const [toastErrorMessage, setToastErrorMessage] = useState("");
 
-
-
 	const {
 		handleSubmit,
 		register,
@@ -87,8 +92,6 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 	} = useForm();
 
 	const fileInputRef = useRef(null);
-
-
 
 	const handleClickShowPassword = () => {
 		setShowPassword((prevState) => !prevState);
@@ -106,26 +109,25 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 		} else {
 			return false;
 		}
-	}
-
-	
+	};
 
 	// register new user
 	const registerUser = async (data) => {
+		console.log(data);
 		if (
 			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
 				data.email
 			)
 		) {
+			await createUserWithEmailAndPassword(
+				auth,
+				data.email,
+				data.password
+			).then(async (user) => {
+				const storageRef = ref(storage, `photoURL/${user.user.uid}`);
+				const uploadTask = await uploadBytesResumable(storageRef, profileImage);
+				const downloadURL = await getDownloadURL(uploadTask.ref);
 
-			await createUserWithEmailAndPassword(auth, data.email, data.password)
-			.then(async (user) => {
-
-				const storageRef = ref(storage, `photoURL/${user.user.uid}`)
-				const uploadTask = await uploadBytesResumable(storageRef, profileImage)
-				const downloadURL = await getDownloadURL(uploadTask.ref)
-
-				
 				setDoc(doc(db, "users", user.user.uid), {
 					uid: user.user.uid,
 					email: user.user.email,
@@ -134,57 +136,57 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 					createdAt: serverTimestamp(),
 					userName: data.userName,
 					online: true,
-					
 				})
-				.then(() => {
-					setDoc(doc(db, "users", user.user.uid, "followers", user.user.uid), {
-						followers: [],
-					})
-					.catch((error) => {
-						console.log(error)
-						setToastError(true)
-						setToastErrorMessage("Something went wrong")
-						setTimeout(() => {
-							setToastError(false)
-							setToastErrorMessage("")
-						}, 3000)
-					})
-					setDoc(doc(db, "users", user.user.uid, "following", user.user.uid), {
-						following: arrayUnion(user.user.uid),
-					})
 					.then(() => {
-						setToastMessage("User created successfully");
-						setToastShow(true);
-						setTimeout(() => {
-							setToastShow(false);
-							setToastMessage("");
-						}, 3000);
-						window.location.reload();
+						setDoc(
+							doc(db, "users", user.user.uid, "followers", user.user.uid),
+							{
+								followers: [],
+							}
+						).catch((error) => {
+							console.log(error);
+							setToastError(true);
+							setToastErrorMessage("Something went wrong");
+							setTimeout(() => {
+								setToastError(false);
+								setToastErrorMessage("");
+							}, 3000);
+						});
+						setDoc(
+							doc(db, "users", user.user.uid, "following", user.user.uid),
+							{
+								following: arrayUnion(user.user.uid),
+							}
+						)
+							.then(() => {
+								setToastMessage("User created successfully");
+								setToastShow(true);
+								setTimeout(() => {
+									setToastShow(false);
+									setToastMessage("");
+								}, 3000);
+								window.location.reload();
+							})
+							.catch((error) => {
+								console.log(error);
+								setToastError(true);
+								setToastErrorMessage(error.message);
+								setTimeout(() => {
+									setToastError(false);
+									setToastErrorMessage("");
+								}, 3000);
+							});
 					})
 					.catch((error) => {
-						console.log(error)
+						console.log(error);
 						setToastError(true);
 						setToastErrorMessage(error.message);
 						setTimeout(() => {
 							setToastError(false);
 							setToastErrorMessage("");
 						}, 3000);
-					})
-				})
-				.catch((error) => {
-					console.log(error)
-					setToastError(true);
-					setToastErrorMessage(error.message);
-					setTimeout(() => {
-						setToastError(false);
-						setToastErrorMessage("");
-					}, 3000);
-				})
-
-				
-					
-
-			})
+					});
+			});
 		}
 	};
 
@@ -217,10 +219,10 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 
 	return (
 		<>
-		{/* <LoginFormContainer> */}
-			<div className='login-form-container text-gray-700'>
-				<div className='logo'>
-					{ logo && <Image src={logo} alt='Logo alt' /> }
+			{/* <LoginFormContainer> */}
+			<div className='login-form-container text-gray-700 w-[75%] mx-auto sm:w-auto'>
+				<div className='logo mb-10 pt-10'>
+					{logo && <Image src={logo} alt='Logo alt' />}
 				</div>
 				<div className='tagline'>Welcome to Memeo</div>
 				<div className='login-form'>
@@ -232,6 +234,7 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 								label='Your full name'
 								variant='standard'
 								type='text'
+								name='fullName'
 								{...register("fullName", {
 									required: "You must have to enter your name",
 									maxLength: {
@@ -252,17 +255,19 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 										</InputAdornment>
 									),
 								}}
+								aria-invalid={errors.fullName ? "true" : "false"}
 								error={Boolean(errors.fullName)}
 								helperText={errors.fullName?.message}
-
 							/>
 						</Box>
-						{/* Full name  */}
+
+						{/* User name  */}
 						<Box sx={{ display: "flex", alignItems: "flex-end", mb: 3 }}>
 							<CssTextField
 								id='userName'
 								label='User name'
 								variant='standard'
+								name='userName'
 								type='text'
 								{...register("userName", {
 									required: "You must have to enter user name",
@@ -279,8 +284,7 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 										if (res) {
 											return "User name already exists";
 										}
-									}
-
+									},
 								})}
 								InputProps={{
 									startAdornment: (
@@ -293,7 +297,6 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 								}}
 								error={Boolean(errors.userName)}
 								helperText={errors.userName?.message}
-
 							/>
 						</Box>
 						{/* Email or phone number  */}
@@ -303,6 +306,7 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 								label='Your email'
 								variant='standard'
 								type='text'
+								name='email'
 								{...register("email", {
 									required: "You must have to enter your email or phone number",
 									validate: (value) =>
@@ -332,6 +336,7 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 								id='password'
 								label='Your password'
 								variant='standard'
+								name='password'
 								type={showPassword ? "text" : "password"}
 								{...register("password", {
 									required: "You must have to enter your password",
@@ -401,10 +406,8 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 							onChange={(e) => {
 								setProfileImage(e.target.files[0]);
 							}}
-							required
-
 						/>
-						
+
 						<div className='flex items-center justify-between'>
 							{profileImage && (
 								<img
@@ -418,11 +421,9 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 								color='primary'
 								onClick={() => fileInputRef.current.click()}
 								sx={{ ml: 2 }}>
-								
 								Upload Profile Image
 							</Button>
 						</div>
-						
 
 						{/* <Box sx={{ display: "flex", alignItems: "flex-end", mb: 1 }}>
 							<FormControl error={Boolean(errors.termsAndConditions)} required>
@@ -449,7 +450,17 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 							</FormControl>
 						</Box> */}
 
-						<Button variant='contained' type='submit' sx={{ mb: 2 }}>
+						<Button
+							variant='contained'
+							type='submit'
+							sx={{
+								mb: 2,
+								backgroundColor: "rgb(255, 69, 34)",
+								"&:hover": {
+									backgroundColor: "rgb(255, 69, 34)",
+									opacity: [0.9, 0.8, 0.7],
+								},
+							}}>
 							Register
 						</Button>
 					</form>
@@ -463,46 +474,20 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 							<a>Already have an account? Log in.</a>
 						</button>
 					</Box>
-
-					<Box className='another-login-method'>
-						<Flex direction='column' gap='20px'>
-							<span>Or, Log in with</span>
-							<Flex gap='30px' horizontal='center' vertical='center'>
-								<BrandBox
-									bg='#3b5998'
-									onClick={signinFacebook}>
-									<FaFacebookF />
-								</BrandBox>
-								{/* <BrandBox bg=' #00acee'>
-											<FaTwitter />
-										</BrandBox> */}
-								<BrandBox
-									bg='#db4a39'
-									onClick={signinGoogle}>
-									<FaGoogle />
-								</BrandBox>
-								<BrandBox
-									bg='#171515'
-									onClick={signinGithub}>
-									<FaGithub />
-								</BrandBox>
-							</Flex>
-						</Flex>
-					</Box>
 				</div>
 			</div>
-		{/* </LoginFormContainer> */}
-		{toastShow && (
-			<div className='fixed bottom-0 right-0 m-8'>
-			  <ToastSuccess text={toastMessage} />
-			</div>
-		  )}
-	
-		{toastError && (
-			<div className='fixed bottom-0 right-0 m-8'>
-			  <ToastError text={toastErrorMessage} />
-			</div>
-		  )}
+			{/* </LoginFormContainer> */}
+			{toastShow && (
+				<div className='fixed bottom-0 right-0 m-8'>
+					<ToastSuccess text={toastMessage} />
+				</div>
+			)}
+
+			{toastError && (
+				<div className='fixed bottom-0 right-0 m-8'>
+					<ToastError text={toastErrorMessage} />
+				</div>
+			)}
 		</>
 	);
 };

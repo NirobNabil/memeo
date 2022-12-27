@@ -14,8 +14,8 @@ import { auth } from "../../firebase";
 const LoginOrRegister = () => {
 	const router = useRouter();
 	const [loginOrRegister, setLoginOrRegister] = useState("login");
-    const [loading, setLoading] = useState(true);
-    const [isLogged, setIsLogged] = useState(false);
+	const [loading, setLoading] = useState(true);
+	const [isLogged, setIsLogged] = useState(false);
 
 	useEffect(() => {
 		auth.onAuthStateChanged((user) => {
@@ -30,14 +30,9 @@ const LoginOrRegister = () => {
 		});
 	}, []);
 
-   
-	
-
 	if (loading) {
 		return (
-			<div 
-			className="justify-center flex flex-col h-screen  items-center"
-			>
+			<div className='justify-center flex flex-col h-screen  items-center'>
 				<Loading loading={true} />
 			</div>
 		);
@@ -50,10 +45,12 @@ const LoginOrRegister = () => {
 					<Flex
 						direction='column'
 						horizontal='space-between'
-						vertical='space-between'>
-					</Flex>
+						vertical='space-between'></Flex>
 				</div>
-				<Flex horizontal='center' vertical='center'>
+				<Flex
+					horizontal='center'
+					vertical='center'
+					className='col-span-2 sm:col-span-1 w-full'>
 					{loginOrRegister === "login" && (
 						<LoginForm setLoginOrRegister={setLoginOrRegister} />
 					)}

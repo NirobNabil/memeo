@@ -243,7 +243,7 @@ const Trending = ({ data, owner, setMyMemes, setIsDeleted }) => {
 					)}
 				</div>
 				<div className='sm:hidden'>
-					<p className='text-white text-sm text-center left-0 w-full py-[5px]'>
+					<p className='text-gray-900 dark:text-white text-sm text-center left-0 w-full py-[5px]'>
 						<span className='w-10/12 mx-auto overflow-hidden'>{data.name}</span>
 					</p>
 				</div>
@@ -315,7 +315,7 @@ const Trending = ({ data, owner, setMyMemes, setIsDeleted }) => {
 										theme === "dark"
 											? {
 													color: "#fff",
-													backgroundColor: "#",
+													backgroundColor: "transparent",
 													margin: "0 5px 5px 0",
 											  }
 											: {

@@ -6,6 +6,7 @@ export const LoginWrapper = styled.div`
 	width: 100%;
 	min-height: 100vh;
 	height: 100vh;
+	overflow-y: auto;
 
 	.loginwrapper_container {
 		height: 100%;
@@ -24,10 +25,13 @@ export const LoginWrapper = styled.div`
 			color: white;
 			background-repeat: no-repeat;
 			background-color: #ff3600;
-			
 
 			& > div {
 				height: 100%;
+			}
+
+			@media screen and (max-width: 640px) {
+				display: none;
 			}
 
 			.login-banner-title p {

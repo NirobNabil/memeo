@@ -2,6 +2,13 @@ import styled from "styled-components";
 
 export const LoginFormContainer = styled.div`
 	padding: 30px;
+	width: auto;
+
+	@media screen and (max-width: 640px) {
+		padding: 0;
+		width: 75%;
+		margin: auto;
+	}
 
 	.logo {
 		max-width: 150px;

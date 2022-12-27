@@ -58,9 +58,11 @@ Responsive todo
 4. Favorite page
 5. Profile 
 6. Setting 
+7. login page 
 
 
 problems 
+- Add a default url from images 
 - direct favorite page reload dile kichu data rendering e somossa hoi
 - share post timestamp problem (sharefrom) 
 - shared post doesn't appear in profile(maybe late for longer)
