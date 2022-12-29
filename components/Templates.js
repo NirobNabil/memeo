@@ -69,7 +69,8 @@ function Templates(props) {
 	}, [props.user]);
 
 	useEffect(() => {
-		if (user && searchTags.length === 0 && search === "") {
+		if(!user?.uid) return;
+		if (user?.uid && searchTags.length === 0 && search === "") {
 			// get memes templates on maximum number of downloads
 			if (activeTab === "memes") {
 				setLoading(true);
@@ -138,7 +139,7 @@ function Templates(props) {
 				// get user's memes templates
 				setLoading(true);
 				getDocs(
-					query(collection(db, "memes", user.uid, "userMemes")),
+					query(collection(db, "memes", user?.uid, "userMemes")),
 					orderBy("timestamp", "desc"),
 					limit(25)
 				).then((querySnapshot) => {
@@ -153,6 +154,7 @@ function Templates(props) {
 	}, [user, activeTab, search, searchTags]);
 
 	useEffect(() => {
+		if(!user?.uid) return;
 		if (user && searchTags.length > 0) {
 			// get memes templates on maximum number of downloads
 			if (activeTab === "memes") {
@@ -245,6 +247,7 @@ function Templates(props) {
 	}, [searchTags]);
 
 	useEffect(() => {
+		if(!user?.uid) return;
 		if (user && search.length >= 0) {
 			if (activeTab === "memes") {
 				setLoading(true);
@@ -341,6 +344,7 @@ function Templates(props) {
 	}, [search, activeTab, user]);
 
 	const fetchMoreMemes = () => {
+		if(!user?.uid) return;
 		if (user && search.length === 0 && searchTags.length === 0) {
 			if (activeTab === "memes") {
 				if (!memes.length) return;

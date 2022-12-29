@@ -19,6 +19,14 @@ export default function Home(props) {
 		fetchUserMemes,
 		userMemes,
 		Isactive,
+		modalFollowOpen,
+		setModalFollowOpen,
+		modalFollowingOpen,
+		setModalFollowingOpen,
+		modalFollowersOpen,
+		setModalFollowersOpen,
+		followListRemove,
+		setFollowListRemove,
 	} = props;
 
 	return (
@@ -35,6 +43,14 @@ export default function Home(props) {
 						fetchFollow={fetchFollow}
 						fetchFollowers={fetchFollowers}
 						active={Isactive}
+						modalFollowOpen={modalFollowOpen}
+						setModalFollowOpen={setModalFollowOpen}
+						modalFollowingOpen={modalFollowingOpen}
+						setModalFollowingOpen={setModalFollowingOpen}
+						modalFollowersOpen={modalFollowersOpen}
+						setModalFollowersOpen={setModalFollowersOpen}
+						followListRemove={followListRemove}
+						setFollowListRemove={setFollowListRemove}
 					/>
 				</div>
 				<div className='flex-grow border-l border-r border-gray-400 dark:border-gray-700 max-w-xl w-full xl:w-[520px] space-x-5 my-[17px] mx-3 md:mx-0'>

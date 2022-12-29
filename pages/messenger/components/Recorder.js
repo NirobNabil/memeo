@@ -61,10 +61,16 @@ function Recorder(props) {
   const [record, setRecord] = useState(null)
   const [clicked, setClicked] = useState(false)
   const [reset, setReset]=useState(false)
-  const user = useSelector(state => state?.data?.currentUser)
   const [mounted, setMounted] = useState(false)
   const [time, setTime] = useState(0)
   const [intervalId, setIntervalId] = useState('')
+  const [user, setUser] = React.useState(null);
+  React.useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    if(user){
+      setUser(user)
+    }
+  }, []);
 
 
   useEffect(() => {

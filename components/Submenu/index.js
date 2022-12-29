@@ -65,18 +65,29 @@ const Submenu1 = (props) => {
 		fetchFollowers,
 		active,
 		fromFavorites,
+		modalFollowOpen,
+		setModalFollowOpen,
+		modalFollowingOpen,
+		setModalFollowingOpen,
+		modalFollowersOpen,
+		setModalFollowersOpen,
+		followListRemove,
+		setFollowListRemove,
 	} = props;
 
-	const [modalFollowOpen, setModalFollowOpen] = useState(false);
-	const [modalFollowingOpen, setModalFollowingOpen] = useState(false);
-	const [modalFollowersOpen, setModalFollowersOpen] = useState(false);
-
-	const [followListRemove, setFollowListRemove] = useState([]);
+	
+	const [user, setUser] = useState(null);
 
 	const [list, setList] = useState([]);
 
 	const router = useRouter();
-	const user = useSelector((state) => state.data.currentUser);
+
+	useEffect(() => {
+		const user = JSON.parse(localStorage.getItem("user"));
+		if (user) {
+			setUser(user);
+		}
+	}, []);
 
 	const followUser = async (post, isTrue) => {
 		if (!isTrue) {

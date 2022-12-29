@@ -15,6 +15,14 @@ const Menu = (props) => {
 		active,
 		fromFavorites,
 		page,
+		modalFollowOpen,
+		setModalFollowOpen,
+		modalFollowingOpen,
+		setModalFollowingOpen,
+		modalFollowersOpen,
+		setModalFollowersOpen,
+		followListRemove,
+		setFollowListRemove,
 	} = props;
 
 	return (
@@ -34,6 +42,15 @@ const Menu = (props) => {
 				fetchFollowers={fetchFollowers}
 				active={active}
 				fromFavorites={fromFavorites}
+				modalFollowOpen={modalFollowOpen}
+				setModalFollowOpen={setModalFollowOpen}
+				modalFollowingOpen={modalFollowingOpen}
+				setModalFollowingOpen={setModalFollowingOpen}
+				modalFollowersOpen={modalFollowersOpen}
+				setModalFollowersOpen={setModalFollowersOpen}
+				followListRemove={followListRemove}
+				setFollowListRemove={setFollowListRemove}
+				
 			/>
 		</div>
 	);

@@ -2,7 +2,13 @@ import React from 'react'
 import { db, auth } from '../../../firebase'
 import { useSelector }  from 'react-redux'
 function Sidebar () {
-  const user = useSelector(state => state.data.currentUser)
+  const [user, setUser] = React.useState(null);
+  React.useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    if(user){
+      setUser(user)
+    }
+  }, []);
 
   return (
     <>

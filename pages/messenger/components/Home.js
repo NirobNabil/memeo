@@ -27,9 +27,10 @@ import {
 
 function Body(props) {
   const { themecolor } = useContext(ContextApp);
-  const user = useSelector(state => state.data.currentUser);
   const [cover, setCover] = useState("");
   const { handleLogout } = props;
+  const [user, setUser] = React.useState(null);
+
   const links = ["chat", "notifications", "settings", "logout"];
   const [notifi, setNotifLength]= useState(0)
   const lnks = [
@@ -39,6 +40,15 @@ function Body(props) {
     { icon: "fal fa-sign-out", txt: "Logout" }
   ];
   // const id =db.collection('users').doc().id
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    if(user){
+      setUser(user)
+    }
+  }, []);
+
+
   const lnksrow =
     lnks &&
     lnks.map((lnk) => {

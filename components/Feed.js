@@ -34,8 +34,15 @@ import AlertBox from "./Components/AlertBox";
 function Feed({ posts, inactive, active, len, fetchMore, fromPost }) {
 	const [isDeleted, setIsDeleted] = useState(false);
 	const [removeList, setRemoveList] = useState([]);
-	const user = useSelector((state) => state?.data?.currentUser);
+	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(false);
+
+	useEffect(() => {
+		const user = JSON.parse(localStorage.getItem("user"));
+		if (user) {
+			setUser(user);
+		}
+	}, []);
 
 	if (user?.uid === undefined) return <Postskeleton />;
 

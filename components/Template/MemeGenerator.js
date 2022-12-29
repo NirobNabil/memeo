@@ -60,8 +60,11 @@ function MemeGenerator(props) {
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		setUser(props.user);
-	}, [props.user]);
+		const user = JSON.parse(localStorage.getItem("user"));
+		if (user) {
+			setUser(user);
+		}
+	}, [])
 
 	return (
 		<>
@@ -296,6 +299,7 @@ function MemeGenerator(props) {
 															setName("");
 															setTag([]);
 															setLoading(false);
+															
 														});
 													});
 												});

@@ -4,10 +4,18 @@ import BookmarkOutlinedIcon from "@mui/icons-material/BookmarkOutlined";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { signOut, useSession } from "next-auth/react";
 import { useSelector } from 'react-redux';
-
+import { useEffect, useState } from "react";
 
 function Sidebar() {
-  const user = useSelector((state) => state.data.currentUser);
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setUser(user);
+    }
+  }, []);
 
 
   return (

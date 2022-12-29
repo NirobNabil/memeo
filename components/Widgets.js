@@ -9,7 +9,15 @@ import ImageGrid from "./ImageContainer/ImageGrid";
 
 function Widgets(props) {
 	const { fetchUserMemes, userMemes, fromProfile } = props;
-	const user = useSelector((state) => state.data.currentUser);
+	const [user, setUser] = useState(null);
+
+	useEffect(() => {
+		const user = JSON.parse(localStorage.getItem("user"));
+		if (user) {
+			setUser(user);
+		}
+	}, []);
+	
 
 	return (
 		<div className='inline space-y-2 overflow-y-auto overflow-x-hidden scrollbar-hide'>

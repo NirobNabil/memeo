@@ -66,8 +66,7 @@ export default function Profile(props) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [text, setText] = useState("");
 	const [tab, setTab] = useState("feed");
-
-	const user = useSelector((state) => state?.data?.currentUser);
+	const [user, setuser] = useState(null);
 	const dispatch = useDispatch();
 
 	const backgroundURLRef = useRef(null);
@@ -77,12 +76,9 @@ export default function Profile(props) {
 	const { uid } = router.query;
 
 	useEffect(() => {
-		if (user?.uid === undefined) {
-			auth.onAuthStateChanged((user) => {
-				if (user) {
-					dispatch(fetchUserAgain(user?.uid));
-				}
-			});
+		const user = JSON.parse(localStorage.getItem("user"));
+		if (user) {
+			setuser(user);
 		}
 	}, []);
 
@@ -135,7 +131,7 @@ export default function Profile(props) {
 			const last = userPost[userPost.length - 1];
 			const q = query(
 				collection(db, "posts", uid, "userPosts"),
-				orderBy("timestamp", "desc"),
+				orderBy("timestamp", "asc"),
 				startAfter(last.timestamp),
 				limit(10)
 			);
@@ -246,7 +242,7 @@ export default function Profile(props) {
 		if (uid) {
 			const q = query(
 				collection(db, "memes", uid, "userMemes"),
-				orderBy("timestamp", "desc"),
+				orderBy("timestamp", "asc"),
 				limit(10)
 			);
 			const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -267,7 +263,7 @@ export default function Profile(props) {
 			const lastMeme = userMemes[userMemes?.length - 1];
 			const q = query(
 				collection(db, "memes", uid, "userMemes"),
-				orderBy("timestamp", "desc"),
+				orderBy("timestamp", "asc"),
 				startAfter(lastMeme?.timestamp),
 				limit(10)
 			);
@@ -478,9 +474,6 @@ export default function Profile(props) {
 
 	return (
 		<>
-			<Head>
-				<title>Memeo | {User?.name || "My Profile"}</title>
-			</Head>
 			<div className=' dark:bg-slate-900 dark:text-gray-400 text-gray-600 bg-white min-h-screen'>
 				<div
 					className='cursor-pointer w-12 h-12 flex justify-center items-center text-2xl text-center rounded-full text-gray-600 dark:text-gray-300 fixed top-4 left-4 hover:shadow-black/30 transition hover:shadow-sm z-50'
@@ -513,7 +506,7 @@ export default function Profile(props) {
 								<p className='text-gray-500 text-sm font-semibold'>
 									@{User?.userName}
 								</p>
-								<p className='text-gray-500 text-sm'>
+								<div className='text-gray-500 text-sm'>
 									{uid === user?.uid &&
 										(User?.bio ? (
 											<p className='mt-4'>Bio: {User?.bio}</p>
@@ -531,7 +524,7 @@ export default function Profile(props) {
 									{uid !== user?.uid && (
 										<p className='mt-4'>Bio: {User?.bio}</p>
 									)}
-								</p>
+								</div>
 							</div>
 							{uid !== user?.uid && (
 								<div className='flex items-center justify-center mt-4'>
@@ -610,7 +603,7 @@ export default function Profile(props) {
 					{tab === "feed" && (
 						<div className='flex-grow border-l border-r border-gray-400 dark:border-gray-700 max-w-xl xl:w-[520px] space-x-5 sm:my-[28px] mx-3 md:mx-0'>
 							<Feed
-								posts={userPost}
+								posts={userPost?.sort((a, b) => b.timestamp - a.timestamp)}
 								inactive
 								len={1}
 								fetchMore={fetchMorePosts}

@@ -84,11 +84,19 @@ const Trending = ({ data, owner, setMyMemes, setIsDeleted }) => {
 	const [error, setError] = useState(null);
 	const [open, setOpen] = useState(false);
 
-	const user = useSelector((state) => state.data.currentUser);
+	const [user, setUser] = useState(null);
+
 	const router = useRouter();
 
 	const { theme } = useTheme();
 	const [chiplen, setChipLen] = useState(3);
+
+	useEffect(() => {
+		const user = JSON.parse(localStorage.getItem("user"));
+		if (user) {
+			setUser(user);
+		}
+	}, []);
 
 	useEffect(() => {
 		if (window.innerWidth < 768) {
@@ -126,6 +134,7 @@ const Trending = ({ data, owner, setMyMemes, setIsDeleted }) => {
 	};
 
 	const deleteTemplate = async () => {
+		if(!deleteLoading && user && data?.memeId){
 		setDeleteLoading(true);
 		getDoc(doc(db, "memes", data.memeId)).then((Doc) => {
 			if (Doc.exists()) {
@@ -139,18 +148,24 @@ const Trending = ({ data, owner, setMyMemes, setIsDeleted }) => {
 								setMyMemes((prev) => {
 									return prev.filter((item) => item.id !== data.id);
 								});
-								setDeleteLoading(false);
-								setOpenApproveDeleteModal(false);
+								
 								setIsDeleted(true);
 								setTimeout(() => {
 									setIsDeleted(false);
 								}, 2000);
+								setDeleteLoading(false);
+								setOpenApproveDeleteModal(false);
 							}
 						);
 					});
 				});
 			}
 		});
+	 }
+	 else{	
+		setOpenApproveDeleteModal(false);
+		alert('You just uploaded this meme, please wait for it to be approved or refresh the page');
+	 }
 	};
 
 	return (
@@ -397,6 +412,7 @@ const Trending = ({ data, owner, setMyMemes, setIsDeleted }) => {
 						<div className='flex justify-center mt-5'>
 							<button
 								className='bg-[#ff4522] text-white px-5 py-2 rounded-md mr-3'
+								disabled={deleteLoading}
 								onClick={() => {
 									setOpenApproveDeleteModal(true);
 									setOpenDeleteModal(false);

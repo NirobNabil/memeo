@@ -81,11 +81,12 @@ import {
 } from "firebase/storage";
 
 export default function Settings() {
-	const user = useSelector((state) => state.data.currentUser);
 	const [trashs, setTrashs] = useState([]);
 	const [password, setPassword] = useState("");
 	const [newPassword, setNewPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
+	const [loading, setLoading] = useState(false);
+	const [user, setUser] = useState(null);
 
 	const [trash, setTrash] = useState([]);
 
@@ -101,6 +102,13 @@ export default function Settings() {
 	const [showPassword, setShowPassword] = useState(false);
 
 	const router = useRouter();
+
+	useEffect(() => {
+		const user = JSON.parse(localStorage.getItem('user'));
+		if(user){
+			setUser(user);
+		}
+	}, [])
 
 	useEffect(() => {
 		if (user) {
@@ -425,27 +433,37 @@ export default function Settings() {
 										{" "}
 										{moment(trash.deletedAt.toDate()).fromNow()}
 									</p>
+									{!loading ? (
 									<button
 										className='text-red-500 font-bold basis-[40%] sm:basis-auto'
 										onClick={() => {
+											setLoading(true);
 											getDoc(
 												doc(db, "memes", user?.uid, "Trash", trash.id)
 											).then((Doc) => {
 												if (Doc.exists()) {
-													deleteObject(ref(storage, Doc.data().memeURL)).then(
-														() => {
-															deleteDoc(
-																doc(db, "memes", user?.uid, "Trash", trash.id)
-															).then(() => {
-																setToastMessage("Meme deleted successfully");
-																setToastShow(true);
-																setTimeout(() => {
-																	setToastMessage("");
-																	setToastShow(false);
-																}, 3000);
-															});
-														}
-													);
+													deleteDoc(
+														doc(db, "memes", user?.uid, "Trash", trash.id)
+													).then(() => {
+														setToastMessage("Meme deleted successfully");
+														setToastShow(true);
+														setTimeout(() => {
+															setToastMessage("");
+															setToastShow(false);
+														}, 3000);
+														setLoading(false);
+													})
+													.catch((error) => {
+														setLoading(false)
+													});
+													deleteObject(ref(storage, Doc.data().memeURL))
+														.then(() => {
+															console.log("deleted");
+														})
+														.catch((error) => {
+															console.log(error);
+														});
+														
 												} else {
 													setToastMessage2("Meme does not exist");
 													setToastShow2(true);
@@ -453,11 +471,16 @@ export default function Settings() {
 														setToastMessage2("");
 														setToastShow2(false);
 													}, 3000);
+													setLoading(false);
+
 												}
 											});
 										}}>
 										Delete
 									</button>
+								) : (
+									null
+								)}
 									<button
 										className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 dark:shadow-sm-light transition-colors duration-200 ease-in-out basis-[40%] sm:basis-auto'
 										onClick={() => {

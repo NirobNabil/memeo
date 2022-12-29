@@ -7,7 +7,7 @@ import {
 	PhotographIcon,
 	XIcon,
 } from "@heroicons/react/outline";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { auth, db, storage } from "../firebase";
 import {
 	getDocs,
@@ -52,7 +52,6 @@ import Modal from "react-modal";
 import { useSelector } from "react-redux";
 
 function Input() {
-	const user = useSelector((state) => state.data.currentUser);
 	const { theme } = useTheme();
 	const [input, setInput] = useState("");
 	const [loading, setLoading] = useState(false);
@@ -63,6 +62,16 @@ function Input() {
 	const [taggedFriends, setTaggedFriends] = useState([]);
 	const [tagFriends, setTagFriends] = useState([]);
 	const [progress, setProgress] = useState(0);
+
+	const [user, setUser] = useState(null);
+
+	useEffect(() => {
+		const user  = JSON.parse(localStorage.getItem("user"));
+		if(user){
+		setUser(user);
+		}
+	}, [])
+
 
 	const sendPost = async () => {
 		if (loading) return;

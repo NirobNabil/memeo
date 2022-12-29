@@ -1,12 +1,20 @@
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useSelector } from 'react-redux';
+import { useEffect, useState } from "react";
 
 
 function Form() {
   const [input, setInput] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
-  const user = useSelector((state) => state.data.currentUser);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if(user){
+      setUser(user);
+    }
+  }, []);
  
 
   return (

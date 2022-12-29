@@ -131,7 +131,7 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 				setDoc(doc(db, "users", user.user.uid), {
 					uid: user.user.uid,
 					email: user.user.email,
-					photoURL: downloadURL || "",
+					photoURL: profileImage ? downloadURL : "https://firebasestorage.googleapis.com/v0/b/memeo-31738.appspot.com/o/default%2Fuser.png?alt=media&token=c648e751-f267-4b21-bdc1-c51cc7d34522",
 					name: data.fullName,
 					createdAt: serverTimestamp(),
 					userName: data.userName,

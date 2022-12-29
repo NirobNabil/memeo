@@ -40,7 +40,13 @@ export default function Gif(props) {
     const [trending, setTrending] = React.useState(false)
     const [trendSearch, setTrendSearch] = React.useState(false)
     const [tSearch, setTsearch] = React.useState([])
-    const user = useSelector(state => state.data.currentUser)
+    const [user, setUser] = React.useState(null);
+    React.useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'))
+        if(user){
+        setUser(user)
+        }
+    }, []);
 //
 // ─── FETCH ──────────────────────────────────────────────────────────────────────
 const fetchData = async (title)=>{

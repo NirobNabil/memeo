@@ -54,8 +54,11 @@ function Favorites(props) {
 	const router = useRouter();
 
 	useEffect(() => {
-		setUser(props.user);
-	}, [props.user]);
+		const user  = JSON.parse(localStorage.getItem("user"));
+		if(user){
+			setUser(user);
+		}
+	}, []);
 
 	useEffect(() => {
 		if (user) {

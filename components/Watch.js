@@ -4,7 +4,30 @@ import Home from './Home'
 
 const Component = (props) => {
     
-    const { videoPosts, active,  following, follow, followers, followingUIDs, followersUIDs, fetchMore, fetchFollow, fetchFollowers, fetchFollowing, fetchUserMemes, userMemes, Isactive } = props
+    const { 
+        videoPosts,
+        active,
+        following,
+        follow, 
+        followers, 
+        followingUIDs, 
+        followersUIDs, 
+        fetchMore, 
+        fetchFollow, 
+        fetchFollowers, 
+        fetchFollowing, 
+        fetchUserMemes, 
+        userMemes, 
+        Isactive,
+        modalFollowOpen,
+		setModalFollowOpen,
+		modalFollowingOpen,
+		setModalFollowingOpen,
+		modalFollowersOpen,
+		setModalFollowersOpen,
+		followListRemove,
+		setFollowListRemove,
+    } = props
 
     return (
             <Home 
@@ -23,6 +46,14 @@ const Component = (props) => {
             fetchUserMemes={fetchUserMemes}
             userMemes={userMemes}
             Isactive={Isactive}
+            modalFollowOpen={modalFollowOpen}
+            setModalFollowOpen={setModalFollowOpen}
+            modalFollowingOpen={modalFollowingOpen}
+            setModalFollowingOpen={setModalFollowingOpen}
+            modalFollowersOpen={modalFollowersOpen}
+            setModalFollowersOpen={setModalFollowersOpen}
+            followListRemove={followListRemove}
+            setFollowListRemove={setFollowListRemove}
         />
     )
 }

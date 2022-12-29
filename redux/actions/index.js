@@ -28,6 +28,7 @@ export const fetchUser = () => (dispatch) => {
             const docSnap = await getDoc(userRef);
             if (docSnap.exists()) {
                 dispatch({ type: USER_STATE_CHANGE, currentUser: docSnap.data() });
+				localStorage.setItem('user', JSON.stringify(docSnap.data()));
 				const conversationsRef = collection(db, 'conversations');
 				const q = query(conversationsRef, where('uids', 'array-contains', docSnap.data().uid), orderBy('lastmsgdate', 'desc'), limit(10));
 				 onSnapshot(q, (querySnapshot) => {
@@ -49,6 +50,7 @@ export const fetchUserAgain = (uid) => async (dispatch) => {
 	console.log(docSnap.data());
 	if (docSnap.exists()) {
 		console.log("Document data:", docSnap.data());
+		localStorage.setItem('user', JSON.stringify(docSnap.data()));
 		dispatch({ type: USER_STATE_CHANGE, currentUser: docSnap.data() });
 		const conversationsRef = collection(db, 'conversations');
 		const q = query(conversationsRef, where('uids', 'array-contains', docSnap.data().uid), orderBy('lastmsgdate', 'desc'), limit(10));

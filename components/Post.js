@@ -59,14 +59,12 @@ import ShowCommentItem from "./Components/ShowCommentItem";
 import Linkify from "react-linkify";
 
 function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
-	const user = useSelector((state) => state.data.currentUser);
 	const [showInput, setShowInput] = useState(false);
 	const [liked, setLiked] = useState(false);
 	const [comment, setComment] = useState("");
 	const [comments, setComments] = useState([]);
 	const [showComments, setShowComments] = useState(false);
 	const [isFavorite, setIsFavorite] = useState(false);
-
 	const [reply, setReply] = useState("");
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [modalUsers, setModalUsers] = useState([]);
@@ -82,12 +80,25 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 	const [commentTagUsersModalIsOpen, setCommentTagUsersModalIsOpen] = useState(
 		false
 	);
+	const [user, setUser] = useState(null);
+
+
+
+	
 
 	const postRef = useRef(null);
 
 	const router = useRouter();
 
 	useEffect(() => {
+		const user = JSON.parse(localStorage.getItem("user"));
+		if (user) {
+			setUser(user);
+		}
+	}, []);
+
+	useEffect(() => {
+		if(user){
 		getDoc(doc(db, "posts", user?.uid, "userFavorites", post.id)).then(
 			(doc) => {
 				if (doc.exists()) {
@@ -97,9 +108,11 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 				}
 			}
 		);
+	 }
 	}, [post.id, user?.uid]);
 
 	useEffect(() => {
+		if(user){
 		getDoc(doc(db, "posts", post.id, "likes", user?.uid)).then((doc) => {
 			if (doc?.data()) {
 				setLiked(true);
@@ -107,9 +120,11 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 				setLiked(false);
 			}
 		});
+	 }
 	}, [user?.uid, post.id]);
 
 	useEffect(() => {
+		if(!user)return;
 		const unsubscribe = onSnapshot(
 			query(
 				collection(db, "posts", post.id, "comments"),
@@ -146,6 +161,8 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 	}, [post.id, user?.uid, commentlen]);
 
 	useEffect(() => {
+		if(!user)return;
+
 		const observer = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {

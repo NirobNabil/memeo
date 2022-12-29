@@ -89,11 +89,9 @@ function Header(props) {
 	const [showSearch, setShowSearch] = useState(false);
 	const [users, setUsers] = useState([]);
 	const [list, setList] = useState([]);
-	const [modalFollowOpen, setModalFollowOpen] = useState(false);
-	const [modalFollowingOpen, setModalFollowingOpen] = useState(false);
-	const [modalFollowersOpen, setModalFollowersOpen] = useState(false);
-	const [followListRemove, setFollowListRemove] = useState([]);
-	const user = useSelector((state) => state.data.currentUser);
+	const [user, setUser] = useState(null);
+
+ 
 	const {
 		tab,
 		setTab,
@@ -101,23 +99,25 @@ function Header(props) {
 		notificationsLength,
 		setNotificationsLength,
 		fetchMore,
-		posts,
 		active,
-		follow,
-		following,
-		followers,
-		followingUIDs,
-		followersUIDs,
-		fetchMorePosts,
-		fetchFollowing,
-		fetchFollow,
-		fetchFollowers,
-		Isactive,
 		fromFavorites,
-		profile,
+		modalFollowOpen,
+		setModalFollowOpen,
+		modalFollowingOpen,
+		setModalFollowingOpen,
+		modalFollowersOpen,
+		setModalFollowersOpen,
+		followListRemove,
+		setFollowListRemove,
 	} = props;
 
-	console.log(follow, following, followers);
+
+	useEffect(() => {
+		const user = JSON.parse(localStorage.getItem('user'));
+		if(user){
+		  setUser(user);
+		}
+	  }, []);
 
 	// After mounting, we have access to the theme
 	useEffect(() => setMounted(true), []);

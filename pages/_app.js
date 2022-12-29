@@ -1,5 +1,4 @@
-import '../styles/globals.css'
-import "./../styles/styles.css";
+
 import { ThemeProvider } from "next-themes";
 import { SessionProvider } from "next-auth/react";
 
@@ -12,6 +11,8 @@ import "filepond/dist/filepond.min.css";
 
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
+import '../styles/globals.css'
+import "./../styles/styles.css";
 
 
 

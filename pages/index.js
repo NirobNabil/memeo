@@ -64,6 +64,10 @@ function Home(props) {
 	const [videoPosts, setVideoPosts] = useState([]);
 	const [followingUIDs, setFollowingUIDs] = useState([]);
 	const [followersUIDs, setFollowersUIDs] = useState([]);
+	const [modalFollowOpen, setModalFollowOpen] = useState(false);
+	const [modalFollowingOpen, setModalFollowingOpen] = useState(false);
+	const [modalFollowersOpen, setModalFollowersOpen] = useState(false);
+	const [followListRemove, setFollowListRemove] = useState([]);
 
 	const [toastShow, setToastShow] = useState(false);
 	const [toastdata, setToastdata] = useState([]);
@@ -514,38 +518,7 @@ function Home(props) {
 		}
 	};
 
-	// useEffect(() => {
-	//   if (user) {
-	//     const q = query(collection(db, 'memes', user?.uid, 'userMemes'), where("type", "==", "image"), orderBy("timestamp", "desc"), limit(10));
-	//     const unsubscribe = onSnapshot(q, (snapshot) => {
-	//         let memes = [];
-	//         snapshot.docs.map((doc) => {
-	//             const data = doc.data();
-	//             const id = doc.id;
-	//             memes.push({ id: id, ...data });
-	//         });
-	//         setUserMemes(memes);
-	//     });
-	//     return unsubscribe;
-	//   }
-	// }, [user]);
-
-	// const fetchUserMemes = () => {
-	//   if (user && userMemes?.length > 0) {
-	//     const lastMeme = userMemes[userMemes?.length - 1];
-	//     const q = query(collection(db, 'memes', user?.uid, 'userMemes'), where("type", "==", "image"), orderBy("timestamp", "desc"), startAfter(lastMeme?.timestamp), limit(10));
-	//     const unsubscribe = onSnapshot(q, (snapshot) => {
-	//         let memes = [];
-	//         snapshot.docs.map((doc) => {
-	//             const data = doc.data();
-	//             const id = doc.id;
-	//             memes.push({ id: id, ...data });
-	//         });
-	//         setUserMemes((prev) => [...prev, ...memes]);
-	//     });
-	//     return unsubscribe;
-	//   }
-	// };
+	
 
 	if (loading || !props?.data?.currentUser) {
 		return (
@@ -570,18 +543,15 @@ function Home(props) {
 					notificationsLength={notificationsLength}
 					setNotificationsLength={setNotificationsLength}
 					fetchMore={fetchNotifications}
-					posts={posts}
 					active={true}
-					following={following}
-					follow={follow}
-					followers={followers}
-					followingUIDs={followingUIDs}
-					followersUIDs={followersUIDs}
-					fetchMorePosts={fetchPosts}
-					fetchFollowing={fetchFollowing}
-					fetchFollow={fetchFollow}
-					fetchFollowers={fetchFollowers}
-					Isactive={true}
+					modalFollowOpen={modalFollowOpen}
+					setModalFollowOpen={setModalFollowOpen}
+					modalFollowingOpen={modalFollowingOpen}
+					setModalFollowingOpen={setModalFollowingOpen}
+					modalFollowersOpen={modalFollowersOpen}
+					setModalFollowersOpen={setModalFollowersOpen}
+					followListRemove={followListRemove}
+					setFollowListRemove={setFollowListRemove}
 				/>
 				<main className='min-h-screen flex  mx-auto  flex-col dark:bg-slate-900 dark:text-white bg-[#F3F2EF] text-black pt-[105px]'>
 					<Suspense fallback={<Loading loading={true} />}>
@@ -600,8 +570,15 @@ function Home(props) {
 								fetchFollow={fetchFollow}
 								fetchFollowers={fetchFollowers}
 								Isactive={true}
-								// fetchUserMemes={fetchUserMemes}
-								// userMemes={userMemes}
+								modalFollowOpen={modalFollowOpen}
+								setModalFollowOpen={setModalFollowOpen}
+								modalFollowingOpen={modalFollowingOpen}
+								setModalFollowingOpen={setModalFollowingOpen}
+								modalFollowersOpen={modalFollowersOpen}
+								setModalFollowersOpen={setModalFollowersOpen}
+								followListRemove={followListRemove}
+								setFollowListRemove={setFollowListRemove}
+								
 							/>
 						) : tab === "watch" ? (
 							<Watch
@@ -618,8 +595,15 @@ function Home(props) {
 								fetchFollow={fetchFollow}
 								fetchFollowers={fetchFollowers}
 								Isactive={true}
-								// userMemes={userMemes}
-								// fetchUserMemes={fetchUserMemes}
+								modalFollowOpen={modalFollowOpen}
+								setModalFollowOpen={setModalFollowOpen}
+								modalFollowingOpen={modalFollowingOpen}
+								setModalFollowingOpen={setModalFollowingOpen}
+								modalFollowersOpen={modalFollowersOpen}
+								setModalFollowersOpen={setModalFollowersOpen}
+								followListRemove={followListRemove}
+								setFollowListRemove={setFollowListRemove}
+							
 							/>
 						) : (
 							<Templates {...props} />
