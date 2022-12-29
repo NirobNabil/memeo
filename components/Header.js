@@ -634,6 +634,7 @@ function Header(props) {
 														className='w-5 h-5 mr-3'
 														aria-hidden='true'
 														onClick={() => {
+															localStorage.removeItem("user");
 															updateDoc(
 																doc(db, "users", user?.uid),
 																{
@@ -642,7 +643,6 @@ function Header(props) {
 																{ merge: true }
 															).then(() => {
 																auth.signOut();
-																localStorage.removeItem("user");
 																window.location.reload();
 															});
 														}}
