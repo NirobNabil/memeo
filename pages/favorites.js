@@ -50,6 +50,10 @@ function Favorites(props) {
 	const [userMemes, setUserMemes] = useState([]);
 	const [isOpen, setIsOpen] = useState(false);
 	const [text, setText] = useState("");
+	const [modalFollowOpen, setModalFollowOpen] = useState(false);
+	const [modalFollowingOpen, setModalFollowingOpen] = useState(false);
+	const [modalFollowersOpen, setModalFollowersOpen] = useState(false);
+	const [followListRemove, setFollowListRemove] = useState([]);
 
 	const router = useRouter();
 
@@ -243,6 +247,14 @@ function Favorites(props) {
 					active={true}
 					fromFavorites={true}
 					page={"favorites"}
+					modalFollowOpen={modalFollowOpen}
+					setModalFollowOpen={setModalFollowOpen}
+					modalFollowingOpen={modalFollowingOpen}
+					setModalFollowingOpen={setModalFollowingOpen}
+					modalFollowersOpen={modalFollowersOpen}
+					setModalFollowersOpen={setModalFollowersOpen}
+					followListRemove={followListRemove}
+					setFollowListRemove={setFollowListRemove}
 				/>
 			</div>
 			<div className='flex-grow border-l border-r border-gray-100 dark:border-gray-700 max-w-xl xl:w-[520px]  space-x-5  my-3 mx-3 md:mx-0'>

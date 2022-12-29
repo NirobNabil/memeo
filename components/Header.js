@@ -633,6 +633,19 @@ function Header(props) {
 													<LogoutIcon
 														className='w-5 h-5 mr-3'
 														aria-hidden='true'
+														onClick={() => {
+															updateDoc(
+																doc(db, "users", user?.uid),
+																{
+																	online: false,
+																},
+																{ merge: true }
+															).then(() => {
+																auth.signOut();
+																localStorage.removeItem("user");
+																window.location.reload();
+															});
+														}}
 													/>
 													Sign out
 												</Popover.Button>

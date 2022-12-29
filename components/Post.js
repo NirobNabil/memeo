@@ -265,6 +265,7 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 				userName: post.user.userName,
 				id: post.id,
 				caption: post.caption,
+				timestamp: post?.timestamp,
 			},
 			uid: user?.uid,
 			user: {
@@ -428,7 +429,7 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 								@{post?.shareFrom?.userName}
 							</p>
 							<p className='text-sm dark:text-white/50 p-y-1 '>
-								{moment(post?.timestamp?.toDate()).fromNow()}
+								{moment(post?.shareFrom?.timestamp?.toDate()).fromNow()}
 							</p>
 						</div>
 						{!isFavorite ? (

@@ -267,6 +267,7 @@ function Home(props) {
 	useEffect(() => {
 		//push a random postID to viewedPosts array
 		if (user) {
+			let ids = [];
 			const postsRef = collection(db, `posts`, user?.uid, "viewedPosts");
 			const q = query(postsRef, orderBy("timestamp", "desc"));
 			const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -280,10 +281,13 @@ function Home(props) {
 					if (data?.timestamp?.toDate() < oneMonthAgo) {
 						deleteDoc(doc(db, "posts", user?.uid, "viewedPosts", id));
 					} else if (data?.timestamp?.toDate() < oneDayAgo) {
-						setViewedPostID((viewedPosts) => [...viewedPosts, id]);
+						ids.push(id);
 					}
 				});
 			});
+			console.log('viewPosts', ids);
+			setViewedPostID(ids);
+
 			return unsubscribe;
 		}
 	}, [user]);
@@ -306,7 +310,7 @@ function Home(props) {
 			});
 			return unsubscribe;
 		}
-	}, [user]);
+	}, [user, viewedPostID]);
 
 	const fetchPosts = () => {
 		if (user && posts?.length > 0) {

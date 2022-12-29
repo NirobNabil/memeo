@@ -66,7 +66,7 @@ const LoginForm = ({ setLoginOrRegister }) => {
 			);
 		} catch (error) {
 			console.log(error);
-			setToastErrorMessage(error.message);
+			setToastErrorMessage('Invalid Email or Password');
 			setToastError(true);
 			setTimeout(() => {
 				setToastError(false);
