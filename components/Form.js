@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useSelector } from 'react-redux';
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 
 function Form() {
