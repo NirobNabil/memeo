@@ -98,6 +98,7 @@ export default function Settings() {
 
 	const [toastMessage, setToastMessage] = useState("");
 	const [toastMessage2, setToastMessage2] = useState("");
+	
 
 	const [showPassword, setShowPassword] = useState(false);
 

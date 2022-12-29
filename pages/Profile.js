@@ -68,6 +68,10 @@ export default function Profile(props) {
 	const [tab, setTab] = useState("feed");
 	const [user, setuser] = useState(null);
 	const dispatch = useDispatch();
+	const [modalFollowOpen, setModalFollowOpen] = useState(false);
+	const [modalFollowingOpen, setModalFollowingOpen] = useState(false);
+	const [modalFollowersOpen, setModalFollowersOpen] = useState(false);
+	const [followListRemove, setFollowListRemove] = useState([]);
 
 	const backgroundURLRef = useRef(null);
 	const photoURLRef = useRef(null);
@@ -597,6 +601,14 @@ export default function Profile(props) {
 							followingUIDs={followingUIDs}
 							followersUIDs={followersUIDs}
 							active={uid === user?.uid ? true : false}
+							modalFollowOpen={modalFollowOpen}
+							setModalFollowOpen={setModalFollowOpen}
+							modalFollowingOpen={modalFollowingOpen}
+							setModalFollowingOpen={setModalFollowingOpen}
+							modalFollowersOpen={modalFollowersOpen}
+							setModalFollowersOpen={setModalFollowersOpen}
+							followListRemove={followListRemove}
+							setFollowListRemove={setFollowListRemove}
 						/>
 					</div>
 
