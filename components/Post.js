@@ -554,9 +554,9 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 							src={post?.postURL}
 							alt=''
 							className='object-contain w-full cursor-pointer max-h-screen  min-h-72'
-							onClick={() => {
-								router.push(`/posts?id=${post.id}`);
-							}}
+							// onClick={() => {
+							// 	router.push(`/posts?id=${post.id}`);
+							// }}
 						/>
 					) : (
 						<Video videoURL={post?.postURL} />
@@ -1094,9 +1094,9 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 									src={post?.postURL}
 									alt=''
 									className='object-contain w-full cursor-pointer max-h-screen  min-h-72'
-									onClick={() => {
-										router.push(`/posts?id=${post.id}`);
-									}}
+									// onClick={() => {
+									// 	router.push(`/posts?id=${post.id}`);
+									// }}
 								/>
 							) : (
 								<Video videoURL={post?.postURL} />
