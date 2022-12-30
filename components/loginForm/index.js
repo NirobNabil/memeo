@@ -98,6 +98,7 @@ const LoginForm = ({ setLoginOrRegister }) => {
 						setToastShow(false);
 						setToastMessage("");
 					}, 3000);
+					window.location.reload()
 					
 				}
 			);
