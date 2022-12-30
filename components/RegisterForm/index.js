@@ -180,7 +180,7 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 					.catch((error) => {
 						console.log(error);
 						setToastError(true);
-						setToastErrorMessage(error.message);
+						setToastErrorMessage('Something went wrong');
 						setTimeout(() => {
 							setToastError(false);
 							setToastErrorMessage("");

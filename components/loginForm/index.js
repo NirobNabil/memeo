@@ -29,6 +29,35 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { ToastSuccess } from "../Components/Toast";
 import { ToastError } from "../Components/Toast";
 
+import {
+	collection,
+	query,
+	where,
+	getDocs,
+	getDoc,
+	doc,
+	setDoc,
+	updateDoc,
+	arrayUnion,
+	arrayRemove,
+	deleteDoc,
+	serverTimestamp,
+	onSnapshot,
+	orderBy,
+	limit,
+	startAfter,
+	endBefore,
+	startAt,
+	endAt,
+	increment,
+	decrement,
+	runTransaction,
+	writeBatch,
+	addDoc,
+	getFirestore,
+	getDocFromCache,
+} from "firebase/firestore";
+
 const LoginForm = ({ setLoginOrRegister }) => {
 	const [toastShow, setToastShow] = useState(false);
 	const [toastError, setToastError] = useState(false);
@@ -55,13 +84,21 @@ const LoginForm = ({ setLoginOrRegister }) => {
 		const { emailOrPhone, password } = data;
 		try {
 			await signInWithEmailAndPassword(auth, emailOrPhone, password).then(
-				(userCredential) => {
+				async (userCredential) => {
+					// Signed in
+					const user = userCredential.user;
+					const userRef = doc(db, "users", user.uid);
+					const docSnap = await getDoc(userRef);
+					if (docSnap.exists()) {
+						localStorage.setItem('user', JSON.stringify(docSnap.data()));
+					 }
 					setToastMessage("Login Successful");
 					setToastShow(true);
 					setTimeout(() => {
 						setToastShow(false);
 						setToastMessage("");
 					}, 3000);
+					
 				}
 			);
 		} catch (error) {

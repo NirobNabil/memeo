@@ -440,7 +440,7 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 									setDoc(
 										doc(db, "posts", user?.uid, "userFavorites", post.id),
 										{
-											id: post.shareFrom.id,
+											id: post.id,
 											timestamp: serverTimestamp(),
 										}
 									);
@@ -456,7 +456,7 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 											"posts",
 											user?.uid,
 											"userFavorites",
-											post.shareFrom.id
+											post.id
 										)
 									);
 								}}

@@ -128,7 +128,7 @@ export default function Profile(props) {
 				});
 			})();
 		}
-	}, [uid, router]);
+	}, [uid]);
 
 	const fetchMorePosts = async () => {
 		if (userPost.length > 0 && uid) {
