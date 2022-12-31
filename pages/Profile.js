@@ -478,9 +478,12 @@ export default function Profile(props) {
 
 	return (
 		<>
+			<Head>
+				<title>Memeo | {User?.name || "My Profile"}</title>
+			</Head>
 			<div className=' dark:bg-slate-900 dark:text-gray-400 text-gray-600 bg-white min-h-screen'>
 				<div
-					className='cursor-pointer w-12 h-12 flex justify-center items-center text-2xl text-center rounded-full text-gray-600 dark:text-gray-300 fixed top-4 left-4 hover:shadow-black/30 transition hover:shadow-sm z-50'
+					className='cursor-pointer w-12 h-12 flex justify-center items-center text-2xl text-center rounded-full text-gray-600 dark:text-gray-300 fixed top-4 left-4 hover:shadow-black/30 transition hover:shadow-sm z-[100]'
 					onClick={() => router.back()}
 					title='Back'>
 					<span>
@@ -555,11 +558,11 @@ export default function Profile(props) {
 							)}
 
 							<div className='flex flex-row gap-10 items-center justify-center my-2 '>
-								<div className='flex items-center justify-center  space-x-1  bg-transparent hover:bg-gray-100  dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 '>
+								<div className='flex items-center justify-center  space-x-1  bg-transparent hover:bg-gray-100  dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 cursor-pointer' onClick={() => setModalFollowingOpen(true)}>
 									<h1 className='text-md  mx-2'>{followingUIDs.length}</h1>
 									<p className='text-gray-500 text-sm'>Following</p>
 								</div>
-								<div className='flex items-center justify-center  space-x-1   bg-transparent hover:bg-gray-100  dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 '>
+								<div className='flex items-center justify-center  space-x-1   bg-transparent hover:bg-gray-100  dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 cursor-pointer' onClick={() => setModalFollowersOpen(true)}>
 									<h1 className='text-md  mx-2'>{followersUIDs.length}</h1>
 									<p className='text-gray-500 text-sm'>Followers</p>
 								</div>
@@ -575,7 +578,7 @@ export default function Profile(props) {
 				</div>
 
 				{/* // tab */}
-				<div className='tab flex justify-center gap-8 text-xl mt-10 sm:hidden'>
+				<div className='flex justify-center gap-8 text-xl py-5 sticky top-0 z-50 bg-white dark:bg-slate-900'>
 					<div
 						onClick={() => setTab("feed")}
 						className={`${tab === "feed" &&
@@ -590,7 +593,7 @@ export default function Profile(props) {
 					</div>
 				</div>
 
-				<div className='bg-[#F3F2EF] relative top-20  dark:bg-slate-900 dark:text-white min-h-screen flex  flex-row w-full mx-auto justify-center '>
+				<div className='bg-[#F3F2EF] relative top-8  dark:bg-slate-900 dark:text-white min-h-screen flex  flex-row w-full mx-auto justify-center '>
 					<div className='hidden md:flex xl:flex flex-col items-center xl:items-start xl:w-[360px] p-2 mt-[34px]'>
 						<Menu
 							following={following}
@@ -613,7 +616,7 @@ export default function Profile(props) {
 					</div>
 
 					{tab === "feed" && (
-						<div className='flex-grow border-l border-r border-gray-400 dark:border-gray-700 max-w-xl xl:w-[520px] space-x-5 sm:my-[28px] mx-3 md:mx-0'>
+						<div className='flex-grow border-l border-r border-gray-400 dark:border-gray-700 max-w-xl sm:max-w-[520px] space-x-5 sm:my-[28px] mx-3 md:mx-0'>
 							<Feed
 								posts={userPost?.sort((a, b) => b.timestamp - a.timestamp)}
 								inactive
@@ -625,7 +628,7 @@ export default function Profile(props) {
 					)}
 
 					{tab === "templates" && (
-						<div className='grow inline space-y-5 p-2 item-center px-6 xl:items-end  xl:w-[360px] sm:mt-[34px]'>
+						<div className=' inline space-y-5 p-2 item-center px-6 sm:items-end  sm:max-w-[520px] flex-grow sm:mt-[34px]'>
 							<div className='sm:sticky sm:top-20'>
 								<Widgets
 									fetchUserMemes={fetchUserMemes}

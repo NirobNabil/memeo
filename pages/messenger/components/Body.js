@@ -354,7 +354,7 @@ function Body(props) {
 								right: chatview ? "330px" : "50px",
 								width: chatview ? "calc(77% - 380px)" : "calc(29% - 100px)",
 								height: "calc(100% - 170px)",
-								bottom: "0px",
+								bottom: "15px",
 								minWidth: "300px",
 							}}>
 							<div className='dialogue bg-white dark:bg-slate-800'>

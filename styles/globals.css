@@ -8,8 +8,6 @@
 	}
 
 	a {
-		color: rgb(59, 130, 246) !important;
-		text-decoration: underline !important;
 	}
 }
 
@@ -31,7 +29,7 @@
 	}
 
 	.postButton {
-		@apply flex items-center justify-center space-x-2 cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-900/50 w-full py-2 rounded-full transition ease-out font-medium;
+		@apply flex items-center justify-center space-x-2 cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-900/50 w-full py-[0.4rem] rounded-full transition ease-out font-medium;
 	}
 
 	.logo {

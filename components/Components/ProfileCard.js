@@ -72,7 +72,7 @@ export default function ProfileCard({
 							href='#'
 							className={`inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white rounded-lg  focus:ring-4 focus:outline-none focus:ring-gray-200 dark:text-white dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700 ${
 								buttonBlock ? "bg-gray-400" : "bg-blue-500"
-							} text-gray-100 dark:text-gray-900 hover:opacity-70 transition-all`}
+							} text-gray-100  hover:opacity-70 transition-all`}
 							onClick={() => {
 								setButtonBlock(true);
 								func(post, isTrue);

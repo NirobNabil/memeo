@@ -63,7 +63,7 @@ import {
 import { useTheme } from "next-themes";
 
 const TemplateMenu1 = (props) => {
-	const { setActiveTab } = props;
+	const { setActiveTab, activeTab } = props;
 	const [showTag, setShowTag] = useState(false);
 	const [tags, setTags] = useState([]);
 	const [tagsLen, setTagsLen] = useState(10);
@@ -259,8 +259,8 @@ const TemplateMenu1 = (props) => {
 								<ul className='text-gray-600 dark:text-gray-400 hidden sm:block'>
 									<li className='mb-4' onClick={() => setActiveTab("memes")}>
 										<div
-											className='item-link item-content flex flex-row flex-start cursor-pointer  items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
-								          	transform '>
+											className={`item-link item-content flex flex-row flex-start cursor-pointer  items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out transform ${activeTab ===
+												"memes" && "text-orange-red"}`}>
 											<div className='item-media'>
 												<HiOutlineTemplate className='w-6 h-6 mr-6' />
 											</div>
@@ -272,8 +272,8 @@ const TemplateMenu1 = (props) => {
 
 									<li className='mb-4' onClick={() => setActiveTab("popular")}>
 										<div
-											className='item-link item-content flex flex-row cursor-pointer items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
-									transform '>
+											className={`item-link item-content flex flex-row flex-start cursor-pointer  items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out transform ${activeTab ===
+												"popular" && "text-orange-red"}`}>
 											<div className='item-media'>
 												<HiBadgeCheck className='w-6 h-6 mr-6' />
 											</div>
@@ -286,8 +286,8 @@ const TemplateMenu1 = (props) => {
 										className='mb-4'
 										onClick={() => setActiveTab("image-memes")}>
 										<div
-											className='item-link item-content flex flex-row cursor-pointer items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
-								           	transform '>
+											className={`item-link item-content flex flex-row flex-start cursor-pointer  items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out transform ${activeTab ===
+												"image-memes" && "text-orange-red"}`}>
 											<div className='item-media'>
 												<HiCamera className='w-6 h-6 mr-6' />
 											</div>
@@ -300,8 +300,8 @@ const TemplateMenu1 = (props) => {
 										className='mb-4'
 										onClick={() => setActiveTab("video-memes")}>
 										<div
-											className='item-link item-content flex flex-row cursor-pointer items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out 
-												transform '>
+											className={`item-link item-content flex flex-row flex-start cursor-pointer  items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out transform ${activeTab ===
+												"video-memes" && "text-orange-red"}`}>
 											<div className='item-media'>
 												<HiFilm className='w-6 h-6 mr-6' />
 											</div>
@@ -314,8 +314,8 @@ const TemplateMenu1 = (props) => {
 										className='mb-4 '
 										onClick={() => setActiveTab("meme-generator")}>
 										<div
-											className='item-link item-content flex flex-row cursor-pointer items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out
-								        	transform '>
+											className={`item-link item-content flex flex-row flex-start cursor-pointer  items-center w-full  hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg p-2 transition duration-300 ease-in-out transform ${activeTab ===
+												"meme-generator" && "text-orange-red"}`}>
 											<div className='item-media'>
 												<HiOutlineUserGroup className='w-6 h-6 mr-6' />
 											</div>

@@ -64,7 +64,7 @@ function MemeGenerator(props) {
 		if (user) {
 			setUser(user);
 		}
-	}, [])
+	}, []);
 
 	return (
 		<>
@@ -117,7 +117,7 @@ function MemeGenerator(props) {
 						</div>
 						<div className='mt-10'>
 							<div className='flex justify-center items-center'>
-								<div className='w-1/2'>
+								<div className='w-full sm:w-1/2'>
 									<input
 										type='file'
 										id='file'
@@ -137,7 +137,7 @@ function MemeGenerator(props) {
 							{meme && (
 								<div className='mt-10'>
 									<div className='flex justify-center items-center'>
-										<div className='w-1/2 flex justify-center items-center'>
+										<div className='w-full sm:w-1/2 flex justify-center items-center'>
 											{type.includes("image") ? (
 												<img
 													src={URL.createObjectURL(meme)}
@@ -161,7 +161,7 @@ function MemeGenerator(props) {
 								<>
 									<div className='mt-10'>
 										<div className='flex justify-center items-center'>
-											<div className='w-1/2'>
+											<div className='w-full sm:w-1/2'>
 												<input
 													type='text'
 													placeholder='Enter a name for your meme template'
@@ -175,7 +175,7 @@ function MemeGenerator(props) {
 									</div>
 									<div className='mt-10'>
 										<div className='flex justify-center items-center'>
-											<div className='w-1/2'>
+											<div className='w-full sm:w-1/2'>
 												<ChipInput
 													placeholder='Enter tags for your meme template'
 													className='w-full bg-gray-200 dark:bg-slate-700 text-gray-400 dark:text-gray-400 px-3 py-1 placeholder:text-gray-400 placeholder:dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50'
@@ -196,27 +196,10 @@ function MemeGenerator(props) {
 
 							<div className='mt-10'>
 								{loading && <Progress progress={progressbar} />}
-								{/* progressbar
-                            {progressbar > 0 && (
-                                <div className='flex justify-center items-center'>
-                                    <div className='w-1/2'>
-                                        <div className='bg-gray-200 dark:bg-slate-700 rounded-2xl'>
-                                            <div
-                                                className='bg-blue-500 dark:bg-blue-400 rounded-2xl'
-                                                style={{
-                                                    width: `${progressbar}%`,
-                                                    color: "white",
-                                                    height: "0.5rem",
-                                                }}
-                                            > </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )} */}
 							</div>
 
 							<div className='flex justify-center items-center mt-10'>
-								<div className='w-1/2'>
+								<div className='w-full sm:w-1/2'>
 									<button
 										onClick={async () => {
 											setLoading(true);
@@ -299,7 +282,6 @@ function MemeGenerator(props) {
 															setName("");
 															setTag([]);
 															setLoading(false);
-															
 														});
 													});
 												});

@@ -141,7 +141,7 @@ const ShowCommentItem = ({
 					className={`h-7 w-7 rounded-full object-cover cursor-pointer justify-self-start mt-2`}
 				/>
 			</Link>
-			<div className='flex flex-col'>
+			<div className='flex flex-col flex-grow'>
 				<div className='flex items-center space-x-1'>
 					<Link href={`/Profile?uid=${comment?.user?.uid}`}>
 						<h4 className='font-semibold text-sm dark:text-white/75 cursor-pointer'>

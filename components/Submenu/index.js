@@ -75,7 +75,6 @@ const Submenu1 = (props) => {
 		setFollowListRemove,
 	} = props;
 
-	
 	const [user, setUser] = useState(null);
 
 	const [list, setList] = useState([]);
@@ -264,22 +263,10 @@ const Submenu1 = (props) => {
 							zIndex: 1000,
 						},
 						content: {
-							backgroundColor: "transparent",
-							border: "none",
-							top: "50%",
-							left: "50%",
-							right: "auto",
-							bottom: "auto",
 							marginRight: "-50%",
-							transform: "translate(-50%, -50%)",
-							padding: 0,
-							width: "100%",
-							maxWidth: "550px",
-							height: "100%",
-							maxHeight: "550px",
-							overflow: "scroll",
 						},
 					}}
+					className='overflow-x-hidden overflow-y-auto absolute top-1/2 left-1/2 border-0 -translate-x-1/2 -translate-y-1/2 p-0 w-[95%] max-w-[550px] h-full max-h-[550px] bg-transparent focus-visible:outline-none scrollbar-hide'
 					contentLabel='Example Modal'
 					ariaHideApp={false}>
 					<div className='w-full  p-4 bg-white border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700'>
@@ -353,22 +340,10 @@ const Submenu1 = (props) => {
 						zIndex: 1000,
 					},
 					content: {
-						backgroundColor: "transparent",
-						border: "none",
-						top: "50%",
-						left: "50%",
-						right: "auto",
-						bottom: "auto",
 						marginRight: "-50%",
-						transform: "translate(-50%, -50%)",
-						padding: 0,
-						width: "100%",
-						maxWidth: "550px",
-						height: "100%",
-						maxHeight: "550px",
-						overflow: "scroll",
 					},
 				}}
+				className='overflow-x-hidden overflow-y-auto absolute top-1/2 left-1/2 border-0 -translate-x-1/2 -translate-y-1/2 p-0 w-[95%] max-w-[550px] h-full max-h-[550px] bg-transparent focus-visible:outline-none scrollbar-hide'
 				contentLabel='Example Modal'
 				ariaHideApp={false}>
 				<div className='w-full  p-4 bg-white border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700'>
@@ -438,22 +413,10 @@ const Submenu1 = (props) => {
 						zIndex: 1000,
 					},
 					content: {
-						backgroundColor: "transparent",
-						border: "none",
-						top: "50%",
-						left: "50%",
-						right: "auto",
-						bottom: "auto",
 						marginRight: "-50%",
-						transform: "translate(-50%, -50%)",
-						padding: 0,
-						width: "100%",
-						maxWidth: "550px",
-						height: "100%",
-						maxHeight: "550px",
-						overflow: "scroll",
 					},
 				}}
+				className='overflow-x-hidden overflow-y-auto absolute top-1/2 left-1/2 border-0 -translate-x-1/2 -translate-y-1/2 p-0 w-[95%] max-w-[550px] h-full max-h-[550px] bg-transparent focus-visible:outline-none scrollbar-hide'
 				contentLabel='Example Modal'
 				ariaHideApp={false}>
 				<div className='w-full  p-4 bg-white border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700'>

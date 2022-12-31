@@ -1,6 +1,7 @@
 import Feed from "./Feed";
 import Widgets from "./Widgets";
 import Menu from "./Menu";
+import Link from "next/link";
 
 export default function Home(props) {
 	const {
@@ -32,7 +33,7 @@ export default function Home(props) {
 	return (
 		<>
 			<div className=' bg-[#F3F2EF] dark:bg-slate-900 dark:text-white min-h-screen flex  flex-row w-full mx-auto  justify-center '>
-				<div className='hidden sm:flex flex-col items-center xl:items-start xl:w-[360px] px-2 min-h-max h-screen sticky top-[105px]'>
+				<div className='hidden sm:flex flex-col gap-8 items-center md:items-start md:w-[360px] px-2 min-h-max h-screen sticky top-[105px]'>
 					<Menu
 						following={following}
 						follow={follow}
@@ -52,8 +53,30 @@ export default function Home(props) {
 						followListRemove={followListRemove}
 						setFollowListRemove={setFollowListRemove}
 					/>
+					{/* terms and condition and copyright */}
+					<div className='flex flex-col gap-4'>
+						<div className='terms text-sm text-white/50 flex gap-4 items-center'>
+							<Link href='/privacy-policy'>
+								<a className='text-gray-700 dark:text-white/50 hover:text-orange-red transition'>
+									Privacy Policy
+								</a>
+							</Link>
+							<div className='dot w-1 h-1 rounded-full bg-gray-700 dark:bg-white/50'></div>
+							<Link href='/termsandcondition'>
+								<a className='text-gray-700 dark:text-white/50 hover:text-orange-red transition'>
+									Terms & Conditions
+								</a>
+							</Link>
+						</div>
+						{/* copyright  */}
+						<div>
+							<p className='text-gray-700 dark:text-white/50 text-sm'>
+								All rights reserved by memoapp &copy; 2023
+							</p>
+						</div>
+					</div>
 				</div>
-				<div className='flex-grow border-l border-r border-gray-400 dark:border-gray-700 max-w-xl w-full xl:w-[520px] space-x-5 my-[17px] mx-3 md:mx-0'>
+				<div className='border-l border-r border-gray-400 dark:border-gray-700 max-w-xl w-full md:w-[520px] space-x-5 my-[17px] mx-3 md:mx-0'>
 					<Feed
 						posts={posts}
 						inactive={inactive}

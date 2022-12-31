@@ -37,6 +37,7 @@ import Widgets from "../components/Widgets";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
 import Header from "../components/Header";
+import Head from "next/head";
 
 function Favorites(props) {
 	const [user, setUser] = useState(null);
@@ -58,8 +59,8 @@ function Favorites(props) {
 	const router = useRouter();
 
 	useEffect(() => {
-		const user  = JSON.parse(localStorage.getItem("user"));
-		if(user){
+		const user = JSON.parse(localStorage.getItem("user"));
+		if (user) {
 			setUser(user);
 		}
 	}, []);
@@ -228,47 +229,52 @@ function Favorites(props) {
 	};
 
 	return (
-		<div className='bg-[#F3F2EF] dark:bg-slate-900 dark:text-white min-h-screen flex  flex-row w-full mx-auto md:space-y-6 justify-center pt-[50px]'>
-			<div
-				className='flex left-4 top-4 fixed items-center justify-center h-12 w-12 rounded-full bg-white dark:bg-slate-800 shadow-md cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 z-50'
-				onClick={() => router.back()}>
-				<ArrowLeftIcon className='h-6 w-6' />
+		<>
+			<Head>
+				<title>Memeo | Favorites</title>
+			</Head>
+			<div className='bg-[#F3F2EF] dark:bg-slate-900 dark:text-white min-h-screen flex  flex-row w-full mx-auto md:space-y-6 justify-center pt-[50px]'>
+				<div
+					className='flex left-4 top-4 fixed items-center justify-center h-12 w-12 rounded-full bg-white dark:bg-slate-800 shadow-md cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 z-[100]'
+					onClick={() => router.back()}>
+					<ArrowLeftIcon className='h-6 w-6' />
+				</div>
+				<div className='hidden md:flex xl:flex flex-col items-center xl:items-start xl:w-[360px] p-2 '>
+					{/* <Menu follow={follow} following={following} followers={followers} /> */}
+					<Menu
+						following={following}
+						followers={followers}
+						profile={true}
+						fetchFollowing={fetchMoreFollowing}
+						fetchFollowers={fetchMoreFollowers}
+						followingUIDs={followingUIDs}
+						followersUIDs={followersUIDs}
+						active={true}
+						fromFavorites={true}
+						page={"favorites"}
+						modalFollowOpen={modalFollowOpen}
+						setModalFollowOpen={setModalFollowOpen}
+						modalFollowingOpen={modalFollowingOpen}
+						setModalFollowingOpen={setModalFollowingOpen}
+						modalFollowersOpen={modalFollowersOpen}
+						setModalFollowersOpen={setModalFollowersOpen}
+						followListRemove={followListRemove}
+						setFollowListRemove={setFollowListRemove}
+					/>
+				</div>
+				<div className='flex-grow border-l border-r border-gray-100 dark:border-gray-700 sm:max-w-[520px]  space-x-5  my-3 mx-3 md:mx-0'>
+					<Feed posts={posts} inactive len={1} fetchMore={fetchMore} />
+				</div>
+				<div className='hidden  md:inline space-y-5 p-2 item-center px-6 xl:items-end  xl:w-[360px]'>
+					{/* <Widgets /> */}
+					<Widgets
+						// fetchUserMemes={fetchUserMemes}
+						// userMemes={userMemes}
+						fromProfile={false}
+					/>
+				</div>
 			</div>
-			<div className='hidden md:flex xl:flex flex-col items-center xl:items-start xl:w-[360px] p-2 '>
-				{/* <Menu follow={follow} following={following} followers={followers} /> */}
-				<Menu
-					following={following}
-					followers={followers}
-					profile={true}
-					fetchFollowing={fetchMoreFollowing}
-					fetchFollowers={fetchMoreFollowers}
-					followingUIDs={followingUIDs}
-					followersUIDs={followersUIDs}
-					active={true}
-					fromFavorites={true}
-					page={"favorites"}
-					modalFollowOpen={modalFollowOpen}
-					setModalFollowOpen={setModalFollowOpen}
-					modalFollowingOpen={modalFollowingOpen}
-					setModalFollowingOpen={setModalFollowingOpen}
-					modalFollowersOpen={modalFollowersOpen}
-					setModalFollowersOpen={setModalFollowersOpen}
-					followListRemove={followListRemove}
-					setFollowListRemove={setFollowListRemove}
-				/>
-			</div>
-			<div className='flex-grow border-l border-r border-gray-100 dark:border-gray-700 max-w-xl xl:w-[520px]  space-x-5  my-3 mx-3 md:mx-0'>
-				<Feed posts={posts} inactive len={1} fetchMore={fetchMore} />
-			</div>
-			<div className='hidden  md:inline space-y-5 p-2 item-center px-6 xl:items-end  xl:w-[360px]'>
-				{/* <Widgets /> */}
-				<Widgets
-					// fetchUserMemes={fetchUserMemes}
-					// userMemes={userMemes}
-					fromProfile={false}
-				/>
-			</div>
-		</div>
+		</>
 	);
 }
 

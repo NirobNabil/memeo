@@ -718,6 +718,12 @@ form label input:focus {
 	grid-template-columns: 1fr 10fr;
 	height: 100vh;
 }
+
+.post-caption a {
+	color: #0645ad;
+	text-decoration: underline;
+}
+
 .widebody {
 	grid-template-columns: 2fr 9fr;
 }
@@ -899,7 +905,10 @@ form label input:focus {
 	width: 230px;
 }
 .chatview .dialogue {
-	grid-template-rows: 1fr 6fr 1fr;
+	/* grid-template-rows: minmax(50px, 1fr) 6fr minmax(50px, 1fr); */
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }
 .chatview .dialogue .top {
 	padding: 5px;
@@ -948,7 +957,7 @@ form label input:focus {
 
 .chatusers {
 	width: 300px;
-	height: 80%;
+	height: calc(100% - 150px);
 	position: fixed;
 	z-index: var(--medium-priority);
 	right: 20px;
@@ -1962,7 +1971,7 @@ textarea::-webkit-scrollbar {
 	display: none;
 }
 .whiteb .iconshover-enter-done {
-	top: -190px;
+	top: -150px;
 	opacity: 1;
 }
 .icons .left {
@@ -2754,8 +2763,16 @@ textarea::-webkit-scrollbar {
 		height: 50%;
 	}
 }
-@media (max-height: 560px) {
+@media (max-height: 450px) {
 	.chatdiv {
+		display: none;
+	}
+
+	.chatusers {
+		display: none;
+	}
+
+	.chatview {
 		display: none;
 	}
 }

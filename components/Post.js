@@ -57,6 +57,7 @@ import Video from "./Video";
 import AlertBox from "./Components/AlertBox";
 import ShowCommentItem from "./Components/ShowCommentItem";
 import Linkify from "react-linkify";
+import { AddLinks } from "react-link-text";
 
 function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 	const [showInput, setShowInput] = useState(false);
@@ -75,16 +76,13 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 	const [showCaption, setShowCaption] = useState(false);
 	const [commentlen, setCommentlen] = useState(len);
 	const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
+	const [alert, setAlert] = useState(false);
 
 	const [commentTagUsers, setCommentTagUsers] = useState([]);
 	const [commentTagUsersModalIsOpen, setCommentTagUsersModalIsOpen] = useState(
 		false
 	);
 	const [user, setUser] = useState(null);
-
-
-
-	
 
 	const postRef = useRef(null);
 
@@ -98,33 +96,33 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 	}, []);
 
 	useEffect(() => {
-		if(user){
-		getDoc(doc(db, "posts", user?.uid, "userFavorites", post.id)).then(
-			(doc) => {
-				if (doc.exists()) {
-					setIsFavorite(true);
-				} else {
-					setIsFavorite(false);
+		if (user) {
+			getDoc(doc(db, "posts", user?.uid, "userFavorites", post.id)).then(
+				(doc) => {
+					if (doc.exists()) {
+						setIsFavorite(true);
+					} else {
+						setIsFavorite(false);
+					}
 				}
-			}
-		);
-	 }
+			);
+		}
 	}, [post.id, user?.uid]);
 
 	useEffect(() => {
-		if(user){
-		getDoc(doc(db, "posts", post.id, "likes", user?.uid)).then((doc) => {
-			if (doc?.data()) {
-				setLiked(true);
-			} else {
-				setLiked(false);
-			}
-		});
-	 }
+		if (user) {
+			getDoc(doc(db, "posts", post.id, "likes", user?.uid)).then((doc) => {
+				if (doc?.data()) {
+					setLiked(true);
+				} else {
+					setLiked(false);
+				}
+			});
+		}
 	}, [user?.uid, post.id]);
 
 	useEffect(() => {
-		if(!user)return;
+		if (!user) return;
 		const unsubscribe = onSnapshot(
 			query(
 				collection(db, "posts", post.id, "comments"),
@@ -161,7 +159,7 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 	}, [post.id, user?.uid, commentlen]);
 
 	useEffect(() => {
-		if(!user)return;
+		if (!user) return;
 
 		const observer = new IntersectionObserver(
 			(entries) => {
@@ -396,6 +394,18 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 			: string;
 	};
 
+	useEffect(() => {
+		if (isFavorite === true) {
+			setTimeout(() => {
+				setAlert(false);
+			}, 3000);
+		}
+	}, [isFavorite]);
+
+	const options = {
+		className: "text-blue-500 text-underline",
+	};
+
 	return (
 		<>
 			<div
@@ -437,6 +447,7 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 								className='h-6 w-6 text-slate-900 dark:text-white cursor-pointer space-x-2 mr-2'
 								onClick={() => {
 									setIsFavorite(true);
+									setAlert(true);
 									setDoc(
 										doc(db, "posts", user?.uid, "userFavorites", post.id),
 										{
@@ -450,6 +461,7 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 							<HeartIconSolid
 								onClick={() => {
 									setIsFavorite(false);
+									setAlert(false);
 									deleteDoc(
 										doc(
 											db,
@@ -495,6 +507,7 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 								className='h-6 w-6 text-slate-900 dark:text-white cursor-pointer space-x-2 mr-2'
 								onClick={() => {
 									setIsFavorite(true);
+									setAlert(true);
 									setDoc(
 										doc(db, "posts", user?.uid, "userFavorites", post.id),
 										{
@@ -508,6 +521,7 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 							<HeartIconSolid
 								onClick={() => {
 									setIsFavorite(false);
+									setAlert(false);
 									deleteDoc(
 										doc(db, "posts", user?.uid, "userFavorites", post.id)
 									);
@@ -519,14 +533,30 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 				)}
 
 				{!post?.share && post?.caption && (
-					<div className='px-2.5 break-all'>
+					<div className='px-2.5 break-all post-caption'>
 						{showInput ? (
 							<p onClick={() => setShowInput(false)} className='break-all'>
-								<Linkify className='text-white'>{post?.caption}</Linkify>
+								<Linkify
+									properties={{
+										target: "_blank",
+										style: {
+											color: "#0645AD",
+											textDecoration: "underline",
+										},
+									}}>
+									<p>{post?.caption}</p>
+								</Linkify>
 							</p>
 						) : (
 							<p onClick={() => setShowInput(true)}>
-								<Linkify className='text-white'>
+								<Linkify
+									properties={{
+										target: "_blank",
+										style: {
+											color: "#0645AD",
+											textDecoration: "underline",
+										},
+									}}>
 									{truncate(post?.caption, 150)}
 								</Linkify>
 							</p>
@@ -535,14 +565,32 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 				)}
 
 				{post?.share && post?.shareFrom.caption && (
-					<div className='px-2.5 break-all'>
+					<div className='px-2.5 break-all post-caption'>
 						{showInput ? (
 							<p onClick={() => setShowInput(false)} className='break-all'>
-								<Linkify>{post?.shareFrom.caption}</Linkify>
+								<Linkify
+									properties={{
+										target: "_blank",
+										style: {
+											color: "#0645AD",
+											textDecoration: "underline",
+										},
+									}}>
+									{post?.shareFrom.caption}
+								</Linkify>
 							</p>
 						) : (
 							<p onClick={() => setShowInput(true)}>
-								<Linkify>{truncate(post?.shareFrom.caption, 150)}</Linkify>
+								<Linkify
+									properties={{
+										target: "_blank",
+										style: {
+											color: "#0645AD",
+											textDecoration: "underline",
+										},
+									}}>
+									{truncate(post?.shareFrom.caption, 150)}
+								</Linkify>
 							</p>
 						)}
 					</div>
@@ -552,11 +600,8 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 					(post?.type === "image" ? (
 						<img
 							src={post?.postURL}
-							alt=''
-							className='object-contain w-full cursor-pointer max-h-screen  min-h-72'
-							onClick={() => {
-								router.push(`/posts?id=${post.id}`);
-							}}
+							alt='post image'
+							className='object-contain w-auto mx-auto max-h-[60vh] sm:max-h-[65vh] min-h-[300px]'
 						/>
 					) : (
 						<Video videoURL={post?.postURL} />
@@ -590,14 +635,30 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 								/>
 							</div>
 						</div>
-						<div className='px-2.5 break-all'>
+						<div className='px-2.5 break-all post-caption'>
 							{showCaption ? (
 								<p onClick={() => setShowCaption(false)} className='break-all'>
-									<Linkify className='text-white'>{post?.caption}</Linkify>
+									<Linkify
+										properties={{
+											target: "_blank",
+											style: {
+												color: "#0645AD",
+												textDecoration: "underline",
+											},
+										}}>
+										<p>{post?.caption}</p>
+									</Linkify>
 								</p>
 							) : (
 								<p onClick={() => setShowCaption(true)}>
-									<Linkify className='text-white'>
+									<Linkify
+										properties={{
+											target: "_blank",
+											style: {
+												color: "#0645AD",
+												textDecoration: "underline",
+											},
+										}}>
 										{truncate(post?.caption, 150)}
 									</Linkify>
 								</p>
@@ -681,7 +742,7 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 					</div>
 				</div>
 
-				<div className='flex justify-evenly items-center rounded-full  border-gray-600/80 text-gray-500 dark:text-white/75 bg-gray-100 dark:bg-slate-900 w-[80%] mx-auto'>
+				<div className='flex justify-evenly items-center rounded-full  border-gray-600/80 text-gray-500 dark:text-white/75 bg-gray-100 dark:bg-slate-900 w-[90%] mx-auto'>
 					<button
 						className={`postButton `}
 						onClick={() => {
@@ -709,7 +770,7 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 						{liked ? (
 							<i className='fas fa-laugh-squint text-2xl sm:text-xl text-[#ff4522]'></i>
 						) : (
-							<i className='fas fa-laugh-beam text-2xl sm:text-xl text-gray-500'></i>
+							<i className='fas fa-laugh-beam text-2xl sm:text-xl text-gray-200'></i>
 						)}
 
 						<p className='text-sm font-medium hidden sm:block'>HaHa</p>
@@ -731,7 +792,7 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 								setDeleteModalIsOpen(true);
 							}}>
 							<Delete className='h-8 w-8 sm:h-6 sm:w-6' />
-							<h4 className='hidden sm:block'>Delete post</h4>
+							<h4 className='hidden sm:block'>Delete</h4>
 						</button>
 					) : (
 						<button
@@ -1075,14 +1136,32 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 							</div>
 						)}
 						{post?.caption && (
-							<div className='px-2.5 break-all'>
+							<div className='px-2.5 break-all post-caption'>
 								{showInput ? (
 									<p onClick={() => setShowInput(false)}>
-										<Linkify className='text-white'>{post?.caption}</Linkify>
+										<Linkify
+											properties={{
+												target: "_blank",
+												style: {
+													color: "#0645AD",
+													textDecoration: "underline",
+												},
+											}}>
+											<p>{post?.caption}</p>
+										</Linkify>
 									</p>
 								) : (
 									<p onClick={() => setShowInput(true)}>
-										<Linkify>{truncate(post?.caption, 150)}</Linkify>
+										<Linkify
+											properties={{
+												target: "_blank",
+												style: {
+													color: "#0645AD",
+													textDecoration: "underline",
+												},
+											}}>
+											{truncate(post?.caption, 150)}
+										</Linkify>
 									</p>
 								)}
 							</div>
@@ -1168,6 +1247,13 @@ function Post({ post, active, modalPost, setRemoveList, len, setIsDeleted }) {
 					</div>
 				</div>
 			</Modal>
+
+			<AlertBox
+				show={alert}
+				text='Added to favorite successfully.'
+				severity='success'
+				setShow={setAlert}
+			/>
 		</>
 	);
 }

@@ -91,7 +91,6 @@ function Header(props) {
 	const [list, setList] = useState([]);
 	const [user, setUser] = useState(null);
 
- 
 	const {
 		tab,
 		setTab,
@@ -111,13 +110,12 @@ function Header(props) {
 		setFollowListRemove,
 	} = props;
 
-
 	useEffect(() => {
-		const user = JSON.parse(localStorage.getItem('user'));
-		if(user){
-		  setUser(user);
+		const user = JSON.parse(localStorage.getItem("user"));
+		if (user) {
+			setUser(user);
 		}
-	  }, []);
+	}, []);
 
 	// After mounting, we have access to the theme
 	useEffect(() => setMounted(true), []);
@@ -316,17 +314,19 @@ function Header(props) {
 
 	return (
 		<>
-			<header className='fixed w-full top-0 z-40 bg-white dark:bg-slate-800/100 flex items-center justify-around py-1.5 px-3 focus-within:shadow-lg shadow-lg'>
+			<header className='fixed w-full top-0 z-40 bg-white dark:bg-slate-800/100 flex items-center justify-around px-3 focus-within:shadow-lg shadow-lg'>
 				{/* search bar and logo */}
 				<div className='flex items-center sm:space-x-2'>
 					<Link href='/' passHref>
 						<div>
-							<Image
-								src={require("../images/memex-icon.png")}
-								width={45}
-								height={45}
-								className='rounded-full cursor-pointer object-contain'
-							/>
+							<div className='flex justify-center items-center'>
+								<Image
+									src={require("../images/memex-icon.png")}
+									width={45}
+									height={45}
+									className='rounded-full cursor-pointer object-contain'
+								/>
+							</div>
 						</div>
 					</Link>
 					{/* search bar */}
@@ -817,263 +817,6 @@ function Header(props) {
 					</Popover>
 				</div>
 			</div>
-
-			{/* modals for follow followers  */}
-			{/* <Modal
-				isOpen={modalFollowingOpen}
-				onRequestClose={() => setModalFollowingOpen(false)}
-				style={{
-					overlay: {
-						backgroundColor: "rgba(0, 0, 0, 0.5)",
-						zIndex: 1000,
-					},
-					content: {
-						backgroundColor: "transparent",
-						border: "none",
-						top: "50%",
-						left: "50%",
-						right: "auto",
-						bottom: "auto",
-						marginRight: "-50%",
-						transform: "translate(-50%, -50%)",
-						padding: 0,
-						width: "100%",
-						maxWidth: "550px",
-						height: "100%",
-						maxHeight: "550px",
-						overflow: "scroll",
-					},
-				}}
-				contentLabel='Follow List'
-				ariaHideApp={false}>
-				<div className='w-full  p-4 bg-white border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700'>
-					<div className='flex items-center justify-between mb-4'>
-						<h5 className='text-xl font-bold leading-none text-gray-900 dark:text-white'>
-							Following
-						</h5>
-						<button
-							className='text-gray-600 dark:text-gray-200 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:text-gray-500 dark:focus:text-gray-400'
-							aria-label='close'
-							onClick={() => setModalFollowingOpen(false)}>
-							<svg className='w-5 h-5' viewBox='0 0 24 24' fill='none'>
-								<path
-									d='M6 18L18 6M6 6l12 12'
-									stroke='currentColor'
-									strokeWidth='2'
-									strokeLinecap='round'
-									strokeLinejoin='round'></path>
-							</svg>
-						</button>
-					</div>
-					<div className='flow-root'>
-						<ul
-							role='list'
-							className='divide-y divide-gray-200 dark:divide-gray-700'>
-							<InfiniteScroll
-								dataLength={following.length}
-								next={fetchFollowing}
-								hasMore={followingUIDs.length - 1 > following.length}
-								loader={<h4>Loading...</h4>}
-								endMessage={
-									<p style={{ textAlign: "center" }}>
-										<b>Yay! You have seen it all</b>
-									</p>
-								}
-								height={400}
-								scrollableTarget='scrollableDiv'>
-								{following.length === 0 && (
-									<div className='text-center'>No Followings</div>
-								)}
-								{following.map((item) => (
-									<ProfileCard
-										key={item.id}
-										post={item}
-										func={followUser}
-										text='Unfollow'
-										from='following'
-										isTrue={true}
-										list={list}
-										setList={setList}
-										active={active}
-									/>
-								))}
-							</InfiniteScroll>
-						</ul>
-					</div>
-				</div>
-			</Modal>
-
-			<Modal
-				isOpen={modalFollowersOpen}
-				onRequestClose={() => setModalFollowersOpen(false)}
-				style={{
-					overlay: {
-						backgroundColor: "rgba(0, 0, 0, 0.5)",
-						zIndex: 1000,
-					},
-					content: {
-						backgroundColor: "transparent",
-						border: "none",
-						top: "50%",
-						left: "50%",
-						right: "auto",
-						bottom: "auto",
-						marginRight: "-50%",
-						transform: "translate(-50%, -50%)",
-						padding: 0,
-						width: "100%",
-						maxWidth: "550px",
-						height: "100%",
-						maxHeight: "550px",
-						overflow: "scroll",
-					},
-				}}
-				contentLabel='Example Modal'
-				ariaHideApp={false}>
-				<div className='w-full  p-4 bg-white border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700'>
-					<div className='flex items-center justify-between mb-4'>
-						<h5 className='text-xl font-bold leading-none text-gray-900 dark:text-white'>
-							Followers
-						</h5>
-						<button
-							className='text-gray-600 dark:text-gray-200 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:text-gray-500 dark:focus:text-gray-400'
-							aria-label='close'
-							onClick={() => setModalFollowersOpen(false)}>
-							<svg className='w-5 h-5' viewBox='0 0 24 24' fill='none'>
-								<path
-									d='M6 18L18 6M6 6l12 12'
-									stroke='currentColor'
-									strokeWidth='2'
-									strokeLinecap='round'
-									strokeLinejoin='round'></path>
-							</svg>
-						</button>
-					</div>
-					<div className='flow-root'>
-						<ul
-							role='list'
-							className='divide-y divide-gray-200 dark:divide-gray-700'>
-							<InfiniteScroll
-								dataLength={followers.length}
-								next={fetchFollowers}
-								hasMore={followersUIDs.length > followers.length}
-								loader={<h4>Loading...</h4>}
-								endMessage={
-									<p style={{ textAlign: "center" }}>
-										<b>Yay! You have seen it all</b>
-									</p>
-								}
-								height={400}
-								scrollableTarget='scrollableDiv'>
-								{followers.length === 0 && (
-									<div className='text-center'>No Followers</div>
-								)}
-								{followers.map((item) => (
-									<ProfileCard
-										key={item.id}
-										post={item}
-										func={followerFunction}
-										text='Remove'
-										from='followers'
-										list={list}
-										setList={setList}
-										active={active}
-									/>
-								))}
-							</InfiniteScroll>
-						</ul>
-					</div>
-				</div>
-			</Modal>
-
-			{!profile && (
-				<Modal
-					isOpen={modalFollowOpen}
-					onRequestClose={() => setModalFollowOpen(false)}
-					style={{
-						overlay: {
-							backgroundColor: "rgba(0, 0, 0, 0.5)",
-							zIndex: 1000,
-						},
-						content: {
-							backgroundColor: "transparent",
-							border: "none",
-							top: "50%",
-							left: "50%",
-							right: "auto",
-							bottom: "auto",
-							marginRight: "-50%",
-							transform: "translate(-50%, -50%)",
-							padding: 0,
-							width: "100%",
-							maxWidth: "550px",
-							height: "100%",
-							maxHeight: "550px",
-							overflow: "scroll",
-						},
-					}}
-					contentLabel='Example Modal'
-					ariaHideApp={false}>
-					<div className='w-full  p-4 bg-white border rounded-lg shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700'>
-						<div className='flex items-center justify-between mb-4'>
-							<h5 className='text-xl font-bold leading-none text-gray-900 dark:text-white'>
-								Follow
-							</h5>
-							<button
-								className='text-gray-600 dark:text-gray-200 hover:text-gray-500 dark:hover:text-gray-400 focus:outline-none focus:text-gray-500 dark:focus:text-gray-400'
-								aria-label='close'
-								onClick={() => setModalFollowOpen(false)}>
-								<svg className='w-5 h-5' viewBox='0 0 24 24' fill='none'>
-									<path
-										d='M6 18L18 6M6 6l12 12'
-										stroke='currentColor'
-										strokeWidth='2'
-										strokeLinecap='round'
-										strokeLinejoin='round'></path>
-								</svg>
-							</button>
-						</div>
-						<div className='flow-root'>
-							<ul
-								role='list'
-								className='divide-y divide-gray-200 dark:divide-gray-700'>
-								<InfiniteScroll
-									dataLength={follow.length}
-									next={fetchFollow}
-									hasMore={true}
-									loader={<h4>Loading...</h4>}
-									endMessage={
-										<p style={{ textAlign: "center" }}>
-											<b>Yay! You have seen it all</b>
-										</p>
-									}
-									height={400}
-									scrollableTarget='scrollableDiv'>
-									{follow.length === 0 && (
-										<div className='text-center'>No Follow</div>
-									)}
-									{follow
-										.filter((item) => followListRemove.indexOf(item.id) === -1)
-										?.map((item) => (
-											<ProfileCard
-												key={item.id}
-												post={item}
-												func={followUser}
-												text='Start Following'
-												from='follow'
-												isTrue={false}
-												setRemoveList={setFollowListRemove}
-												list={list}
-												setList={setList}
-												active={active}
-											/>
-										))}
-								</InfiniteScroll>
-							</ul>
-						</div>
-					</div>
-				</Modal>
-			)} */}
 		</>
 	);
 }

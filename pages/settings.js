@@ -79,6 +79,8 @@ import {
 	uploadBytesResumable,
 	getApps,
 } from "firebase/storage";
+import Head from "next/head";
+import Link from "next/link";
 
 export default function Settings() {
 	const [trashs, setTrashs] = useState([]);
@@ -98,18 +100,17 @@ export default function Settings() {
 
 	const [toastMessage, setToastMessage] = useState("");
 	const [toastMessage2, setToastMessage2] = useState("");
-	
 
 	const [showPassword, setShowPassword] = useState(false);
 
 	const router = useRouter();
 
 	useEffect(() => {
-		const user = JSON.parse(localStorage.getItem('user'));
-		if(user){
+		const user = JSON.parse(localStorage.getItem("user"));
+		if (user) {
 			setUser(user);
 		}
-	}, [])
+	}, []);
 
 	useEffect(() => {
 		if (user) {
@@ -130,6 +131,9 @@ export default function Settings() {
 
 	return (
 		<>
+			<Head>
+				<title>Memeo | Settings</title>
+			</Head>
 			<div className='fixed top-0 left-0 z-5  p-2'>
 				<button
 					onClick={() => router.back()}
@@ -404,7 +408,29 @@ export default function Settings() {
 					</div>
 				</div>
 
-				<div className='mx-10 my-10 rounded-lg shadow-lg p-10'>
+				<div className='flex flex-col gap-4 pl-2 sm:hidden'>
+					<div className='terms text-sm text-white/50 flex gap-4 items-center'>
+						<Link href='/privacy-policy'>
+							<a className='text-gray-700 dark:text-white/50 hover:text-orange-red transition'>
+								Privacy Policy
+							</a>
+						</Link>
+						<div className='dot w-1 h-1 rounded-full bg-gray-700 dark:bg-white/50'></div>
+						<Link href='/termsandcondition'>
+							<a className='text-gray-700 dark:text-white/50 hover:text-orange-red transition'>
+								Terms & Conditions
+							</a>
+						</Link>
+					</div>
+					{/* copyright  */}
+					<div>
+						<p className='text-gray-700 dark:text-white/50 text-sm'>
+							All rights reserved by memoapp &copy; 2023
+						</p>
+					</div>
+				</div>
+
+				<div className='sm:mx-10 mt-10 rounded-lg shadow-lg p-5 sm:p-10'>
 					<h1 className='text-2xl font-bold'>
 						Trash Template ({trashs.length})
 					</h1>
@@ -430,58 +456,55 @@ export default function Settings() {
 									<h1 className='text-xl font-bold basis-[40%] text-ellipsis overflow-hidden whitespace-nowrap'>
 										{trash.name}
 									</h1>
-									<p className='text-red-500 font-bold basis-[40%] sm:basis-auto'>
+									<p className='text-red-500 font-bold basis-[40%] sm:basis-auto sm:text-left text-right'>
 										{" "}
 										{moment(trash.deletedAt.toDate()).fromNow()}
 									</p>
 									{!loading ? (
-									<button
-										className='text-red-500 font-bold basis-[40%] sm:basis-auto'
-										onClick={() => {
-											setLoading(true);
-											getDoc(
-												doc(db, "memes", user?.uid, "Trash", trash.id)
-											).then((Doc) => {
-												if (Doc.exists()) {
-													deleteDoc(
-														doc(db, "memes", user?.uid, "Trash", trash.id)
-													).then(() => {
-														setToastMessage("Meme deleted successfully");
-														setToastShow(true);
+										<button
+											className='text-red-500 bg-transparent focus:outline-none font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:shadow-sm-light border-red-500 border-2 ease-in-out basis-[40%] sm:basis-auto'
+											onClick={() => {
+												setLoading(true);
+												getDoc(
+													doc(db, "memes", user?.uid, "Trash", trash.id)
+												).then((Doc) => {
+													if (Doc.exists()) {
+														deleteDoc(
+															doc(db, "memes", user?.uid, "Trash", trash.id)
+														)
+															.then(() => {
+																setToastMessage("Meme deleted successfully");
+																setToastShow(true);
+																setTimeout(() => {
+																	setToastMessage("");
+																	setToastShow(false);
+																}, 3000);
+																setLoading(false);
+															})
+															.catch((error) => {
+																setLoading(false);
+															});
+														deleteObject(ref(storage, Doc.data().memeURL))
+															.then(() => {
+																console.log("deleted");
+															})
+															.catch((error) => {
+																console.log(error);
+															});
+													} else {
+														setToastMessage2("Meme does not exist");
+														setToastShow2(true);
 														setTimeout(() => {
-															setToastMessage("");
-															setToastShow(false);
+															setToastMessage2("");
+															setToastShow2(false);
 														}, 3000);
 														setLoading(false);
-													})
-													.catch((error) => {
-														setLoading(false)
-													});
-													deleteObject(ref(storage, Doc.data().memeURL))
-														.then(() => {
-															console.log("deleted");
-														})
-														.catch((error) => {
-															console.log(error);
-														});
-														
-												} else {
-													setToastMessage2("Meme does not exist");
-													setToastShow2(true);
-													setTimeout(() => {
-														setToastMessage2("");
-														setToastShow2(false);
-													}, 3000);
-													setLoading(false);
-
-												}
-											});
-										}}>
-										Delete
-									</button>
-								) : (
-									null
-								)}
+													}
+												});
+											}}>
+											Delete
+										</button>
+									) : null}
 									<button
 										className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 dark:shadow-sm-light transition-colors duration-200 ease-in-out basis-[40%] sm:basis-auto'
 										onClick={() => {

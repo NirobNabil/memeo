@@ -79,9 +79,8 @@ function Hoverableicondiv(props) {
 								}
 							/>
 							<Iconspecial
-								className={`${
-									"icondiv fal fa-" + icon
-								} bg-slate-50 dark:bg-slate-900`}
+								className={`${"icondiv fal fa-" +
+									icon} bg-slate-50 dark:bg-slate-900`}
 							/>
 						</>
 					)}
@@ -91,7 +90,7 @@ function Hoverableicondiv(props) {
 					className={`icondiv ${classNames} 
         text-slate-900 dark:bg-slate-900 dark:text-white  bg-white dark:hover:bg-slate-900 hover:bg-[#ff4522] hover:text-white cursor-pointer group`}
 					onClick={() => {
-						setState && setState(!state);
+						setState && setState((prev) => !prev);
 						handleEvent && handleEvent();
 					}}>
 					{icon && (
