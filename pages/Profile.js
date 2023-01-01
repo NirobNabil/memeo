@@ -72,6 +72,7 @@ export default function Profile(props) {
 	const [modalFollowingOpen, setModalFollowingOpen] = useState(false);
 	const [modalFollowersOpen, setModalFollowersOpen] = useState(false);
 	const [followListRemove, setFollowListRemove] = useState([]);
+	const [ids, setIds] = useState([]);
 
 	const backgroundURLRef = useRef(null);
 	const photoURLRef = useRef(null);
@@ -110,45 +111,50 @@ export default function Profile(props) {
 					setBio(docx.data()?.bio || "");
 					getDocs(
 						collection(db, "posts", uid, "userPosts"),
-						orderBy("timestamp", "desc"),
-						limit(10)
+						orderBy("timestamp", "asc"),
+						limit(20)
 					).then((querySnapshot) => {
-						const posts = [];
 						querySnapshot.forEach((Doc) => {
 							if (Doc.exists()) {
 								getDoc(doc(db, "posts", Doc.data().postID)).then((doc) => {
 									if (doc.exists()) {
-										posts.push({ id: doc.id, ...doc.data() });
+										setUserPost((prev) =>
+											prev
+												.filter((post) => post.id !== doc.id)
+												.concat({ id: doc.id, ...doc.data() })
+										);
 									}
 								});
 							}
 						});
-						setUserPost(posts);
+						// setUserPost(posts)
 					});
 				});
 			})();
 		}
-	}, [uid, router]);
+	}, [uid]);
 
 	const fetchMorePosts = async () => {
-		if (userPost.length > 0 && uid) {
+		if (userPost.length > 0 && uid && userPost.length % 20 === 0) {
 			const last = userPost[userPost.length - 1];
 			const q = query(
 				collection(db, "posts", uid, "userPosts"),
 				orderBy("timestamp", "asc"),
 				startAfter(last.timestamp),
-				limit(10)
+				limit(20)
 			);
 			const querySnapshot = await getDocs(q);
-			const posts = [];
 			querySnapshot.forEach((Doc) => {
 				getDoc(doc(db, "posts", Doc.data().postID)).then((doc) => {
 					if (doc.exists()) {
-						posts.push({ id: doc.id, ...doc.data() });
+						setUserPost((prev) =>
+							prev
+								.filter((post) => post.id !== doc.id)
+								.concat({ id: doc.id, ...doc.data() })
+						);
 					}
 				});
 			});
-			setUserPost([...userPost, ...posts]);
 		}
 	};
 
@@ -470,6 +476,20 @@ export default function Profile(props) {
 		}
 	}, [followersUIDs, user?.uid]);
 
+	const FeedDisplay = useCallback(() => {
+		return (
+			<div className='flex-grow border-l border-r border-gray-400 dark:border-gray-700 max-w-xl sm:max-w-[520px] space-x-5 sm:my-[28px] mx-3 md:mx-0'>
+				<Feed
+					posts={userPost?.sort((a, b) => b.timestamp - a.timestamp)}
+					inactive
+					len={1}
+					fetchMore={fetchMorePosts}
+					active={false}
+				/>
+			</div>
+		);
+	}, [userPost]);
+
 	if (loading) {
 		<div className='flex justify-center items-center h-screen opacity-50'>
 			<Loading />
@@ -558,20 +578,24 @@ export default function Profile(props) {
 							)}
 
 							<div className='flex flex-row gap-10 items-center justify-center my-2 '>
-								<div className='flex items-center justify-center  space-x-1  bg-transparent hover:bg-gray-100  dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 cursor-pointer' onClick={() => setModalFollowingOpen(true)}>
+								<div
+									className='flex items-center justify-center  space-x-1  bg-transparent hover:bg-gray-100  dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 cursor-pointer'
+									onClick={() => setModalFollowingOpen(true)}>
 									<h1 className='text-md  mx-2'>{followingUIDs.length}</h1>
 									<p className='text-gray-500 text-sm'>Following</p>
 								</div>
-								<div className='flex items-center justify-center  space-x-1   bg-transparent hover:bg-gray-100  dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 cursor-pointer' onClick={() => setModalFollowersOpen(true)}>
+								<div
+									className='flex items-center justify-center  space-x-1   bg-transparent hover:bg-gray-100  dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 cursor-pointer'
+									onClick={() => setModalFollowersOpen(true)}>
 									<h1 className='text-md  mx-2'>{followersUIDs.length}</h1>
 									<p className='text-gray-500 text-sm'>Followers</p>
 								</div>
-								<div className='flex items-center justify-center  space-x-1 bg-transparent hover:bg-gray-100  dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 '>
+								{/* <div className='flex items-center justify-center  space-x-1 bg-transparent hover:bg-gray-100  dark:text-gray-400 text-gray-600 dark:bg-slate-900 rounded-full px-4 py-2 '>
 									<h1 className='text-md  mx-2'>
 										{userPost ? userPost.length : 0}
 									</h1>
 									<p className='text-gray-500 text-sm'>Posts</p>
-								</div>
+								</div> */}
 							</div>
 						</div>
 					</div>
@@ -615,17 +639,7 @@ export default function Profile(props) {
 						/>
 					</div>
 
-					{tab === "feed" && (
-						<div className='flex-grow border-l border-r border-gray-400 dark:border-gray-700 max-w-xl sm:max-w-[520px] space-x-5 sm:my-[28px] mx-3 md:mx-0'>
-							<Feed
-								posts={userPost?.sort((a, b) => b.timestamp - a.timestamp)}
-								inactive
-								len={1}
-								fetchMore={fetchMorePosts}
-								active={false}
-							/>
-						</div>
-					)}
+					{tab === "feed" && FeedDisplay()}
 
 					{tab === "templates" && (
 						<div className=' inline space-y-5 p-2 item-center px-6 sm:items-end  sm:max-w-[520px] flex-grow sm:mt-[34px]'>
