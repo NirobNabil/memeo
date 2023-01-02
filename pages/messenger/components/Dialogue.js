@@ -467,7 +467,7 @@ function Dialogue(props) {
 									: ytVidId(msg.message)
 									? { backgroundColor: "transparent" }
 									: msg.senderid === user.uid
-									? { backgroundColor: "#e6e6e6" }
+									? { backgroundColor: "#ff4522", color: "#ffffff" }
 									: null
 							}
 							onClick={(e) => {
@@ -480,7 +480,7 @@ function Dialogue(props) {
 							{" "}
 							{determineMsgtype(msg)}
 							{msg.editing && (
-								<span className='text-xs text-gray-500'>edited</span>
+								<span className='text-xs text-slate-200'>edited</span>
 							)}
 						</span>
 						<Threedots
@@ -957,162 +957,164 @@ function Dialogue(props) {
 
 	return (
 		<>
-			<div className='top border-b borfer-gray-300 dark:border-gray-500 basis-[50px] flex items-center justify-between'>
-				{chatimg && (
-					<>
-						<div className='profilepic'>
-							<div className='relative'>
-								{chatimg && (
-									<img
-										className='w-16 h-16 rounded-full'
-										src={chatimg}
-										alt=''
-									/>
-								)}
-								<span
-									className={`bottom-0 left-6 absolute  w-3.5 h-3.5 ${
-										chatactive ? "bg-green-400" : "bg-red-400"
-									} border-2 border-white dark:border-gray-800 rounded-full`}></span>
+			<div className='flex flex-col h-full sm:block sm:h-auto relative z-[55]'>
+				<div className='top border-b borfer-gray-300 dark:border-gray-500 basis-[50px] flex items-center justify-between'>
+					{chatimg && (
+						<>
+							<div className='profilepic'>
+								<div className='relative'>
+									{chatimg && (
+										<img
+											className='w-16 h-16 rounded-full'
+											src={chatimg}
+											alt=''
+										/>
+									)}
+									<span
+										className={`bottom-0 left-6 absolute  w-3.5 h-3.5 ${
+											chatactive ? "bg-green-400" : "bg-red-400"
+										} border-2 border-white dark:border-gray-800 rounded-full`}></span>
+								</div>
+								<div>
+									{nickname === "" ? (
+										<p className='username'>
+											{chatname.length > 15
+												? chatname.slice(0, 15) + "..."
+												: chatname}
+										</p>
+									) : (
+										<p className='username'>{nickname}</p>
+									)}
+									<small>{chatactive ? "Online" : "Offline"}</small>
+								</div>
 							</div>
-							<div>
-								{nickname === "" ? (
-									<p className='username'>
-										{chatname.length > 15
-											? chatname.slice(0, 15) + "..."
-											: chatname}
-									</p>
+							<div className='controls text-slate-800'>
+								{icon && icon === "fal fa-times" ? (
+									<i
+										className={icon}
+										style={{ padding: "0 5px", color: "gray" }}
+										onClick={() => setState(false)}></i>
 								) : (
-									<p className='username'>{nickname}</p>
+									<i
+										style={{ padding: "0 5px", color: "gray" }}
+										className='fal fa-ellipsis-v'
+										onClick={() => setIsSettingModalOpen(true)}></i>
 								)}
-								<small>{chatactive ? "Online" : "Offline"}</small>
 							</div>
-						</div>
-						<div className='controls text-slate-800'>
-							{icon && icon === "fal fa-times" ? (
-								<i
-									className={icon}
-									style={{ padding: "0 5px", color: "gray" }}
-									onClick={() => setState(false)}></i>
-							) : (
-								<i
-									style={{ padding: "0 5px", color: "gray" }}
-									className='fal fa-ellipsis-v'
-									onClick={() => setIsSettingModalOpen(true)}></i>
-							)}
-						</div>
-					</>
-				)}
-			</div>
-
-			<div
-				className={`msgs flex-grow my-1 overflow-y-scroll  ${
-					type === "small" ? "h-96" : "h-auto"
-				} dark:bg-gray-800 dark:text-white bg-slate-300 text-slate-800`}
-				style={
-					urlRegex.test(theme)
-						? {
-								backgroundImage: `url(${theme})`,
-								backgroundSize: "cover",
-								backgroundPosition: "center",
-								backgroundRepeat: "no-repeat",
-						  }
-						: {
-								backgroundColor: theme,
-						  }
-				}>
-				<div className='grid'>
-					<div className='scrollto chat' ref={scrollto}></div>
-					{showMessages}
-					{messages.length >= 100 && showloadmore && (
-						<button
-							className='relative mb-auto mx-auto top-0 dark:bg-slate-800 text-sm text-white-500 dark:text-slate-500 border-1 border-spacing-1 rounded-full p-2 border-white  bg-gray-200 text-gray-500  dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white-500 hover:bg-gray-300 hover:text-gray-600'
-							onClick={() => LoadMoreMessages()}>
-							See More
-						</button>
+						</>
 					)}
 				</div>
-			</div>
 
-			<div className='search whiteb flex h-20 basis-[50px]  items-center justify-between border-t border-gray-200 dark:border-gray-500 bg-white dark:bg-slate-800'>
-				<div className='plus font-bold'>
-					{!visible ? (
-						<PlusIcon
-							className='plusicon text-gray-700 dark:text-white'
-							width={20}
-							height={20}
-							style={{
-								margin: "8px",
-								cursor: "pointer",
-								fontWeight: "bold",
-							}}
-							onClick={() => setVisible(!visible)}
-						/>
-					) : (
-						<MinusIcon
-							className='plusicon dark:text-white text-gray-700'
-							width={20}
-							height={20}
-							style={{
-								margin: "8px",
-								cursor: "pointer",
-							}}
-							onClick={() => setVisible(!visible)}
-						/>
-					)}
-
-					<CSSTransition
-						in={visible}
-						timeout={300}
-						classNames='iconshover'
-						unmountOnExit>
-						<div className={"icons"}>
-							{iconsrow}
-							<span className='uploader bs' ref={progressbar}>
-								<span className='percent' ref={progresswidth}></span>
-							</span>
-						</div>
-					</CSSTransition>
-				</div>
-				<div className='w-full flex flex-col relative '>
-					<textarea
-						type='text'
-						placeholder='Send a message...'
-						onKeyUp={(e) => triggerSend(e)}
-						ref={typerRef}
-						value={msgstring}
-						onChange={(e) => {
-							setMsgstring(e.target.value);
-						}}
-						onInput={() => formatTextarea()}
-						className={`${
-							type === "small" ? "" : "focus:p-1"
-						} placeholder:p-1 text-slate-600 placeholder:text-slate-600 mt-0.5 px-4 py-1`}></textarea>
-					<div className='gif_emoji  right-5 absolute space-x-2 top-4 '>
-						<i
-							className='fal fa-laugh'
-							onClick={() => {
-								inputFunc();
-							}}></i>
-						<i
-							className='fal fa-comment-alt-smile'
-							onClick={() => setGif(!gif)}></i>
+				<div
+					className={`msgs flex-grow my-1 overflow-y-scroll  ${
+						type === "small" ? "h-96" : "h-auto"
+					} dark:bg-gray-800 dark:text-white bg-slate-300 text-slate-800`}
+					style={
+						urlRegex.test(theme)
+							? {
+									backgroundImage: `url(${theme})`,
+									backgroundSize: "cover",
+									backgroundPosition: "center",
+									backgroundRepeat: "no-repeat",
+							  }
+							: {
+									backgroundColor: theme,
+							  }
+					}>
+					<div className='grid'>
+						<div className='scrollto chat' ref={scrollto}></div>
+						{showMessages}
+						{messages.length >= 100 && showloadmore && (
+							<button
+								className='relative mb-auto mx-auto top-0 dark:bg-slate-800 text-sm text-white-500 dark:text-slate-500 border-1 border-spacing-1 rounded-full p-2 border-white  bg-gray-200 text-gray-500  dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white-500 hover:bg-gray-300 hover:text-gray-600'
+								onClick={() => LoadMoreMessages()}>
+								See More
+							</button>
+						)}
 					</div>
 				</div>
-				<div className='flexrow'>
-					<span
-						role='img'
-						aria-label='emoji'
-						onClick={() => sendEmoji(emojitype)}
-						style={{ cursor: "pointer" }}
-						className='ml-2'>
-						{emojitype}
-					</span>
-					<i
-						className='fal fa-paper-plane'
-						onClick={() => {
-							sendMessage();
-							setEmojipicker(false);
-						}}></i>
+
+				<div className='search whiteb flex h-20 basis-[50px]  items-center justify-between border-t border-gray-200 dark:border-gray-500 bg-white dark:bg-slate-800'>
+					<div className='plus font-bold'>
+						{!visible ? (
+							<PlusIcon
+								className='plusicon text-gray-700 dark:text-white'
+								width={20}
+								height={20}
+								style={{
+									margin: "8px",
+									cursor: "pointer",
+									fontWeight: "bold",
+								}}
+								onClick={() => setVisible(!visible)}
+							/>
+						) : (
+							<MinusIcon
+								className='plusicon dark:text-white text-gray-700'
+								width={20}
+								height={20}
+								style={{
+									margin: "8px",
+									cursor: "pointer",
+								}}
+								onClick={() => setVisible(!visible)}
+							/>
+						)}
+
+						<CSSTransition
+							in={visible}
+							timeout={300}
+							classNames='iconshover'
+							unmountOnExit>
+							<div className={"icons"}>
+								{iconsrow}
+								<span className='uploader bs' ref={progressbar}>
+									<span className='percent' ref={progresswidth}></span>
+								</span>
+							</div>
+						</CSSTransition>
+					</div>
+					<div className='w-full flex flex-col relative '>
+						<textarea
+							type='text'
+							placeholder='Send a message...'
+							onKeyUp={(e) => triggerSend(e)}
+							ref={typerRef}
+							value={msgstring}
+							onChange={(e) => {
+								setMsgstring(e.target.value);
+							}}
+							onInput={() => formatTextarea()}
+							className={`${
+								type === "small" ? "" : "focus:p-1"
+							} placeholder:p-1 bg-slate-200 dark:bg-slate-900 text-slate-600 dark:text-slate-400 placeholder:text-slate-600 mt-0.5 px-4 py-1`}></textarea>
+						<div className='gif_emoji  right-5 absolute space-x-2 top-4 '>
+							<i
+								className='fal fa-laugh'
+								onClick={() => {
+									inputFunc();
+								}}></i>
+							<i
+								className='fal fa-comment-alt-smile'
+								onClick={() => setGif(!gif)}></i>
+						</div>
+					</div>
+					<div className='flexrow'>
+						<span
+							role='img'
+							aria-label='emoji'
+							onClick={() => sendEmoji(emojitype)}
+							style={{ cursor: "pointer" }}
+							className='ml-2'>
+							{emojitype}
+						</span>
+						<i
+							className='fal fa-paper-plane'
+							onClick={() => {
+								sendMessage();
+								setEmojipicker(false);
+							}}></i>
+					</div>
 				</div>
 			</div>
 
@@ -1209,33 +1211,19 @@ function Dialogue(props) {
 						backgroundColor: "#00000080",
 						zIndex: 1000,
 					},
-					content: {
-						position: "absolute",
-						width: "600px",
-						height: "500px",
-						top: "50%",
-						left: "50%",
-						right: "50%",
-						bottom: "auto",
-						marginRight: "-50%",
-						transform: "translate(-50%, -50%)",
-						border: "none",
-						padding: "10px",
-						background: "#fff",
-						overflow: "scroll",
-					},
 				}}
-				contentLabel='Example Modal'>
+				className='overflow-auto bg-white dark:bg-slate-800 p-3 border-0 -translate-x-1/2 -translate-y-1/2 -mr-[50%] absolute left-1/2 top-1/2 right-1/2 bottom-auto h-[500px] max-h-screen w-[600px] max-w-full'
+				contentLabel='Setting modal for Chat'>
 				<i
 					className='fal fa-times p-2'
 					onClick={() => setIsSettingModalOpen(false)}></i>
 
 				<div className='flex flex-row items-center justify-between p-2'>
-					<h2 className='text-xl'>Change Emoji</h2>
+					<h2 className='text-base'>Change Emoji</h2>
 					<div className='flex flex-row items-center justify-between'>
 						<div className='flex flex-row items-center justify-between'>
 							<p
-								className='text-gray-500 text-sm cursor-pointer'
+								className='text-gray-500 text-2xl cursor-pointer'
 								onClick={() => setEmojiTypePicker(!emojiTypePicker)}>
 								{emojitype}
 							</p>
@@ -1254,7 +1242,7 @@ function Dialogue(props) {
 					</div>
 				)}
 				<div className='flex flex-row items-center justify-between p-2'>
-					<h2 className='text-xl'>Notifications</h2>
+					<h2 className=''>Notifications</h2>
 					<div className='flex flex-row items-center justify-between'>
 						<div className='flex flex-row items-center justify-between'>
 							<Switches checked={myNotify} setChecked={setMyNotify} />
@@ -1263,12 +1251,12 @@ function Dialogue(props) {
 				</div>
 
 				<div className='flex flex-row items-center justify-between p-2'>
-					<h2 className='text-xl'>Change Nickname </h2>
+					<h2 className=''>Change Nickname </h2>
 					<div className='flex flex-row items-center justify-between'>
 						<div className='flex flex-row items-center justify-between'>
 							<input
 								type='text'
-								className='border border-gray-300 rounded-md px-2 py-1'
+								className='border-[0.5px] border-gray-400 rounded-md px-2 py-1'
 								value={changeNickname}
 								onChange={(e) => setChangeNickname(e.target.value)}
 								placeholder='Enter Nickname'
@@ -1278,7 +1266,7 @@ function Dialogue(props) {
 				</div>
 
 				<div className='flex flex-row items-center justify-between p-2'>
-					<h2 className='text-xl'>Change Theme</h2>
+					<h2 className=''>Change Theme</h2>
 					<div className='flex flex-row items-center justify-between'>
 						<div className='flex flex-row items-center justify-between'>
 							{theme ? (
@@ -1291,14 +1279,14 @@ function Dialogue(props) {
 							) : (
 								<div className='flex flex-row items-center justify-between'>
 									<div
-										className='w-16 h-16 rounded-sm cursor-pointer dark:bg-slate-800 bg-gray-200 mr-4'
+										className='w-16 h-16 rounded-sm cursor-pointer dark:bg-slate-800 border shadow-xl bg-gray-200 mr-4'
 										onClick={() =>
 											document.getElementById("file").click()
 										}></div>
 								</div>
 							)}
 							<button
-								className='bg-blue-500 text-white px-4 py-2 rounded-md ml-2'
+								className='bg-blue-500 text-white px-4 py-2 rounded-md ml-2 text-sm'
 								onClick={() => {
 									setTheme("");
 									try {
@@ -1336,7 +1324,7 @@ function Dialogue(props) {
 					<div className='flex flex-row items-center justify-between'>
 						<div className='flex flex-row items-center justify-between'>
 							<button
-								className='bg-blue-500 text-white px-4 py-2 rounded-md'
+								className='bg-blue-500 text-white px-4 py-2 rounded-md text-sm'
 								onClick={async () => {
 									if (user?.uid === chatUsers[0]?.uid) {
 										updateDoc(
@@ -1421,7 +1409,7 @@ function Dialogue(props) {
 											{ merge: true }
 										);
 									}
-
+									setChangeNickname("");
 									setIsSettingModalOpen(false);
 								}}>
 								Save

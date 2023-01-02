@@ -180,6 +180,7 @@ function Body(props) {
 				{ merge: true }
 			);
 			addDoc(collection(db, "conversations", convoid, "messages"), messages);
+			setMessage("");
 		}
 	}
 
@@ -252,7 +253,7 @@ function Body(props) {
 		<>
 			{!Home && (
 				<div className='bg-white dark:bg-slate-800 flex flex-col h-full fixed w-full'>
-					<div className='flex left-1 top-1 absolute items-center justify-center h-12 w-12 rounded-full bg-white dark:bg-slate-800 shadow-md cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700'>
+					<div className='flex left-1 top-1 absolute items-center justify-center h-12 w-12 rounded-full bg-white dark:bg-slate-800 shadow-md cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 z-50'>
 						<ArrowLeftIcon className='h-6 w-6' onClick={() => router.back()} />
 					</div>
 					<div className='flex flex-row flex-1 bg-slate-50 dark:bg-slate-800 '>
