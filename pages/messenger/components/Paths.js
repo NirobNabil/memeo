@@ -8,33 +8,40 @@ import Image from "next/image";
 import { useState } from "react";
 
 function Paths(props) {
-	let { adduser, setAdduser, chatuser, setChatuser, convos, fetchMore } = props;
-	const [show, setShow] = useState("chatlist");
+	const {
+		adduser,
+		setAdduser,
+		chatuser,
+		setChatuser,
+		convos,
+		fetchMore,
+		setShowChat,
+		showChat,
+	} = props;
 
 	return (
 		<div
 			className={`conversations dark:bg-slate-800 bg-white-50 flex flex-col w-full  h-full overflow-hidden`}>
-			<div className={"chatcontainer min-h-screen sm:min-h-auto"}>
+			<div
+				className={`flex flex-row min-h-screen sm:min-h-auto w-[200%] sm:w-full ${
+					showChat ? "-translate-x-[50%]" : "translate-x-0"
+				} sm:translate-x-0`}>
 				<div
-					className={`${
-						show === "chatlist" ? "!block" : "!hidden"
-					} col-span-2 sm:col-span-1 userrow spanall shadow-indigo-50 xl:flex hidden p-5 h-screen text-slate-700/100 dark:text-white/60 bg-white-50 dark:bg-slate-800 border-0 border-r border-solid border-gray-400 dark:border-slate-400`}>
+					className={`basis-full sm:basis-[400px] min-w-[400px] userrow spanall shadow-indigo-50 flex p-5 h-screen text-slate-700/100 dark:text-white/60 bg-white-50 dark:bg-slate-800`}>
 					<Userrow
 						chatuser={chatuser}
 						setChatuser={setChatuser}
 						convos={convos}
 						fetchMore={fetchMore}
-						setAdduser={() => setAdduser(!adduser)}
-						setShow={setShow}
+						setAdduser={() => setAdduser((prev) => !prev)}
+						setShowChat={setShowChat}
 					/>
 				</div>
 				{chatuser ? (
 					<>
 						<div
-							className={`${
-								show === "chatbox" ? "!block" : "!hidden"
-							} col-span-2 sm:col-span-1 dialogue spanall min-w-max h-screen pt-2 bg-white dark:bg-slate-900/50 dark:text-white border-l border-r dark:border-slate-500 border-x-white/50 border-color-white-50`}>
-							<Dialogue chatuser={chatuser} />
+							className={`basis-full sm:basis-auto flex-grow dialogue spanall min-w-max h-screen pt-2 bg-white dark:bg-slate-900/50 dark:text-white border-l border-r dark:border-slate-500 border-x-white/50 border-color-white-50`}>
+							<Dialogue chatuser={chatuser} setShowChat={setShowChat} />
 						</div>
 						{/* <div className='userprofile w-full xl:flex spanall hidden pt-2'>
 							<div>
@@ -45,9 +52,7 @@ function Paths(props) {
 				) : (
 					<>
 						<div
-							className={`${
-								show === "chatbox" ? "!block" : "!hidden"
-							} col-span-2 sm:col-span-1 w-full relative bg-slate-100 dark:bg-inherit`}>
+							className={`basis-full sm:basis-auto w-full relative bg-slate-100 dark:bg-inherit border-0 border-l border-gray-600`}>
 							<div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 '>
 								{/* logo */}
 								<div className='logo-messenger flex flex-col justify-center items-center'>

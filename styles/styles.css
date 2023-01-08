@@ -1938,7 +1938,7 @@ textarea::-webkit-scrollbar {
 	right: 20%;
 }
 .emojipicker {
-	bottom: 20%;
+	bottom: 15%;
 	opacity: 0;
 	transition: all 0.3s;
 	position: absolute;
@@ -1949,7 +1949,7 @@ textarea::-webkit-scrollbar {
 }
 .emojipicker-enter-done {
 	opacity: 1;
-	z-index: 1;
+	z-index: 100;
 }
 .times {
 	z-index: 2;
@@ -1983,6 +1983,7 @@ textarea::-webkit-scrollbar {
 .whiteb .iconshover-enter-done {
 	top: -150px;
 	opacity: 1;
+	left: 10px;
 }
 .icons .left {
 	right: -22px;

@@ -50,6 +50,7 @@ function Body(props) {
 	const { Home, id } = props;
 	const [loading, setLoading] = useState(false);
 	const [convos, setConvos] = useState([]);
+	const [showChat, setShowChat] = useState(false);
 
 	const router = useRouter();
 
@@ -253,7 +254,11 @@ function Body(props) {
 		<>
 			{!Home && (
 				<div className='bg-white dark:bg-slate-800 flex flex-col h-full fixed w-full'>
-					<div className='flex left-1 top-1 absolute items-center justify-center h-12 w-12 rounded-full bg-white dark:bg-slate-800 shadow-md cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 z-50'>
+					<div
+						className={`flex left-1 top-1 absolute items-center justify-center h-12 w-12 rounded-full bg-white dark:bg-slate-800 shadow-md cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 ${
+							showChat ? "-z-[1]" : "z-[50]"
+						} sm:z-50`}
+						onClick={() => setChatopen(false)}>
 						<ArrowLeftIcon className='h-6 w-6' onClick={() => router.back()} />
 					</div>
 					<div className='flex flex-row flex-1 bg-slate-50 dark:bg-slate-800 '>
@@ -264,6 +269,8 @@ function Body(props) {
 							convos={convos}
 							fetchMore={fetchMoreChatsUser}
 							setAdduser={() => setAdduser(!adduser)}
+							setShowChat={setShowChat}
+							showChat={showChat}
 						/>
 					</div>
 					<CSSTransition

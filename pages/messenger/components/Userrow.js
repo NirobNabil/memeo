@@ -28,7 +28,7 @@ function Userrow(props) {
 	const [keyword, setKeyword] = useState("");
 	const pattern = new RegExp("\\b" + keyword.replace(/[\W_]+/g, ""), "i");
 
-	const { setChatuser, chatuser, convos, fetchMore, setShow } = props;
+	const { setChatuser, chatuser, convos, fetchMore, setShowChat } = props;
 
 	return (
 		<>
@@ -61,7 +61,7 @@ function Userrow(props) {
 							chatuser={chatuser}
 							setChatuser={setChatuser}
 							element={element}
-							onClick={setShow("chatbox")}
+							setShowChat={setShowChat}
 						/>
 					))}
 				</InfiniteScroll>

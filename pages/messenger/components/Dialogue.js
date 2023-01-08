@@ -83,6 +83,7 @@ const Picker = dynamic(() => import("emoji-picker-react"), {
 import Modal from "react-modal";
 import Hoverablebutton from "./Hoverablebutton";
 
+import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/outline";
 import Grid from "@material-ui/core/Grid";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
@@ -95,6 +96,7 @@ import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import InfiniteScroll from "react-infinite-scroll-component";
+import Head from "next/head";
 
 function Dialogue(props) {
 	const { notifi, setNotifi, notificont, setNotificont } = useContext(
@@ -129,7 +131,7 @@ function Dialogue(props) {
 	const [nickname, setNickname] = useState([]);
 	const [emojipicker, setEmojipicker] = useState(false);
 	const [messages, setMessages] = useState([]);
-	const { chatuser, setState, icon, type } = props;
+	const { chatuser, setState, icon, type, setShowChat } = props;
 	const [convoid, setConvoid] = useState("");
 	const [recipientid, setRecipientid] = useState("");
 	const [user, setUser] = useState(null);
@@ -861,7 +863,7 @@ function Dialogue(props) {
 
 	function inputFunc() {
 		typerRef.current.focus();
-		setEmojipicker(!emojipicker);
+		setEmojipicker((prev) => !prev);
 	}
 
 	function showTypingAnim() {
@@ -957,11 +959,20 @@ function Dialogue(props) {
 
 	return (
 		<>
-			<div className='flex flex-col h-full sm:block sm:h-auto relative z-[55]'>
+			<Head>
+				<title>Memeo | Messenger</title>
+			</Head>
+			<div className='flex flex-col h-screen relative z-[55]'>
 				<div className='top border-b borfer-gray-300 dark:border-gray-500 basis-[50px] flex items-center justify-between'>
 					{chatimg && (
 						<>
 							<div className='profilepic'>
+								<div className='back-icon block sm:hidden'>
+									<ArrowLeftIcon
+										className='h-6 w-6'
+										onClick={() => setShowChat(false)}
+									/>
+								</div>
 								<div className='relative'>
 									{chatimg && (
 										<img
@@ -1046,7 +1057,7 @@ function Dialogue(props) {
 									cursor: "pointer",
 									fontWeight: "bold",
 								}}
-								onClick={() => setVisible(!visible)}
+								onClick={() => setVisible((prev) => !prev)}
 							/>
 						) : (
 							<MinusIcon
@@ -1057,7 +1068,7 @@ function Dialogue(props) {
 									margin: "8px",
 									cursor: "pointer",
 								}}
-								onClick={() => setVisible(!visible)}
+								onClick={() => setVisible((prev) => !prev)}
 							/>
 						)}
 
@@ -1086,8 +1097,8 @@ function Dialogue(props) {
 							}}
 							onInput={() => formatTextarea()}
 							className={`${
-								type === "small" ? "" : "focus:p-1"
-							} placeholder:p-1 bg-slate-200 dark:bg-slate-900 text-slate-600 dark:text-slate-400 placeholder:text-slate-600 mt-0.5 px-4 py-1`}></textarea>
+								type === "small" ? "" : ""
+							} placeholder:p-1 h-12 bg-slate-200 dark:bg-slate-900 text-slate-600 dark:text-slate-400 placeholder:text-slate-600 mt-0.5 px-4 py-1`}></textarea>
 						<div className='gif_emoji  right-5 absolute space-x-2 top-4 '>
 							<i
 								className='fal fa-laugh'

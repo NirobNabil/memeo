@@ -209,10 +209,14 @@ function Adduser(props) {
 	}
 	return (
 		<>
-			<div className='adduser' onClick={() => props.setAdduser()}></div>
-			<div className='userlist bs bg-white dark:bg-slate-800 text-slate-700 dark:text-white-50'>
+			<div
+				className='adduser z-[100]'
+				onClick={() => props.setAdduser(false)}></div>
+			<div className='userlist bs bg-white dark:bg-slate-800 text-slate-700 dark:text-white-50 z-[101] w-full sm:w-[60%]'>
 				<div className='hd'>
-					<h2 className='dark:text-white text-slate-600'>Add Contact</h2>
+					<h2 className='dark:text-white text-slate-600 text-lg mb-4'>
+						Add Contact
+					</h2>
 					<div className='search'>
 						<input
 							type='text'
@@ -223,7 +227,7 @@ function Adduser(props) {
 					</div>
 				</div>
 				<div className='overflow flex'>{showSearchUsers}</div>
-				<div className='overflow flex'>{showUsers}</div>
+				<div className='overflow flex flex-grow'>{showUsers}</div>
 				<div className='search'>
 					<input
 						type='text'
