@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import Submenu from "../Submenu";
 
@@ -27,9 +28,9 @@ const Menu = (props) => {
 
 	return (
 		<div
-			className={`bg-white  dark:bg-slate-800 dark:text-gray-300 border-1 dark:border-white border-solid  rounded-lg flex flex-col space-y-4 p-4  w-64 z-10 sticky shadow-md ${
+			className={`z-10 sticky ${
 				page === "favorites" ? "top-0" : "top-20"
-			}`}>
+			} flex flex-col gap-10`}>
 			<Submenu
 				following={following}
 				follow={follow}
@@ -50,8 +51,30 @@ const Menu = (props) => {
 				setModalFollowersOpen={setModalFollowersOpen}
 				followListRemove={followListRemove}
 				setFollowListRemove={setFollowListRemove}
-				
 			/>
+
+			{/* terms and condition and copyright */}
+			<div className='flex flex-col gap-4'>
+				<div className='terms text-sm text-white/50 flex gap-4 items-center'>
+					<Link href='/privacy-policy'>
+						<a className='text-gray-700 dark:text-white/50 hover:text-orange-red transition'>
+							Privacy Policy
+						</a>
+					</Link>
+					<div className='dot w-1 h-1 rounded-full bg-gray-700 dark:bg-white/50'></div>
+					<Link href='/termsandcondition'>
+						<a className='text-gray-700 dark:text-white/50 hover:text-orange-red transition'>
+							Terms & Conditions
+						</a>
+					</Link>
+				</div>
+				{/* copyright  */}
+				<div>
+					<p className='text-gray-700 dark:text-white/50 text-sm'>
+						All rights reserved by memoapp &copy; 2023
+					</p>
+				</div>
+			</div>
 		</div>
 	);
 };

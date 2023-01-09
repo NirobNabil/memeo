@@ -168,7 +168,7 @@ const Submenu1 = (props) => {
 
 	return (
 		<>
-			<div className='container'>
+			<div className='container bg-white  dark:bg-slate-800 dark:text-gray-300 border-1 dark:border-white border-solid  rounded-lg flex flex-col space-y-4 p-4  w-64 shadow-md'>
 				<div className='card'>
 					<div className='card-content mt-2 px-10 py-5'>
 						<div className='card-content-inner'>

@@ -959,9 +959,6 @@ function Dialogue(props) {
 
 	return (
 		<>
-			<Head>
-				<title>Memeo | Messenger</title>
-			</Head>
 			<div className='flex flex-col h-screen relative z-[55]'>
 				<div className='top border-b borfer-gray-300 dark:border-gray-500 basis-[50px] flex items-center justify-between'>
 					{chatimg && (

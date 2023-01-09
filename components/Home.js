@@ -53,28 +53,6 @@ export default function Home(props) {
 						followListRemove={followListRemove}
 						setFollowListRemove={setFollowListRemove}
 					/>
-					{/* terms and condition and copyright */}
-					<div className='flex flex-col gap-4'>
-						<div className='terms text-sm text-white/50 flex gap-4 items-center'>
-							<Link href='/privacy-policy'>
-								<a className='text-gray-700 dark:text-white/50 hover:text-orange-red transition'>
-									Privacy Policy
-								</a>
-							</Link>
-							<div className='dot w-1 h-1 rounded-full bg-gray-700 dark:bg-white/50'></div>
-							<Link href='/termsandcondition'>
-								<a className='text-gray-700 dark:text-white/50 hover:text-orange-red transition'>
-									Terms & Conditions
-								</a>
-							</Link>
-						</div>
-						{/* copyright  */}
-						<div>
-							<p className='text-gray-700 dark:text-white/50 text-sm'>
-								All rights reserved by memoapp &copy; 2023
-							</p>
-						</div>
-					</div>
 				</div>
 				<div className='border-l border-r border-gray-400 dark:border-gray-700 max-w-xl w-full md:w-[520px] space-x-5 my-[17px] mx-3 md:mx-0'>
 					<Feed
