@@ -23,7 +23,7 @@ function Paths(props) {
 		<div
 			className={`conversations dark:bg-slate-800 bg-white-50 flex flex-col w-full  h-full overflow-hidden`}>
 			<div
-				className={`flex flex-row min-h-screen sm:min-h-auto w-full relative`}>
+				className={`flex flex-row min-h-screen max-h-screen sm:min-h-auto w-full relative`}>
 				<div
 					className={`absolute h-full sm:h-auto left-0 top-0 sm:static w-full sm:w-auto sm:min-w-[400px] userrow spanall shadow-indigo-50 flex p-5 h-screen text-slate-700/100 dark:text-white/60 bg-white-50 dark:bg-slate-800 z-10 ${
 						showChat ? "-left-[120%]" : "left-0"
