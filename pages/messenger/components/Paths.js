@@ -25,7 +25,7 @@ function Paths(props) {
 			<div
 				className={`flex flex-row min-h-screen max-h-screen sm:min-h-auto w-full relative`}>
 				<div
-					className={`absolute h-full sm:h-auto left-0 top-0 sm:static w-full sm:w-auto sm:min-w-[400px] userrow spanall shadow-indigo-50 flex p-5 h-screen text-slate-700/100 dark:text-white/60 bg-white-50 dark:bg-slate-800 z-10 ${
+					className={`absolute sm:h-auto left-0 top-0 sm:static w-full sm:w-auto sm:min-w-[400px] userrow spanall shadow-indigo-50 flex p-5 h-screen text-slate-700/100 dark:text-white/60 bg-white-50 dark:bg-slate-800 z-10 ${
 						showChat ? "-left-[120%]" : "left-0"
 					} transition duration-300`}>
 					<Userrow
@@ -40,7 +40,7 @@ function Paths(props) {
 				{chatuser ? (
 					<>
 						<div
-							className={`absolute sm:static h-full w-full top-0 left-0 sm:w-auto flex-grow dialogue spanall sm:min-w-max h-screen pt-2 bg-white dark:bg-slate-900/50 dark:text-white border-l border-r dark:border-slate-500 border-x-white/50 border-color-white-50 z-[0]`}>
+							className={`absolute sm:static w-full top-0 left-0 sm:w-auto flex-grow dialogue spanall sm:min-w-max h-screen pt-2 bg-white dark:bg-slate-900/50 dark:text-white border-l border-r dark:border-slate-500 border-x-white/50 border-color-white-50 z-[0]`}>
 							<Dialogue chatuser={chatuser} setShowChat={setShowChat} />
 						</div>
 						{/* <div className='userprofile w-full xl:flex spanall hidden pt-2'>
