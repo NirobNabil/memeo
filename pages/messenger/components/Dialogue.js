@@ -1029,7 +1029,7 @@ function Dialogue(props) {
 									backgroundColor: theme,
 							  }
 					}>
-					<div className='grid pb-[80px] sm:pb-0'>
+					<div className='grid pb-[100px] sm:pb-0'>
 						<div className='scrollto chat' ref={scrollto}></div>
 						{showMessages}
 						{messages.length >= 100 && showloadmore && (
