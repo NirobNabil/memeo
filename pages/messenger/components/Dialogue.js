@@ -960,7 +960,7 @@ function Dialogue(props) {
 	return (
 		<>
 			<div className='flex flex-col h-screen !max-h-screen relative z-[55]'>
-				<div className='top border-b borfer-gray-300 dark:border-gray-500 basis-[50px] flex items-center justify-between'>
+				<div className='top border-b borfer-gray-300 dark:border-gray-500 basis-[62px] flex items-center justify-between'>
 					{chatimg && (
 						<>
 							<div className='profilepic'>
@@ -1029,7 +1029,7 @@ function Dialogue(props) {
 									backgroundColor: theme,
 							  }
 					}>
-					<div className='grid'>
+					<div className='grid pb-[80px] sm:pb-0'>
 						<div className='scrollto chat' ref={scrollto}></div>
 						{showMessages}
 						{messages.length >= 100 && showloadmore && (
@@ -1042,7 +1042,7 @@ function Dialogue(props) {
 					</div>
 				</div>
 
-				<div className='search whiteb flex h-20 basis-[50px]  items-center justify-between border-t border-gray-200 dark:border-gray-500 bg-white dark:bg-slate-800'>
+				<div className='search whiteb flex h-20 basis-[62px] items-center justify-between border-t border-gray-200 dark:border-gray-500 bg-white dark:bg-slate-800 !fixed !w-full !bottom-0 !z-50 sm:!relative'>
 					<div className='plus font-bold'>
 						{!visible ? (
 							<PlusIcon
