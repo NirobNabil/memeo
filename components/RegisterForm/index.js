@@ -74,6 +74,7 @@ import {
 
 import { ToastSuccess } from "../Components/Toast";
 import { ToastError } from "../Components/Toast";
+import Link from "next/link";
 
 const RegisterForm = ({ setLoginOrRegister }) => {
 	const [showPassword, setShowPassword] = useState(false);
@@ -131,7 +132,9 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 				setDoc(doc(db, "users", user.user.uid), {
 					uid: user.user.uid,
 					email: user.user.email,
-					photoURL: profileImage ? downloadURL : "https://firebasestorage.googleapis.com/v0/b/memeo-31738.appspot.com/o/default%2Fuser.png?alt=media&token=c648e751-f267-4b21-bdc1-c51cc7d34522",
+					photoURL: profileImage
+						? downloadURL
+						: "https://firebasestorage.googleapis.com/v0/b/memeo-31738.appspot.com/o/default%2Fuser.png?alt=media&token=c648e751-f267-4b21-bdc1-c51cc7d34522",
 					name: data.fullName,
 					createdAt: serverTimestamp(),
 					userName: data.userName,
@@ -170,7 +173,7 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 							.catch((error) => {
 								console.log(error);
 								setToastError(true);
-								setToastErrorMessage('Something went wrong');
+								setToastErrorMessage("Something went wrong");
 								setTimeout(() => {
 									setToastError(false);
 									setToastErrorMessage("");
@@ -180,7 +183,7 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 					.catch((error) => {
 						console.log(error);
 						setToastError(true);
-						setToastErrorMessage('Something went wrong');
+						setToastErrorMessage("Something went wrong");
 						setTimeout(() => {
 							setToastError(false);
 							setToastErrorMessage("");
@@ -190,31 +193,10 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 		}
 	};
 
-	const signinGithub = async (e) => {
-		e.preventDefault();
-		const provider = new GithubAuthProvider(auth);
-		const result = await signInWithPopup(auth, provider);
-		const credential = GithubAuthProvider.credentialFromResult(result);
-		const token = credential.accessToken;
-		const user = result.user;
-	};
+	const [checked, isChecked] = useState(false);
 
-	const signinGoogle = async (e) => {
-		e.preventDefault();
-		const provider = new GoogleAuthProvider(auth);
-		const result = await signInWithPopup(auth, provider);
-		const credential = GoogleAuthProvider.credentialFromResult(result);
-		const token = credential.accessToken;
-		const user = result.user;
-	};
-
-	const signinFacebook = async (e) => {
-		e.preventDefault();
-		const provider = new FacebookAuthProvider(auth);
-		const result = await signInWithPopup(auth, provider);
-		const credential = FacebookAuthProvider.credentialFromResult(result);
-		const token = credential.accessToken;
-		const user = result.user;
+	const handleChange = (e) => {
+		isChecked(e.target.checked);
 	};
 
 	return (
@@ -369,34 +351,7 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 								helperText={errors.password?.message}
 							/>
 						</Box>
-						{/* Birthday  */}
-						{/* <Box sx={{ display: "flex", alignItems: "flex-end", mb: 3 }}>
-							<CssTextField
-								id='date'
-								label='Birthday'
-								type='date'
-								variant='standard'
-								{...register("birthday", {
-									required: "You must have to enter your birthday",
-								})}
-								InputLabelProps={{
-									shrink: true,
-								}}
-								InputProps={{
-									startAdornment: (
-										<InputAdornment position='start'>
-											<div className='icon lock-icon text-gray-700 '>
-												<FaBirthdayCake 
-											    	className="text-gray-700"
-												/>
-											</div>
-										</InputAdornment>
-									),
-								}}
-								error={Boolean(errors.birthday)}
-								helperText={errors.birthday?.message}
-							/>
-						</Box> */}
+
 						<input
 							accept='image/*'
 							className='hidden'
@@ -425,31 +380,30 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 							</Button>
 						</div>
 
-						{/* <Box sx={{ display: "flex", alignItems: "flex-end", mb: 1 }}>
-							<FormControl error={Boolean(errors.termsAndConditions)} required>
-								<FormControlLabel
-									control={
-										<Checkbox
-											id='termsAndConditions'
-											sx={{
-												color: "#ff4522",
-												"&.Mui-checked": {
-													color: "#ff4522",
-												},
-											}}
-											{...register("termsAndConditions", {
-												required: "You must accept the Terms and Conditions",
-											})}
-										/>
-									}
-									label='I agree to all Terms, Data Policy and Cookie Policy.'
+						<div className=''>
+							<label
+								htmlFor='termsandprivacy'
+								className='cursor-pointer inline'>
+								<Checkbox
+									inputProps={{ "aria-label": "controlled" }}
+									name='termsandprivacy'
+									id='termsandprivacy'
+									onChange={handleChange}
 								/>
-								<FormHelperText>
-									{errors.termsAndConditions?.message}
-								</FormHelperText>
-							</FormControl>
-						</Box> */}
-
+								Please check our{" "}
+								<Link href='termsandcondition'>
+									<a className='text-orange-red font-[600] contents'>
+										Terms & Conditions
+									</a>
+								</Link>{" "}
+								and{" "}
+								<Link href='privacy-policy'>
+									<a className='text-orange-red font-[600] contents'>
+										Privacy Policy
+									</a>
+								</Link>
+							</label>
+						</div>
 						<Button
 							variant='contained'
 							type='submit'
@@ -460,7 +414,8 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 									backgroundColor: "rgb(255, 69, 34)",
 									opacity: [0.9, 0.8, 0.7],
 								},
-							}}>
+							}}
+							disabled={checked ? false : true}>
 							Register
 						</Button>
 					</form>
