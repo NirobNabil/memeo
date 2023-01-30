@@ -86,13 +86,17 @@ function Home(props) {
 
 	useEffect(() => {
 		auth.onAuthStateChanged((user) => {
-			if (user) {
+			if(user && user.emailVerified){
 				props.fetchUser(user);
 				router.push("/");
+			} else if(user && !user.emailVerified){
+				router.push("/verify");
 			} else {
 				router.push("/login");
 			}
 		});
+
+
 		return () => {
 			setLoading(false);
 		};
@@ -216,7 +220,7 @@ function Home(props) {
 				notifications?.map((notification) => {
 					if (
 						moment(notification?.notifidate?.toDate()).fromNow() ===
-						"a few seconds ago"
+						"a few seconds ago" 
 					) {
 						setToastdata(notification);
 						setToastShow(true);

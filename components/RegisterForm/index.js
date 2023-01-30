@@ -65,6 +65,11 @@ import {
 } from "firebase/firestore";
 
 import {
+	sendEmailVerification,
+	sendPasswordResetEmail,
+} from "firebase/auth";
+
+import {
 	ref,
 	getDownloadURL,
 	uploadBytesResumable,
@@ -113,17 +118,32 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 
 	// register new user
 	const registerUser = async (data) => {
-		console.log(data);
-		if (
-			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-				data.email
-			)
-		) {
+
+		const emailRex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		
+		if (emailRex.test(data.email)) {
 			await createUserWithEmailAndPassword(
 				auth,
 				data.email,
 				data.password
 			).then(async (user) => {
+
+				// verify email
+				await sendEmailVerification(user.user)
+					.then(() => {
+						setToastMessage("Verification email sent");
+						setToastShow(true);
+						setTimeout(() => {
+							setToastShow(false);
+						}, 5000);
+					})
+					.catch((error) => {
+						setToastErrorMessage(error.message);
+						setToastError(true);
+					});
+					
+
+			//  if(auth.currentUser.emailVerified){
 				const storageRef = ref(storage, `photoURL/${user.user.uid}`);
 				const uploadTask = await uploadBytesResumable(storageRef, profileImage);
 				const downloadURL = await getDownloadURL(uploadTask.ref);
@@ -186,7 +206,9 @@ const RegisterForm = ({ setLoginOrRegister }) => {
 							setToastErrorMessage("");
 						}, 3000);
 					});
-			});
+				// }
+
+		});
 		}
 	};
 
