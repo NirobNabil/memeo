@@ -19,7 +19,7 @@ const LoginOrRegister = () => {
 
 	useEffect(() => {
 		auth.onAuthStateChanged((user) => {
-			if (user) {
+			if (user?.emailVerified) {
 				setIsLogged(true);
 				setLoading(false);
 				router.push("/");
